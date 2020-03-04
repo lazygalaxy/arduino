@@ -1,0 +1,62 @@
+/*
+   Timer.h - Library for scheduling tasks using a timer.
+   Created by LazyGalaxy - Evangelos Papakonstantis, Febraury 1, 2020.
+   Released into the public domain.
+ */
+
+#ifndef Timer_h
+#define Timer_h
+
+#include <Component.h>
+
+// TODO: somehow share this in LazyGalaxy
+typedef void (*funcPtr)(void);
+
+// TODO: needs ot be private static
+static unsigned long idCounter = 0;
+
+class Timer {
+ public:
+  static Timer* getInstance() {
+    static Timer* instance = new Timer();
+    return instance;
+  }
+
+  struct TimerTask {
+    TimerTask(unsigned long triggerTime, funcPtr callback) {
+      this->id = ++idCounter;
+      this->triggerTime = triggerTime;
+      this->callback = callback;
+      this->component = nullptr;
+      this->next = nullptr;
+    }
+
+    TimerTask(unsigned long triggerTime, Component* component) {
+      this->id = ++idCounter;
+      this->triggerTime = triggerTime;
+      this->callback = nullptr;
+      this->component = component;
+      this->next = nullptr;
+    }
+
+    unsigned long id;
+    unsigned long triggerTime;
+    funcPtr callback;
+    Component* component;
+    TimerTask* next;
+  };
+
+  unsigned long schedule(unsigned long triggerTime, funcPtr callback);
+  unsigned long schedule(unsigned long triggerTime, Component* component);
+  bool unschedule(unsigned long taskId);
+  void update(unsigned long time);
+
+ private:
+  Timer();
+  void addTask(TimerTask* task);
+
+  TimerTask* head = nullptr;
+  TimerTask* tail = nullptr;
+};
+
+#endif
