@@ -6,12 +6,9 @@
 
 #include <LazyGalaxyLED.h>
 
-LazyGalaxyLED::LazyGalaxyLED(uint8_t pin) {
-  _pin = pin;
+LazyGalaxyLED::LazyGalaxyLED(uint8_t pin) : LazyGalaxyComponent(pin) {
   pinMode(_pin, OUTPUT);
 }
-
-bool LazyGalaxyLED::isDigital() { return _pin < 14; }
 
 void LazyGalaxyLED::setLight(bool flag) {
   if (flag) {

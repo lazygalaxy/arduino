@@ -71,7 +71,7 @@ void LazyGalaxyTimer::update(unsigned long time) {
     if (current->triggerTime <= time) {
       remove = true;
       if (current->callback != nullptr) {
-        current->callback();
+        current->callback(time);
       } else if (current->component != nullptr) {
         unsigned int delay = current->component->update(time);
         if (delay > 0) {

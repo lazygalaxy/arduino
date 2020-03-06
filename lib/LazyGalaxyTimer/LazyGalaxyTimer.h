@@ -16,6 +16,12 @@ class LazyGalaxyTimer {
     return instance;
   }
 
+  static void scheduleTask(unsigned int delay, funcPtr callback) {
+    getInstance()->schedule(millis() + delay, callback);
+  }
+
+  static void updateTasks() { getInstance()->update(millis()); }
+
   struct LazyGalaxyTimerTask {
     LazyGalaxyTimerTask(unsigned long id, unsigned long triggerTime,
                         funcPtr callback) {

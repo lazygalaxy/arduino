@@ -20,8 +20,6 @@ class LazyGalaxyLED : public LazyGalaxyComponent {
   unsigned int update(unsigned long time);
 
  private:
-  bool isDigital();
-  uint8_t _pin;
   unsigned long _blinkTaskId = 0;
   unsigned int _blinkDelay = 0;
 };

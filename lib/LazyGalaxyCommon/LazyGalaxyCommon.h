@@ -24,11 +24,16 @@ static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
 
-typedef void (*funcPtr)(void);
+typedef void (*funcPtr)(unsigned long time);
 
 class LazyGalaxyComponent {
  public:
+  explicit LazyGalaxyComponent(uint8_t pin) { _pin = pin; }
+  bool isDigital() { return _pin < 14; }
   virtual unsigned int update(unsigned long time);
+
+ protected:
+  uint8_t _pin;
 };
 
 #endif
