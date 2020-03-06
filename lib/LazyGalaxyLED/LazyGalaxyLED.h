@@ -1,19 +1,18 @@
 /*
-   LED.h - Library for lighting a LED.
+   LazyGalaxyLED.h - Library for controlling an LED
    Created by LazyGalaxy - Evangelos Papakonstantis, January 29, 2020.
    Released into the public domain.
  */
 
-#ifndef LED_h
-#define LED_h
+#ifndef LAZYGALAXYLED_h
+#define LAZYGALAXYLED_h
 
-#include <Arduino.h>
-#include <Component.h>
-#include <Timer.h>
+#include <LazyGalaxyCommon.h>
+#include <LazyGalaxyTimer.h>
 
-class LED : public Component {
+class LazyGalaxyLED : public LazyGalaxyComponent {
  public:
-  LED(uint8_t pin);
+  LazyGalaxyLED(uint8_t pin);
   void setLight(bool flag);
   bool isLight();
   void setBlink(bool flag, unsigned int blinkDelay = 500);

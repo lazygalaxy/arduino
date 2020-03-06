@@ -1,26 +1,30 @@
 /*
-   Timer.cpp - Library for scheduling tasks using a timer.
+   LazyGalaxyTimer.cpp - Library for scheduling tasks
    Created by LazyGalaxy - Evangelos Papakonstantis, Febraury 1, 2020.
    Released into the public domain.
  */
 
-#include <Timer.h>
+#include <LazyGalaxyTimer.h>
 
-Timer::Timer() {}
+LazyGalaxyTimer::LazyGalaxyTimer() {}
 
-unsigned long Timer::schedule(unsigned long triggerTime, funcPtr callback) {
-  TimerTask *task = new TimerTask(triggerTime, callback);
+unsigned long LazyGalaxyTimer::schedule(unsigned long triggerTime,
+                                        funcPtr callback) {
+  LazyGalaxyTimerTask *task =
+      new LazyGalaxyTimerTask(++idCounter, triggerTime, callback);
   addTask(task);
   return task->id;
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, Component *component) {
-  TimerTask *task = new TimerTask(triggerTime, component);
+unsigned long LazyGalaxyTimer::schedule(unsigned long triggerTime,
+                                        LazyGalaxyComponent *component) {
+  LazyGalaxyTimerTask *task =
+      new LazyGalaxyTimerTask(++idCounter, triggerTime, component);
   addTask(task);
   return task->id;
 }
 
-void Timer::addTask(TimerTask *task) {
+void LazyGalaxyTimer::addTask(LazyGalaxyTimerTask *task) {
   if (head == nullptr) {
     head = task;
     tail = task;
@@ -30,12 +34,12 @@ void Timer::addTask(TimerTask *task) {
   }
 }
 
-bool Timer::unschedule(unsigned long taskId) {
-  TimerTask *current = head;
-  TimerTask *previous = nullptr;
+bool LazyGalaxyTimer::unschedule(unsigned long taskId) {
+  LazyGalaxyTimerTask *current = head;
+  LazyGalaxyTimerTask *previous = nullptr;
   while (current != nullptr) {
     if (current->id == taskId) {
-      TimerTask *temp = current;
+      LazyGalaxyTimerTask *temp = current;
       if (previous == nullptr) {
         head = head->next;
         if (head == nullptr) {
@@ -59,9 +63,9 @@ bool Timer::unschedule(unsigned long taskId) {
   return false;
 }
 
-void Timer::update(unsigned long time) {
-  TimerTask *current = head;
-  TimerTask *previous = nullptr;
+void LazyGalaxyTimer::update(unsigned long time) {
+  LazyGalaxyTimerTask *current = head;
+  LazyGalaxyTimerTask *previous = nullptr;
   while (current != nullptr) {
     bool remove = false;
     if (current->triggerTime <= time) {
@@ -77,7 +81,7 @@ void Timer::update(unsigned long time) {
       }
 
       if (remove) {
-        TimerTask *temp = current;
+        LazyGalaxyTimerTask *temp = current;
         if (previous == nullptr) {
           head = head->next;
           if (head == nullptr) {

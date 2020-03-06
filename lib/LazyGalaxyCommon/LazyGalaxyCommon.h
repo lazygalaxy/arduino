@@ -4,10 +4,10 @@
    Released into the public domain.
  */
 
-#ifndef LazyGalaxy_h
-#define LazyGalaxy_h
+#ifndef LAZYGALAXYCOMMON_h
+#define LAZYGALAXYCOMMON_h
 
-#include <Timer.h>
+#include <Arduino.h>
 
 static const uint8_t D0 = 0;
 static const uint8_t D1 = 1;
@@ -24,13 +24,11 @@ static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
 
-// TODO: somehow share this in LazyGalaxy
 typedef void (*funcPtr)(void);
 
-static void update() { Timer::getInstance()->update(millis()); }
-
-static void scheduleTask(unsigned int delay, funcPtr callback) {
-  Timer::getInstance()->schedule(millis() + delay, callback);
-}
+class LazyGalaxyComponent {
+ public:
+  virtual unsigned int update(unsigned long time);
+};
 
 #endif
