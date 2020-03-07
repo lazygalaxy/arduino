@@ -44,6 +44,6 @@ void setup() {
 }
 
 void loop() {
-  // update the LazyGalaxy tasks
+  // update all LazyGalaxy tasks
   LazyGalaxyTimer::updateTasks();
 }

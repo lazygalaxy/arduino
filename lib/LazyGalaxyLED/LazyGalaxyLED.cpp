@@ -8,6 +8,7 @@
 
 LazyGalaxyLED::LazyGalaxyLED(uint8_t pin) : LazyGalaxyComponent(pin) {
   pinMode(_pin, OUTPUT);
+  setLight(false);
 }
 
 void LazyGalaxyLED::setLight(bool flag) {
@@ -42,7 +43,9 @@ void LazyGalaxyLED::setBlink(bool flag, unsigned int blinkDelay) {
         LazyGalaxyTimer::getInstance()->schedule(update(millis()), this);
   } else if (!flag && isBlink()) {
     // we would like to stop the blink
-    LazyGalaxyTimer::getInstance()->unschedule(_blinkTaskId);
+    if (_blinkTaskId > 0) {
+      LazyGalaxyTimer::getInstance()->unschedule(_blinkTaskId);
+    }
     _blinkDelay = 0;
     _blinkTaskId = 0;
     setLight(false);

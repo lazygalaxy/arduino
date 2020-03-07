@@ -39,26 +39,28 @@ bool LazyGalaxyTimer::unschedule(unsigned long taskId) {
   LazyGalaxyTimerTask *previous = nullptr;
   while (current != nullptr) {
     if (current->id == taskId) {
-      LazyGalaxyTimerTask *temp = current;
-      if (previous == nullptr) {
-        head = head->next;
-        if (head == nullptr) {
-          tail = nullptr;
-        }
-        current = current->next;
-      } else {
-        previous->next = current->next;
-        if (current->next == nullptr) {
-          tail = current;
-        }
-        current = current->next;
-      }
-      delete temp;
+      //   LazyGalaxyTimerTask *temp = current;
+      //   if (previous == nullptr) {
+      //     head = head->next;
+      //     if (head == nullptr) {
+      //       tail = nullptr;
+      //     }
+      //     current = current->next;
+      //   } else {
+      //     previous->next = current->next;
+      //     if (current->next == nullptr) {
+      //       tail = current;
+      //     }
+      //     current = current->next;
+      //   }
+      //   delete temp;
+      current->isActive = false;
       return true;
-    } else {
-      previous = current;
-      current = current->next;
     }
+    // else {
+    previous = current;
+    current = current->next;
+    //}
   }
   return false;
 }
@@ -67,39 +69,42 @@ void LazyGalaxyTimer::update(unsigned long time) {
   LazyGalaxyTimerTask *current = head;
   LazyGalaxyTimerTask *previous = nullptr;
   while (current != nullptr) {
-    bool remove = false;
-    if (current->triggerTime <= time) {
-      remove = true;
+    Serial.println(String(current->id) + " " + String(current->triggerTime) +
+                   " " + String(time));
+    // bool remove = false;
+    if (current->isActive && current->triggerTime <= time) {
+      current->isActive = false;
       if (current->callback != nullptr) {
         current->callback(time);
       } else if (current->component != nullptr) {
         current->triggerTime = current->component->update(time);
+        Serial.println("new time: " + String(current->triggerTime));
         if (current->triggerTime > time) {
-          remove = false;
+          current->isActive = true;
         }
       }
 
-      if (remove) {
-        LazyGalaxyTimerTask *temp = current;
-        if (previous == nullptr) {
-          head = head->next;
-          if (head == nullptr) {
-            tail = nullptr;
-          }
-          current = current->next;
-        } else {
-          previous->next = current->next;
-          if (current->next == nullptr) {
-            tail = current;
-          }
-          current = current->next;
-        }
-        delete temp;
-      }
+      // if (remove) {
+      //   LazyGalaxyTimerTask *temp = current;
+      //   if (previous == nullptr) {
+      //     head = head->next;
+      //     if (head == nullptr) {
+      //       tail = nullptr;
+      //     }
+      //     current = current->next;
+      //   } else {
+      //     previous->next = current->next;
+      //     if (current->next == nullptr) {
+      //       tail = current;
+      //     }
+      //     current = current->next;
+      //   }
+      //   delete temp;
+      // }
     }
-    if (!remove) {
-      previous = current;
-      current = current->next;
-    }
+    // if (!remove) {
+    previous = current;
+    current = current->next;
+    //}
   }
 }

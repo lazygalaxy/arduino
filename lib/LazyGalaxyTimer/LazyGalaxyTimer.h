@@ -27,6 +27,7 @@ class LazyGalaxyTimer {
                         funcPtr callback) {
       this->id = id;
       this->triggerTime = triggerTime;
+      this->isActive = true;
       this->callback = callback;
       this->component = nullptr;
       this->next = nullptr;
@@ -36,6 +37,7 @@ class LazyGalaxyTimer {
                         LazyGalaxyComponent* component) {
       this->id = id;
       this->triggerTime = triggerTime;
+      this->isActive = true;
       this->callback = nullptr;
       this->component = component;
       this->next = nullptr;
@@ -43,6 +45,7 @@ class LazyGalaxyTimer {
 
     unsigned long id;
     unsigned long triggerTime;
+    bool isActive;
     funcPtr callback;
     LazyGalaxyComponent* component;
     LazyGalaxyTimerTask* next;
