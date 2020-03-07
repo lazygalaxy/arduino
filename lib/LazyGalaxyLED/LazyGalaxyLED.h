@@ -11,17 +11,18 @@
 #include <LazyGalaxyTimer.h>
 
 class LazyGalaxyLED : public LazyGalaxyComponent {
+ private:
+  unsigned long _blinkTaskId = 0;
+  unsigned int _blinkDelay = 0;
+
  public:
   LazyGalaxyLED(uint8_t pin);
   void setLight(bool flag);
   bool isLight();
   void setBlink(bool flag, unsigned int blinkDelay = 500);
   bool isBlink();
-  unsigned int update(unsigned long time);
-
- private:
-  unsigned long _blinkTaskId = 0;
-  unsigned int _blinkDelay = 0;
+  unsigned long getBlinkTaskId();
+  unsigned long update(unsigned long time) override;
 };
 
 #endif

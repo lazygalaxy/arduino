@@ -1,5 +1,5 @@
 /*
-   LazyGalaxy.h - Static classes to make life happy for your projects.
+   LazyGalaxyCommon.h - Common stuff for other LazyGalaxy classes
    Created by LazyGalaxy - Evangelos Papakonstantis, February 21, 2020.
    Released into the public domain.
  */
@@ -29,8 +29,8 @@ typedef void (*funcPtr)(unsigned long time);
 class LazyGalaxyComponent {
  public:
   explicit LazyGalaxyComponent(uint8_t pin) { _pin = pin; }
-  bool isDigital() { return _pin < 14; }
-  virtual unsigned int update(unsigned long time);
+  bool isDigital() { return _pin < A0; }
+  virtual unsigned long update(unsigned long time) { return time; }
 
  protected:
   uint8_t _pin;

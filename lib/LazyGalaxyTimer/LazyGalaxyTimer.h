@@ -1,5 +1,5 @@
 /*
-   LazyGalaxyTimer.h - Library for scheduling tasks
+   LazyGalaxyTimer.h - Util for scheduling tasks
    Created by LazyGalaxy - Evangelos Papakonstantis, Febraury 1, 2020.
    Released into the public domain.
  */

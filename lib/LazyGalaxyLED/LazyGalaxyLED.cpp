@@ -39,7 +39,7 @@ void LazyGalaxyLED::setBlink(bool flag, unsigned int blinkDelay) {
     // we would like to start the blink
     _blinkDelay = blinkDelay;
     _blinkTaskId =
-        LazyGalaxyTimer::getInstance()->schedule(blinkDelay + millis(), this);
+        LazyGalaxyTimer::getInstance()->schedule(update(millis()), this);
   } else if (!flag && isBlink()) {
     // we would like to stop the blink
     LazyGalaxyTimer::getInstance()->unschedule(_blinkTaskId);
@@ -51,14 +51,16 @@ void LazyGalaxyLED::setBlink(bool flag, unsigned int blinkDelay) {
 
 bool LazyGalaxyLED::isBlink() { return _blinkDelay > 0 && _blinkTaskId > 0; }
 
-unsigned int LazyGalaxyLED::update(unsigned long time) {
+unsigned long LazyGalaxyLED::getBlinkTaskId() { return _blinkTaskId; }
+
+unsigned long LazyGalaxyLED::update(unsigned long time) {
   if (isBlink()) {
     if (isLight()) {
       setLight(false);
     } else {
       setLight(true);
     }
-    return _blinkDelay;
+    return time + _blinkDelay;
   }
-  return 0;
+  return time;
 }

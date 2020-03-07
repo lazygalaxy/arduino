@@ -30,20 +30,16 @@ void blinkOff(unsigned long time) {
 }
 
 void setup() {
-  Serial.begin(9600);
-
   // light all 3 LEDS on startup
   led1.setLight(true);
   led2.setLight(true);
   led3.setLight(true);
 
-  // schedule a task to switch the lights of all LEDs in 3 seconds
+  // schedule a task/function to switch the lights of all LEDs in 3 seconds
   LazyGalaxyTimer::scheduleTask(3000, lightOff);
-
-  // schedule a task to start the blink of all LEDs in 6 seconds
+  // schedule a task/function to start the blink of all LEDs in 6 seconds
   LazyGalaxyTimer::scheduleTask(6000, blinkOn);
-
-  // schedule a task to stop the blink of all LEDs in 9 seconds
+  // schedule a task/function to stop the blink of all LEDs in 9 seconds
   LazyGalaxyTimer::scheduleTask(9000, blinkOff);
 }
 

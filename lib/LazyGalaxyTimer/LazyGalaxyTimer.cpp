@@ -1,5 +1,5 @@
 /*
-   LazyGalaxyTimer.cpp - Library for scheduling tasks
+   LazyGalaxyTimer.cpp - Util for scheduling tasks
    Created by LazyGalaxy - Evangelos Papakonstantis, Febraury 1, 2020.
    Released into the public domain.
  */
@@ -73,10 +73,9 @@ void LazyGalaxyTimer::update(unsigned long time) {
       if (current->callback != nullptr) {
         current->callback(time);
       } else if (current->component != nullptr) {
-        unsigned int delay = current->component->update(time);
-        if (delay > 0) {
+        current->triggerTime = current->component->update(time);
+        if (current->triggerTime > time) {
           remove = false;
-          current->triggerTime = time + delay;
         }
       }
 
