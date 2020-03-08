@@ -23,6 +23,8 @@ void LazyGalaxySpeaker::stopNote() {
 
 void LazyGalaxySpeaker::stopMelody() {
   _melody = nullptr;
+  _noteCallback = nullptr;
+  _finalCallback = nullptr;
   _noteIndex = -1;
   if (_melodyTaskId > 0) {
     LazyGalaxyTimer::getInstance()->unschedule(_melodyTaskId);
@@ -31,10 +33,13 @@ void LazyGalaxySpeaker::stopMelody() {
   stopNote();
 }
 
-void LazyGalaxySpeaker::playMelody(Melody* melody) {
+void LazyGalaxySpeaker::playMelody(LazyGalaxyMelody* melody,
+                                   noteCallbackPtr noteCallback,
+                                   taskCallbackPtr finalCallback) {
   stopMelody();
-
   _melody = melody;
+  _noteCallback = noteCallback;
+  _finalCallback = finalCallback;
   _noteIndex = 0;
   _melodyTaskId =
       LazyGalaxyTimer::getInstance()->schedule(update(millis()), this);
@@ -52,9 +57,16 @@ unsigned long LazyGalaxySpeaker::update(unsigned long time) {
         return time + 50;
       }
       playNote(_melody->getNotes()[_noteIndex]);
+      if (_noteCallback != nullptr) {
+        _noteCallback(time, _melody->getNotes()[_noteIndex]);
+      }
       return time + (_melody->getBeats()[_noteIndex++] * _melody->getTempo());
     } else {
+      taskCallbackPtr tempFinalCallback = _finalCallback;
       stopMelody();
+      if (tempFinalCallback != nullptr) {
+        tempFinalCallback(time);
+      }
     }
   }
   return time;

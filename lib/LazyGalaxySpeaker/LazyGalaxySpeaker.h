@@ -8,21 +8,27 @@
 #define LAZYGALAXYSPEAKER_h
 
 #include <LazyGalaxyCommon.h>
+#include <LazyGalaxyMelody.h>
 #include <LazyGalaxyTimer.h>
-#include <Melody.h>
+
+typedef void (*noteCallbackPtr)(unsigned long time, int note);
 
 class LazyGalaxySpeaker : public LazyGalaxyComponent {
  public:
   LazyGalaxySpeaker(uint8_t pin);
-  void playMelody(Melody* melody);
+  void playMelody(LazyGalaxyMelody* melody,
+                  noteCallbackPtr noteCallback = nullptr,
+                  taskCallbackPtr finalCallback = nullptr);
   void stopMelody();
   unsigned long update(unsigned long time) override;
 
  private:
   bool _isNotePlaying = false;
-  Melody* _melody = nullptr;
+  LazyGalaxyMelody* _melody = nullptr;
   int _noteIndex;
   unsigned long _melodyTaskId = 0;
+  noteCallbackPtr _noteCallback;
+  taskCallbackPtr _finalCallback;
 
   void playNote(int note);
   void stopNote();

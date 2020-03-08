@@ -1,11 +1,11 @@
 /*
-Melody.h - Library to represent a melody.
+LazyGalaxyMelody.h - Library to represent a melody.
 Created by LazyGalaxy - Evangelos Papakonstantis, November 20, 2018.
 Released into the public domain.
  */
 
-#ifndef Melody_h
-#define Melody_h
+#ifndef LAZYGALAXYMELODY_h
+#define LAZYGALAXYMELODY_h
 
 #define TNT -1  // no tone
 #define TTE 0   // no tone
@@ -99,9 +99,9 @@ Released into the public domain.
 #define TD8 4699
 #define TDS8 4978
 
-class Melody {
+class LazyGalaxyMelody {
  public:
-  Melody(int notes[], int beats[], int tempo);
+  LazyGalaxyMelody(int notes[], int beats[], int tempo);
   int *getNotes();
   int *getBeats();
   int getTempo();

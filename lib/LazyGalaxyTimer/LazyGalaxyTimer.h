@@ -16,19 +16,19 @@ class LazyGalaxyTimer {
     return instance;
   }
 
-  static void scheduleTask(unsigned int delay, funcPtr callback) {
-    getInstance()->schedule(millis() + delay, callback);
+  static void scheduleTask(unsigned int delay, taskCallbackPtr updateCallback) {
+    getInstance()->schedule(millis() + delay, updateCallback);
   }
 
   static void updateTasks() { getInstance()->update(millis()); }
 
   struct LazyGalaxyTimerTask {
     LazyGalaxyTimerTask(unsigned long id, unsigned long triggerTime,
-                        funcPtr callback) {
+                        taskCallbackPtr updateCallback) {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
-      this->callback = callback;
+      this->updateCallback = updateCallback;
       this->component = nullptr;
       this->next = nullptr;
     }
@@ -38,7 +38,7 @@ class LazyGalaxyTimer {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
-      this->callback = nullptr;
+      this->updateCallback = nullptr;
       this->component = component;
       this->next = nullptr;
     }
@@ -46,12 +46,13 @@ class LazyGalaxyTimer {
     unsigned long id;
     unsigned long triggerTime;
     bool isActive;
-    funcPtr callback;
+    taskCallbackPtr updateCallback;
     LazyGalaxyComponent* component;
     LazyGalaxyTimerTask* next;
   };
 
-  unsigned long schedule(unsigned long triggerTime, funcPtr callback);
+  unsigned long schedule(unsigned long triggerTime,
+                         taskCallbackPtr updateCallback);
   unsigned long schedule(unsigned long triggerTime,
                          LazyGalaxyComponent* component);
   bool unschedule(unsigned long taskId);
@@ -60,9 +61,9 @@ class LazyGalaxyTimer {
  private:
   LazyGalaxyTimer();
   void addTask(LazyGalaxyTimerTask* task);
+  void cleanTasks();
 
   unsigned long idCounter = 0;
-
   LazyGalaxyTimerTask* head = nullptr;
   LazyGalaxyTimerTask* tail = nullptr;
 };
