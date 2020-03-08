@@ -7,6 +7,7 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyTimer.h>
 
+// any pin is ok for the LEDs, digital(with and without PWM) or analog
 LED led1(D3);
 LED led2(D7);
 LED led3(A3);

@@ -7,7 +7,8 @@
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-Speaker speaker(11);
+// any pin is ok for a speaker/buzzer, digital(with and without PWM) or analog
+Speaker speaker(D12);
 
 Melody* santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
