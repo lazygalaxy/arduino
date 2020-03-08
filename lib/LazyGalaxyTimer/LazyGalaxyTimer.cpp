@@ -6,25 +6,22 @@
 
 #include <LazyGalaxyTimer.h>
 
-LazyGalaxyTimer::LazyGalaxyTimer() {}
+Timer::Timer() {}
 
-unsigned long LazyGalaxyTimer::schedule(unsigned long triggerTime,
-                                        taskCallbackPtr updateCallback) {
-  LazyGalaxyTimerTask *task =
-      new LazyGalaxyTimerTask(++idCounter, triggerTime, updateCallback);
+unsigned long Timer::schedule(unsigned long triggerTime,
+                              taskCallbackPtr updateCallback) {
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback);
   addTask(task);
   return task->id;
 }
 
-unsigned long LazyGalaxyTimer::schedule(unsigned long triggerTime,
-                                        LazyGalaxyComponent *component) {
-  LazyGalaxyTimerTask *task =
-      new LazyGalaxyTimerTask(++idCounter, triggerTime, component);
+unsigned long Timer::schedule(unsigned long triggerTime, Component *component) {
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, component);
   addTask(task);
   return task->id;
 }
 
-void LazyGalaxyTimer::addTask(LazyGalaxyTimerTask *task) {
+void Timer::addTask(TimerTask *task) {
   if (head == nullptr) {
     head = task;
     tail = task;
@@ -34,12 +31,12 @@ void LazyGalaxyTimer::addTask(LazyGalaxyTimerTask *task) {
   }
 }
 
-void LazyGalaxyTimer::cleanTasks() {
-  LazyGalaxyTimerTask *current = head;
-  LazyGalaxyTimerTask *previous = nullptr;
+void Timer::cleanTasks() {
+  TimerTask *current = head;
+  TimerTask *previous = nullptr;
   while (current != nullptr) {
     if (!current->isActive) {
-      LazyGalaxyTimerTask *temp = current;
+      TimerTask *temp = current;
       if (previous == nullptr) {
         head = head->next;
         if (head == nullptr) {
@@ -61,8 +58,8 @@ void LazyGalaxyTimer::cleanTasks() {
   }
 }
 
-bool LazyGalaxyTimer::unschedule(unsigned long taskId) {
-  LazyGalaxyTimerTask *current = head;
+bool Timer::unschedule(unsigned long taskId) {
+  TimerTask *current = head;
   while (current != nullptr) {
     if (current->id == taskId) {
       current->isActive = false;
@@ -73,8 +70,8 @@ bool LazyGalaxyTimer::unschedule(unsigned long taskId) {
   return false;
 }
 
-void LazyGalaxyTimer::update(unsigned long time) {
-  LazyGalaxyTimerTask *current = head;
+void Timer::update(unsigned long time) {
+  TimerTask *current = head;
   while (current != nullptr) {
     if (current->isActive && current->triggerTime <= time) {
       if (current->updateCallback != nullptr) {

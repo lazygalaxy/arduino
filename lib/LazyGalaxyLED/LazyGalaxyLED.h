@@ -4,19 +4,19 @@
    Released into the public domain.
  */
 
-#ifndef LAZYGALAXYLED_h
-#define LAZYGALAXYLED_h
+#ifndef LAZYGALAXYLED_H
+#define LAZYGALAXYLED_H
 
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 
-class LazyGalaxyLED : public LazyGalaxyComponent {
+class LED : public Component {
  private:
   unsigned long _blinkTaskId = 0;
   unsigned int _blinkDelay = 0;
 
  public:
-  LazyGalaxyLED(uint8_t pin);
+  LED(uint8_t pin);
   void setLight(bool flag);
   bool isLight();
   void setBlink(bool flag, unsigned int blinkDelay = 500);

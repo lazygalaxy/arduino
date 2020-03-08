@@ -6,46 +6,56 @@
 
 #include <LazyGalaxySpeaker.h>
 
-LazyGalaxySpeaker::LazyGalaxySpeaker(uint8_t pin) : LazyGalaxyComponent(pin) {
+Melody::Melody(int *notes, int *beats, int tempo) {
+  _notes = notes;
+  _beats = beats;
+  _tempo = tempo;
+}
+
+int *Melody::getNotes() { return _notes; }
+
+int *Melody::getBeats() { return _beats; }
+
+int Melody::getTempo() { return _tempo; }
+
+Speaker::Speaker(uint8_t pin) : Component(pin) {
   pinMode(_pin, OUTPUT);
   stopMelody();
 }
 
-void LazyGalaxySpeaker::playNote(int note) {
+void Speaker::playNote(int note) {
   tone(_pin, note);
   _isNotePlaying = true;
 }
 
-void LazyGalaxySpeaker::stopNote() {
+void Speaker::stopNote() {
   noTone(_pin);
   _isNotePlaying = false;
 }
 
-void LazyGalaxySpeaker::stopMelody() {
+void Speaker::stopMelody() {
   _melody = nullptr;
   _noteCallback = nullptr;
   _finalCallback = nullptr;
   _noteIndex = -1;
   if (_melodyTaskId > 0) {
-    LazyGalaxyTimer::getInstance()->unschedule(_melodyTaskId);
+    Timer::getInstance()->unschedule(_melodyTaskId);
   }
   _melodyTaskId = 0;
   stopNote();
 }
 
-void LazyGalaxySpeaker::playMelody(LazyGalaxyMelody* melody,
-                                   noteCallbackPtr noteCallback,
-                                   taskCallbackPtr finalCallback) {
+void Speaker::playMelody(Melody *melody, noteCallbackPtr noteCallback,
+                         taskCallbackPtr finalCallback) {
   stopMelody();
   _melody = melody;
   _noteCallback = noteCallback;
   _finalCallback = finalCallback;
   _noteIndex = 0;
-  _melodyTaskId =
-      LazyGalaxyTimer::getInstance()->schedule(update(millis()), this);
+  _melodyTaskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
-unsigned long LazyGalaxySpeaker::update(unsigned long time) {
+unsigned long Speaker::update(unsigned long time) {
   // a positive index indicates we have a melody to play
   if (_noteIndex >= 0) {
     if (_melody->getNotes()[_noteIndex]) {

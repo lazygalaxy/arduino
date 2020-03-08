@@ -18,12 +18,12 @@ void setup() {
   Serial.begin(9600);
 
   // schedule a task to print "Hello" in 3 seconds
-  LazyGalaxyTimer::scheduleTask(3000, printHello);
+  Timer::scheduleTask(3000, printHello);
   // schedule a task to print "Goodbye" in 6 seconds
-  LazyGalaxyTimer::scheduleTask(6000, printGoodbye);
+  Timer::scheduleTask(6000, printGoodbye);
 }
 
 void loop() {
   // update all LazyGalaxy tasks
-  LazyGalaxyTimer::updateTasks();
+  Timer::updateTasks();
 }

@@ -4,15 +4,15 @@
    Released into the public domain.
  */
 
-#ifndef LAZYGALAXYTIMER_h
-#define LAZYGALAXYTIMER_h
+#ifndef LAZYGALAXYTIMER_H
+#define LAZYGALAXYTIMER_H
 
 #include <LazyGalaxyCommon.h>
 
-class LazyGalaxyTimer {
+class Timer {
  public:
-  static LazyGalaxyTimer* getInstance() {
-    static LazyGalaxyTimer* instance = new LazyGalaxyTimer();
+  static Timer* getInstance() {
+    static Timer* instance = new Timer();
     return instance;
   }
 
@@ -22,9 +22,9 @@ class LazyGalaxyTimer {
 
   static void updateTasks() { getInstance()->update(millis()); }
 
-  struct LazyGalaxyTimerTask {
-    LazyGalaxyTimerTask(unsigned long id, unsigned long triggerTime,
-                        taskCallbackPtr updateCallback) {
+  struct TimerTask {
+    TimerTask(unsigned long id, unsigned long triggerTime,
+              taskCallbackPtr updateCallback) {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
@@ -33,8 +33,8 @@ class LazyGalaxyTimer {
       this->next = nullptr;
     }
 
-    LazyGalaxyTimerTask(unsigned long id, unsigned long triggerTime,
-                        LazyGalaxyComponent* component) {
+    TimerTask(unsigned long id, unsigned long triggerTime,
+              Component* component) {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
@@ -47,25 +47,24 @@ class LazyGalaxyTimer {
     unsigned long triggerTime;
     bool isActive;
     taskCallbackPtr updateCallback;
-    LazyGalaxyComponent* component;
-    LazyGalaxyTimerTask* next;
+    Component* component;
+    TimerTask* next;
   };
 
   unsigned long schedule(unsigned long triggerTime,
                          taskCallbackPtr updateCallback);
-  unsigned long schedule(unsigned long triggerTime,
-                         LazyGalaxyComponent* component);
+  unsigned long schedule(unsigned long triggerTime, Component* component);
   bool unschedule(unsigned long taskId);
   void update(unsigned long time);
 
  private:
-  LazyGalaxyTimer();
-  void addTask(LazyGalaxyTimerTask* task);
+  Timer();
+  void addTask(TimerTask* task);
   void cleanTasks();
 
   unsigned long idCounter = 0;
-  LazyGalaxyTimerTask* head = nullptr;
-  LazyGalaxyTimerTask* tail = nullptr;
+  TimerTask* head = nullptr;
+  TimerTask* tail = nullptr;
 };
 
 #endif

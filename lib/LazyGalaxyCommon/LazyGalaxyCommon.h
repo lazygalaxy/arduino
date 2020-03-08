@@ -4,8 +4,8 @@
    Released into the public domain.
  */
 
-#ifndef LAZYGALAXYCOMMON_h
-#define LAZYGALAXYCOMMON_h
+#ifndef LAZYGALAXYCOMMON_H
+#define LAZYGALAXYCOMMON_H
 
 #include <Arduino.h>
 
@@ -26,9 +26,9 @@ static const uint8_t D13 = 13;
 
 typedef void (*taskCallbackPtr)(unsigned long time);
 
-class LazyGalaxyComponent {
+class Component {
  public:
-  explicit LazyGalaxyComponent(uint8_t pin) { _pin = pin; }
+  explicit Component(uint8_t pin) { _pin = pin; }
   bool isDigital() { return _pin < A0; }
   virtual unsigned long update(unsigned long time) { return time; }
 

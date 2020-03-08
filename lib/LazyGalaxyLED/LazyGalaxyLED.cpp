@@ -6,12 +6,12 @@
 
 #include <LazyGalaxyLED.h>
 
-LazyGalaxyLED::LazyGalaxyLED(uint8_t pin) : LazyGalaxyComponent(pin) {
+LED::LED(uint8_t pin) : Component(pin) {
   pinMode(_pin, OUTPUT);
   setLight(false);
 }
 
-void LazyGalaxyLED::setLight(bool flag) {
+void LED::setLight(bool flag) {
   if (flag) {
     if (isDigital()) {
       digitalWrite(_pin, HIGH);
@@ -27,7 +27,7 @@ void LazyGalaxyLED::setLight(bool flag) {
   };
 }
 
-bool LazyGalaxyLED::isLight() {
+bool LED::isLight() {
   if (isDigital()) {
     return digitalRead(_pin) == HIGH;
   } else {
@@ -35,16 +35,15 @@ bool LazyGalaxyLED::isLight() {
   }
 }
 
-void LazyGalaxyLED::setBlink(bool flag, unsigned int blinkDelay) {
+void LED::setBlink(bool flag, unsigned int blinkDelay) {
   if (flag && !isBlink()) {
     // we would like to start the blink
     _blinkDelay = blinkDelay;
-    _blinkTaskId =
-        LazyGalaxyTimer::getInstance()->schedule(update(millis()), this);
+    _blinkTaskId = Timer::getInstance()->schedule(update(millis()), this);
   } else if (!flag && isBlink()) {
     // we would like to stop the blink
     if (_blinkTaskId > 0) {
-      LazyGalaxyTimer::getInstance()->unschedule(_blinkTaskId);
+      Timer::getInstance()->unschedule(_blinkTaskId);
     }
     _blinkDelay = 0;
     _blinkTaskId = 0;
@@ -52,11 +51,11 @@ void LazyGalaxyLED::setBlink(bool flag, unsigned int blinkDelay) {
   }
 }
 
-bool LazyGalaxyLED::isBlink() { return _blinkDelay > 0 && _blinkTaskId > 0; }
+bool LED::isBlink() { return _blinkDelay > 0 && _blinkTaskId > 0; }
 
-unsigned long LazyGalaxyLED::getBlinkTaskId() { return _blinkTaskId; }
+unsigned long LED::getBlinkTaskId() { return _blinkTaskId; }
 
-unsigned long LazyGalaxyLED::update(unsigned long time) {
+unsigned long LED::update(unsigned long time) {
   if (isBlink()) {
     if (isLight()) {
       setLight(false);

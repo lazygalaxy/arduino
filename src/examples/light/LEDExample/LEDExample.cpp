@@ -7,9 +7,9 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyTimer.h>
 
-LazyGalaxyLED led1(D3);
-LazyGalaxyLED led2(D7);
-LazyGalaxyLED led3(A3);
+LED led1(D3);
+LED led2(D7);
+LED led3(A3);
 
 void lightOff(unsigned long time) {
   led1.setLight(false);
@@ -36,14 +36,14 @@ void setup() {
   led3.setLight(true);
 
   // schedule a task/function to switch the lights of all LEDs in 3 seconds
-  LazyGalaxyTimer::scheduleTask(3000, lightOff);
+  Timer::scheduleTask(3000, lightOff);
   // schedule a task/function to start the blink of all LEDs in 6 seconds
-  LazyGalaxyTimer::scheduleTask(6000, blinkOn);
+  Timer::scheduleTask(6000, blinkOn);
   // schedule a task/function to stop the blink of all LEDs in 9 seconds
-  LazyGalaxyTimer::scheduleTask(9000, blinkOff);
+  Timer::scheduleTask(9000, blinkOff);
 }
 
 void loop() {
   // update all LazyGalaxy tasks
-  LazyGalaxyTimer::updateTasks();
+  Timer::updateTasks();
 }
