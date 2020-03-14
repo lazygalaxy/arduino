@@ -22,6 +22,13 @@ class Timer {
 
   static void updateTasks() { getInstance()->update(millis()); }
 
+  unsigned long schedule(unsigned long triggerTime,
+                         taskCallbackPtr updateCallback);
+  unsigned long schedule(unsigned long triggerTime, Component* component);
+  bool unschedule(unsigned long taskId);
+  void update(unsigned long time);
+
+ private:
   struct TimerTask {
     TimerTask(unsigned long id, unsigned long triggerTime,
               taskCallbackPtr updateCallback) {
@@ -51,13 +58,6 @@ class Timer {
     TimerTask* next;
   };
 
-  unsigned long schedule(unsigned long triggerTime,
-                         taskCallbackPtr updateCallback);
-  unsigned long schedule(unsigned long triggerTime, Component* component);
-  bool unschedule(unsigned long taskId);
-  void update(unsigned long time);
-
- private:
   Timer();
   void addTask(TimerTask* task);
   void cleanTasks();

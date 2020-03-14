@@ -10,7 +10,8 @@
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 
-#define TEND 0  // no tone
+// Tones for easy reference
+#define TEND 0  // tone end
 #define TB0 31
 #define TC1 33
 #define TCS1 35
@@ -103,17 +104,16 @@
 
 typedef void (*noteCallbackPtr)(unsigned long time, int note);
 
-class Melody {
- public:
-  Melody(int notes[], int beats[], int tempo);
-  int *getNotes();
-  int *getBeats();
-  int getTempo();
+struct Melody {
+  Melody(int notes[], int beats[], int tempo) {
+    this->notes = notes;
+    this->beats = beats;
+    this->tempo = tempo;
+  }
 
- private:
-  int *_notes;
-  int *_beats;
-  int _tempo;
+  int *notes;
+  int *beats;
+  int tempo;
 };
 
 class Speaker : public Component {

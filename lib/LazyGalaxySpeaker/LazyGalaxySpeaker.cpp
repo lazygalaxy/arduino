@@ -6,18 +6,6 @@
 
 #include <LazyGalaxySpeaker.h>
 
-Melody::Melody(int *notes, int *beats, int tempo) {
-  _notes = notes;
-  _beats = beats;
-  _tempo = tempo;
-}
-
-int *Melody::getNotes() { return _notes; }
-
-int *Melody::getBeats() { return _beats; }
-
-int Melody::getTempo() { return _tempo; }
-
 Speaker::Speaker(uint8_t pin) : Component(pin) {
   pinMode(_pin, OUTPUT);
   stopMelody();
@@ -58,19 +46,19 @@ void Speaker::playMelody(Melody *melody, noteCallbackPtr noteCallback,
 unsigned long Speaker::update(unsigned long time) {
   // a positive index indicates we have a melody to play
   if (_noteIndex >= 0) {
-    if (_melody->getNotes()[_noteIndex]) {
+    if (_melody->notes[_noteIndex]) {
       // if the previous note we are playing is  identical to the next one
-      if (_isNotePlaying && (_melody->getNotes()[_noteIndex - 1] ==
-                             _melody->getNotes()[_noteIndex])) {
+      if (_isNotePlaying &&
+          (_melody->notes[_noteIndex - 1] == _melody->notes[_noteIndex])) {
         // stop the note for 50 millis
         stopNote();
         return time + 50;
       }
-      playNote(_melody->getNotes()[_noteIndex]);
+      playNote(_melody->notes[_noteIndex]);
       if (_noteCallback != nullptr) {
-        _noteCallback(time, _melody->getNotes()[_noteIndex]);
+        _noteCallback(time, _melody->notes[_noteIndex]);
       }
-      return time + (_melody->getBeats()[_noteIndex++] * _melody->getTempo());
+      return time + (_melody->beats[_noteIndex++] * _melody->tempo);
     } else {
       taskCallbackPtr tempFinalCallback = _finalCallback;
       stopMelody();
