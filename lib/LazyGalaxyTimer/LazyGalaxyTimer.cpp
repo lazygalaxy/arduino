@@ -71,11 +71,14 @@ bool Timer::unschedule(unsigned long taskId) {
 }
 
 void Timer::update(unsigned long time) {
+  // Serial.println(String(time));
+
   TimerTask *current = head;
   while (current != nullptr) {
     if (current->isActive && current->triggerTime <= time) {
       if (current->updateCallback != nullptr) {
         current->updateCallback(time);
+        // Serial.println(String(time) + " " + String(current->triggerTime));
       }
       if (current->component != nullptr) {
         current->triggerTime = current->component->update(time);
