@@ -42,10 +42,10 @@ void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation,
   }
 }
 
-void NeoPixel::off() { noSequence(0, 0.0, 0.0); }
+void NeoPixel::off() { setSimpleSequence(0, 0.0, 0.0); }
 
-void NeoPixel::wipeSequence(float hue, float saturation, float value,
-                            unsigned long delayMicros, bool reverse) {
+void NeoPixel::setWipeSequence(float hue, float saturation, float value,
+                               unsigned long delayMicros, bool reverse) {
   for (uint16_t i = 0; i < _strip->numPixels(); i++) {
     uint16_t index = i;
     if (reverse) {
@@ -56,9 +56,9 @@ void NeoPixel::wipeSequence(float hue, float saturation, float value,
   }
 }
 
-void NeoPixel::chaseSequence(float hue, float saturation, float value,
-                             unsigned long delayMicros, unsigned short cycles,
-                             unsigned short gap) {
+void NeoPixel::setChaseSequence(float hue, float saturation, float value,
+                                unsigned long delayMicros,
+                                unsigned short cycles, unsigned short gap) {
   for (unsigned short c = 0; c < cycles; c++) {
     for (uint16_t i = 0; i < _strip->numPixels(); i++) {
       if ((i + c) % gap == 0) {
@@ -72,9 +72,11 @@ void NeoPixel::chaseSequence(float hue, float saturation, float value,
   }
 }
 
-void NeoPixel::noSequence(float hue, float saturation, float value) {
+void NeoPixel::setSimpleSequence(float hue, float saturation, float value) {
   for (uint16_t i = 0; i < _strip->numPixels(); i++) {
     setHSVColor(i, hue, saturation, value, false);
   }
   _strip->show();
 }
+
+unsigned long NeoPixel::update(unsigned long time) { return time; }

@@ -8,9 +8,12 @@
 
 NeoPixel strip(D11, 35);
 
-void allRed() { strip.noSequence(0.00, 1.0, 1.0); }
-void allGreen(unsigned long time) { strip.noSequence(0.33, 1.0, 1.0); }
-void allBlue(unsigned long time) { strip.noSequence(0.66, 1.0, 1.0); }
+void allRed() { strip.setSimpleSequence(0.00, 1.0, 1.0); }
+void allGreen(unsigned long time) { strip.setSimpleSequence(0.33, 1.0, 1.0); }
+void allBlue(unsigned long time) { strip.setSimpleSequence(0.66, 1.0, 1.0); }
+void wipeSequence(unsigned long time) {
+  strip.setWipeSequence(0, 0.0, 1.0, 50);
+}
 void allOff(unsigned long time) { strip.off(); }
 
 void setup() {
@@ -34,18 +37,18 @@ void loop() {
   // unsigned long delay = 50;
 
   // strip.off();
-  // strip.wipeSequence(0, 0.0, 1.0, delay);
-  // strip.wipeSequence(0, 1.0, 1.0, delay, true);
-  // strip.wipeSequence(0.25, 1.0, 1.0, delay);
-  // strip.wipeSequence(0.5, 1.0, 1.0, delay, true);
-  // strip.wipeSequence(0.75, 1.0, 1.0, delay);
-  // strip.wipeSequence(0, 1.0, 0.0, delay, true);
+  // strip.setWipeSequence(0, 0.0, 1.0, delay);
+  // strip.setWipeSequence(0, 1.0, 1.0, delay, true);
+  // strip.setWipeSequence(0.25, 1.0, 1.0, delay);
+  // strip.setWipeSequence(0.5, 1.0, 1.0, delay, true);
+  // strip.setWipeSequence(0.75, 1.0, 1.0, delay);
+  // strip.setWipeSequence(0, 1.0, 0.0, delay, true);
 
   // unsigned short cycles = 10;
   // unsigned short gap = 5;
   // strip.off();
-  // strip.chaseSequence(0, 1.0, 1.0, delay, cycles, gap);
-  // strip.chaseSequence(0.25, 1.0, 1.0, delay, cycles, gap);
-  // strip.chaseSequence(0.5, 1.0, 1.0, delay, cycles, gap);
-  // strip.chaseSequence(0.75, 1.0, 1.0, delay, cycles, gap);
+  // strip.setChaseSequence(0, 1.0, 1.0, delay, cycles, gap);
+  // strip.setChaseSequence(0.25, 1.0, 1.0, delay, cycles, gap);
+  // strip.setChaseSequence(0.5, 1.0, 1.0, delay, cycles, gap);
+  // strip.setChaseSequence(0.75, 1.0, 1.0, delay, cycles, gap);
 }

@@ -20,12 +20,13 @@ class NeoPixel : public Component {
   void setHSVColor(unsigned short pixel, float hue, float saturation,
                    float value, bool mustShow = true);
   void off();
-  void wipeSequence(float hue, float saturation, float value,
-                    unsigned long delayMicros = 0, bool reverse = false);
-  void chaseSequence(float hue, float saturation, float value,
-                     unsigned long delayMicros = 0, unsigned short cycles = 1,
-                     unsigned short gap = 3);
-  void noSequence(float hue, float saturation, float value);
+  void setWipeSequence(float hue, float saturation, float value,
+                       unsigned long delayMicros = 0, bool reverse = false);
+  void setChaseSequence(float hue, float saturation, float value,
+                        unsigned long delayMicros = 0,
+                        unsigned short cycles = 1, unsigned short gap = 3);
+  void setSimpleSequence(float hue, float saturation, float value);
+  unsigned long update(unsigned long time) override;
 
  private:
   Adafruit_NeoPixel* _strip;
