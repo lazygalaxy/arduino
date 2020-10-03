@@ -42,7 +42,7 @@ void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation,
   }
 }
 
-void NeoPixel::off() { setSimpleSequence(0, 0.0, 0.0); }
+void NeoPixel::off() { setSimpleSequence(0.0, 0.0, 0.0); }
 
 void NeoPixel::setWipeSequence(float hue, float saturation, float value,
                                unsigned long delayMicros, bool reverse) {
@@ -52,6 +52,7 @@ void NeoPixel::setWipeSequence(float hue, float saturation, float value,
       index = _strip->numPixels() - i - 1;
     }
     setHSVColor(index, hue, saturation, value);
+    // TODO: user timer
     delay(delayMicros);
   }
 }
@@ -68,13 +69,19 @@ void NeoPixel::setChaseSequence(float hue, float saturation, float value,
       }
     }
     _strip->show();
+    // TODO: user timer
     delay(delayMicros);
   }
 }
 
-void NeoPixel::setSimpleSequence(float hue, float saturation, float value) {
+void NeoPixel::setSimpleSequence(float hue, float saturation, float value,
+                                 float probability) {
   for (uint16_t i = 0; i < _strip->numPixels(); i++) {
-    setHSVColor(i, hue, saturation, value, false);
+    if (probability >= random(1000) / 1000.0f) {
+      setHSVColor(i, hue, saturation, value, false);
+    } else {
+      setHSVColor(i, 0.0, 0.0, 0.0, false);
+    }
   }
   _strip->show();
 }

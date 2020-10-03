@@ -10,12 +10,12 @@
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-Button button1(A2);
-Button button2(A4);
-Button button3(A6);
-Button button4(D8);
-NeoPixel strip(D10, 35);
-Speaker speaker(D11);
+Button button1(D2, D3);
+Button button2(D4, D5);
+Button button3(D6, D7);
+Button button4(D8, D9);
+NeoPixel strip(D11, 35);
+Speaker speaker(D12);
 
 Melody* santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -41,6 +41,18 @@ Melody* merryChristmasMelody =
                        4, 4, 4, 2, 2, 2, 2, 4, 4, 2, 2, 4, 4, 4, 8},
                100);
 
+void noteCallback(unsigned long time, int note) {
+  strip.setSimpleSequence(random(1000) / 1000.0f, 1.0, 0.4, 0.5);
+}
+
+void finalCallback(unsigned long time) {
+  strip.off();
+  button1.setOn(false);
+  button2.setOn(false);
+  button3.setOn(false);
+  button4.setOn(false);
+}
+
 void setup() { strip.setup(); }
 
 void loop() {
@@ -49,53 +61,41 @@ void loop() {
 
   int clicks1 = button1.getClicks();
   if (!button1.isOn() && clicks1 > 0) {
+    strip.off();
     button1.setOn(true);
     button2.setOn(false);
     button3.setOn(false);
     button4.setOn(false);
-    speaker.playMelody(merryChristmasMelody);
+    speaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
   }
 
   int clicks2 = button2.getClicks();
   if (!button2.isOn() && clicks2 > 0) {
+    strip.off();
     button1.setOn(false);
     button2.setOn(true);
     button3.setOn(false);
     button4.setOn(false);
-    speaker.playMelody(jingleBellsMelody);
+    speaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
   }
 
   int clicks3 = button3.getClicks();
   if (!button3.isOn() && clicks3 > 0) {
+    strip.off();
     button1.setOn(false);
     button2.setOn(false);
     button3.setOn(true);
     button4.setOn(false);
-    speaker.playMelody(santaClausMelody);
+    speaker.playMelody(santaClausMelody, noteCallback, finalCallback);
   }
 
   int clicks4 = button4.getClicks();
   if (!button4.isOn() && clicks4 > 0) {
-    speaker.stopMelody();
+    strip.off();
     button1.setOn(false);
     button2.setOn(false);
     button3.setOn(false);
     button4.setOn(true);
-  }
-
-  // if (button1.isOn() || button2.isOn() || button3.isOn()) {
-  //   speaker.playMelody(playRandomCallback, stopCallback);
-  // }
-}
-
-// void playRandomCallback(int counter) {
-//   strip.noSequence(random(360), 1.0, 1.0, 0, 0.5);
-// }
-
-void stopCallback() {
-  strip.off();
-  button1.setOn(false);
-  button2.setOn(false);
-  button3.setOn(false);
-  button4.setOn(false);
+    speaker.stopMelody();
+    }
 }

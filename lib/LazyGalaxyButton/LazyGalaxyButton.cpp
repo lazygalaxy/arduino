@@ -6,7 +6,12 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t pin) : Component(pin) { pinMode(pin, INPUT_PULLUP); }
+Button::Button(uint8_t buttonPin, uint8_t ledPin) : Component(buttonPin) {
+  pinMode(buttonPin, INPUT_PULLUP);
+  if (ledPin >= 0) {
+    led = new LED(ledPin);
+  }
+}
 
 int Button::getClicks(unsigned int delay) {
   unsigned long time = millis();
@@ -53,4 +58,11 @@ boolean Button::isLongPressed(unsigned int duration) {
 
 bool Button::isOn() { return _buttonOn; }
 
-void Button::setOn(bool buttonOn) { _buttonOn = buttonOn; }
+void Button::setOn(bool buttonOn) {
+  _buttonOn = buttonOn;
+  if (led != nullptr && buttonOn) {
+    led->setLight(true);
+  } else if (led != nullptr && !buttonOn) {
+    led->setLight(false);
+  }
+}

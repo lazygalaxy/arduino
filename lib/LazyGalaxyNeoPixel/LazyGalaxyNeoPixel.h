@@ -25,7 +25,8 @@ class NeoPixel : public Component {
   void setChaseSequence(float hue, float saturation, float value,
                         unsigned long delayMicros = 0,
                         unsigned short cycles = 1, unsigned short gap = 3);
-  void setSimpleSequence(float hue, float saturation, float value);
+  void setSimpleSequence(float hue, float saturation, float value,
+                         float probability = 1.0);
   unsigned long update(unsigned long time) override;
 
  private:

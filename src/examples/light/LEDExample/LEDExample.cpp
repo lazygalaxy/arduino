@@ -9,8 +9,8 @@
 
 // any pin is ok for the LEDs, digital(with and without PWM) or analog
 LED led1(D3);
-LED led2(D7);
-LED led3(A3);
+LED led2(D5);
+LED led3(D7);
 
 void lightOff(unsigned long time) {
   led1.setLight(false);
