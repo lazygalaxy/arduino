@@ -11,6 +11,10 @@
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 
+static const unsigned char NO_SEQUENCE = 0;
+static const unsigned char CHASE_SEQUENCE = 1;
+static const unsigned char WIPE_SEQUENCE = 2;
+
 class NeoPixel : public Component {
  public:
   NeoPixel(char pin, unsigned short pixels);
@@ -21,17 +25,28 @@ class NeoPixel : public Component {
                    float value, bool mustShow = true);
   void off();
   void setWipeSequence(float hue, float saturation, float value,
-                       unsigned long delayMicros = 0, bool reverse = false);
+                       unsigned int sequenceDelay = 0, bool reverse = false,
+                       taskCallbackPtr finalCallback = nullptr);
   void setChaseSequence(float hue, float saturation, float value,
-                        unsigned long delayMicros = 0,
-                        unsigned short cycles = 1, unsigned short gap = 3);
+                        unsigned int sequenceDelay = 0,
+                        unsigned short cycles = 1, unsigned short gap = 3,
+                        taskCallbackPtr finalCallback = nullptr);
   void setSimpleSequence(float hue, float saturation, float value,
                          float probability = 1.0);
+  void stopSequence();
   unsigned long update(unsigned long time) override;
 
  private:
   Adafruit_NeoPixel* _strip;
-  unsigned int _delay = 0;
+  unsigned long _sequenceTaskId = 0;
+  unsigned char _sequence;
+  float _sequenceHue;
+  float _sequenceSaturation;
+  float _sequenceValue;
+  unsigned int _sequenceDelay;
+  bool _sequenceReverse;
+  uint16_t _sequenceCurrentIndex;
+  taskCallbackPtr _finalCallback;
 };
 
 #endif

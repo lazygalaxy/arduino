@@ -8,6 +8,7 @@
 
 NeoPixel::NeoPixel(char pin, unsigned short pixels) : Component(pin) {
   _strip = new Adafruit_NeoPixel(pixels, pin, NEO_GRB + NEO_KHZ800);
+  stopSequence();
 }
 
 void NeoPixel::setup() {
@@ -45,21 +46,31 @@ void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation,
 void NeoPixel::off() { setSimpleSequence(0.0, 0.0, 0.0); }
 
 void NeoPixel::setWipeSequence(float hue, float saturation, float value,
-                               unsigned long delayMicros, bool reverse) {
-  for (uint16_t i = 0; i < _strip->numPixels(); i++) {
-    uint16_t index = i;
-    if (reverse) {
-      index = _strip->numPixels() - i - 1;
-    }
-    setHSVColor(index, hue, saturation, value);
-    // TODO: user timer
-    delay(delayMicros);
-  }
+                               unsigned int sequenceDealy, bool reverse,
+                               taskCallbackPtr finalCallback) {
+  _sequence = WIPE_SEQUENCE;
+  _sequenceHue = hue;
+  _sequenceSaturation = saturation;
+  _sequenceValue = value;
+  _sequenceDelay = sequenceDealy;
+  _sequenceReverse = reverse;
+  _finalCallback = finalCallback;
+
+  _sequenceTaskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
 void NeoPixel::setChaseSequence(float hue, float saturation, float value,
-                                unsigned long delayMicros,
-                                unsigned short cycles, unsigned short gap) {
+                                unsigned int sequenceDealy,
+                                unsigned short cycles, unsigned short gap,
+                                taskCallbackPtr finalCallback) {
+  _sequence = CHASE_SEQUENCE;
+  _sequenceHue = hue;
+  _sequenceSaturation = saturation;
+  _sequenceValue = value;
+  _sequenceDelay = sequenceDealy;
+
+  _finalCallback = finalCallback;
+
   for (unsigned short c = 0; c < cycles; c++) {
     for (uint16_t i = 0; i < _strip->numPixels(); i++) {
       if ((i + c) % gap == 0) {
@@ -70,7 +81,7 @@ void NeoPixel::setChaseSequence(float hue, float saturation, float value,
     }
     _strip->show();
     // TODO: user timer
-    delay(delayMicros);
+    // delay(sequenceDealy);
   }
 }
 
@@ -86,4 +97,40 @@ void NeoPixel::setSimpleSequence(float hue, float saturation, float value,
   _strip->show();
 }
 
-unsigned long NeoPixel::update(unsigned long time) { return time; }
+void NeoPixel::stopSequence() {
+  _sequence = NO_SEQUENCE;
+  _sequenceHue = 0.0;
+  _sequenceSaturation = 0.0;
+  _sequenceValue = 0.0;
+  _sequenceDelay = 0;
+  _sequenceReverse = false;
+  _sequenceCurrentIndex = 0;
+  _finalCallback = nullptr;
+}
+
+unsigned long NeoPixel::update(unsigned long time) {
+  switch (_sequence) {
+    case CHASE_SEQUENCE:
+      return time + _sequenceDelay;
+      break;
+    case WIPE_SEQUENCE:
+      if (_sequenceCurrentIndex < _strip->numPixels()) {
+        uint16_t index = _sequenceCurrentIndex;
+        if (_sequenceReverse) {
+          index = _strip->numPixels() - _sequenceCurrentIndex - 1;
+        }
+        setHSVColor(index, _sequenceHue, _sequenceSaturation, _sequenceValue);
+        _sequenceCurrentIndex++;
+        return time + _sequenceDelay;
+      } else {
+        taskCallbackPtr tempFinalCallback = _finalCallback;
+        stopSequence();
+        if (tempFinalCallback != nullptr) {
+          tempFinalCallback(time);
+        }
+      }
+      break;
+  }
+
+  return time;
+}
