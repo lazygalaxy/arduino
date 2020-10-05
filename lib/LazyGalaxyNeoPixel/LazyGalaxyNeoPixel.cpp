@@ -43,50 +43,43 @@ void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation,
   }
 }
 
-void NeoPixel::off() { setSimpleSequence(0.0, 0.0, 0.0); }
+void NeoPixel::off() { setNoSequence(0.0, 0.0, 0.0); }
 
 void NeoPixel::setWipeSequence(float hue, float saturation, float value,
-                               unsigned int sequenceDealy, bool reverse,
+                               unsigned int delay, bool reverse,
                                taskCallbackPtr finalCallback) {
-  _sequence = WIPE_SEQUENCE;
+  stopSequence();
+  _sequenceType = WIPE_SEQUENCE_TYPE;
   _sequenceHue = hue;
   _sequenceSaturation = saturation;
   _sequenceValue = value;
-  _sequenceDelay = sequenceDealy;
+  _sequenceDelay = delay;
   _sequenceReverse = reverse;
-  _finalCallback = finalCallback;
+  _sequenceFinalCallback = finalCallback;
 
   _sequenceTaskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
 void NeoPixel::setChaseSequence(float hue, float saturation, float value,
-                                unsigned int sequenceDealy,
-                                unsigned short cycles, unsigned short gap,
+                                unsigned int delay, unsigned short cycles,
+                                unsigned char gap,
                                 taskCallbackPtr finalCallback) {
-  _sequence = CHASE_SEQUENCE;
+  stopSequence();
+  _sequenceType = CHASE_SEQUENCE_TYPE;
   _sequenceHue = hue;
   _sequenceSaturation = saturation;
   _sequenceValue = value;
-  _sequenceDelay = sequenceDealy;
+  _sequenceDelay = delay;
+  _sequenceCycles = cycles;
+  _sequenceGap = gap;
+  _sequenceFinalCallback = finalCallback;
 
-  _finalCallback = finalCallback;
-
-  for (unsigned short c = 0; c < cycles; c++) {
-    for (uint16_t i = 0; i < _strip->numPixels(); i++) {
-      if ((i + c) % gap == 0) {
-        setHSVColor(i, hue, saturation, value, false);
-      } else {
-        setRGBColor(i, 0, 0, 0);
-      }
-    }
-    _strip->show();
-    // TODO: user timer
-    // delay(sequenceDealy);
-  }
+  _sequenceTaskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
-void NeoPixel::setSimpleSequence(float hue, float saturation, float value,
-                                 float probability) {
+void NeoPixel::setNoSequence(float hue, float saturation, float value,
+                             float probability) {
+  stopSequence();
   for (uint16_t i = 0; i < _strip->numPixels(); i++) {
     if (probability >= random(1000) / 1000.0f) {
       setHSVColor(i, hue, saturation, value, false);
@@ -98,39 +91,62 @@ void NeoPixel::setSimpleSequence(float hue, float saturation, float value,
 }
 
 void NeoPixel::stopSequence() {
-  _sequence = NO_SEQUENCE;
+  if (_sequenceTaskId != 0) {
+    Timer::getInstance()->unschedule(_sequenceTaskId);
+  }
+  _sequenceTaskId = 0;
+  _sequenceType = NO_SEQUENCE_TYPE;
   _sequenceHue = 0.0;
   _sequenceSaturation = 0.0;
   _sequenceValue = 0.0;
   _sequenceDelay = 0;
   _sequenceReverse = false;
-  _sequenceCurrentIndex = 0;
-  _finalCallback = nullptr;
+  _sequenceCycles = 0;
+  _sequenceGap = 0;
+  _sequenceIndex = 0;
+  _sequenceFinalCallback = nullptr;
 }
 
 unsigned long NeoPixel::update(unsigned long time) {
-  switch (_sequence) {
-    case CHASE_SEQUENCE:
-      return time + _sequenceDelay;
+  boolean sequenceComplete = false;
+  switch (_sequenceType) {
+    case CHASE_SEQUENCE_TYPE:
+      if (_sequenceIndex < _sequenceCycles) {
+        for (uint16_t i = 0; i < _strip->numPixels(); i++) {
+          if ((i + _sequenceIndex) % _sequenceGap == 0) {
+            setHSVColor(i, _sequenceHue, _sequenceSaturation, _sequenceValue,
+                        false);
+          } else {
+            setRGBColor(i, 0, 0, 0, false);
+          }
+        }
+        _strip->show();
+      } else {
+        sequenceComplete = true;
+      }
       break;
-    case WIPE_SEQUENCE:
-      if (_sequenceCurrentIndex < _strip->numPixels()) {
-        uint16_t index = _sequenceCurrentIndex;
+    case WIPE_SEQUENCE_TYPE:
+      if (_sequenceIndex < _strip->numPixels()) {
+        uint16_t index = _sequenceIndex;
         if (_sequenceReverse) {
-          index = _strip->numPixels() - _sequenceCurrentIndex - 1;
+          index = _strip->numPixels() - _sequenceIndex - 1;
         }
         setHSVColor(index, _sequenceHue, _sequenceSaturation, _sequenceValue);
-        _sequenceCurrentIndex++;
-        return time + _sequenceDelay;
       } else {
-        taskCallbackPtr tempFinalCallback = _finalCallback;
-        stopSequence();
-        if (tempFinalCallback != nullptr) {
-          tempFinalCallback(time);
-        }
+        sequenceComplete = true;
       }
       break;
   }
 
-  return time;
+  if (sequenceComplete) {
+    taskCallbackPtr tempFinalCallback = _sequenceFinalCallback;
+    stopSequence();
+    if (tempFinalCallback != nullptr) {
+      tempFinalCallback(time);
+    }
+    return time;
+  } else {
+    _sequenceIndex++;
+    return time + _sequenceDelay;
+  }
 }

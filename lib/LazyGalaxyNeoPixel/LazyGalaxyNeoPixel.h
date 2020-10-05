@@ -11,9 +11,9 @@
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 
-static const unsigned char NO_SEQUENCE = 0;
-static const unsigned char CHASE_SEQUENCE = 1;
-static const unsigned char WIPE_SEQUENCE = 2;
+static const unsigned char NO_SEQUENCE_TYPE = 0;
+static const unsigned char CHASE_SEQUENCE_TYPE = 1;
+static const unsigned char WIPE_SEQUENCE_TYPE = 2;
 
 class NeoPixel : public Component {
  public:
@@ -25,28 +25,31 @@ class NeoPixel : public Component {
                    float value, bool mustShow = true);
   void off();
   void setWipeSequence(float hue, float saturation, float value,
-                       unsigned int sequenceDelay = 0, bool reverse = false,
+                       unsigned int delay = 50, bool reverse = false,
                        taskCallbackPtr finalCallback = nullptr);
   void setChaseSequence(float hue, float saturation, float value,
-                        unsigned int sequenceDelay = 0,
-                        unsigned short cycles = 1, unsigned short gap = 3,
+                        unsigned int delay = 50, unsigned short cycles = 50,
+                        unsigned char gap = 3,
                         taskCallbackPtr finalCallback = nullptr);
-  void setSimpleSequence(float hue, float saturation, float value,
-                         float probability = 1.0);
+  void setNoSequence(float hue, float saturation, float value,
+                     float probability = 1.0);
   void stopSequence();
   unsigned long update(unsigned long time) override;
 
  private:
   Adafruit_NeoPixel* _strip;
-  unsigned long _sequenceTaskId = 0;
-  unsigned char _sequence;
+
+  unsigned long _sequenceTaskId;
+  unsigned char _sequenceType;
   float _sequenceHue;
   float _sequenceSaturation;
   float _sequenceValue;
   unsigned int _sequenceDelay;
   bool _sequenceReverse;
-  uint16_t _sequenceCurrentIndex;
-  taskCallbackPtr _finalCallback;
+  unsigned short _sequenceCycles;
+  unsigned char _sequenceGap;
+  uint16_t _sequenceIndex;
+  taskCallbackPtr _sequenceFinalCallback;
 };
 
 #endif

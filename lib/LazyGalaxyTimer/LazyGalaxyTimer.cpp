@@ -78,10 +78,13 @@ void Timer::update(unsigned long time) {
     if (current->isActive && current->triggerTime <= time) {
       if (current->updateCallback != nullptr) {
         current->updateCallback(time);
-        // Serial.println(String(time) + " " + String(current->triggerTime));
+        // Serial.println("callback: " + String(time) + " " +
+        // String(current->triggerTime));
       }
       if (current->component != nullptr) {
         current->triggerTime = current->component->update(time);
+        // Serial.println("component: " + String(time) + " " +
+        // String(current->triggerTime));
       }
       if (current->triggerTime <= time) {
         current->isActive = false;

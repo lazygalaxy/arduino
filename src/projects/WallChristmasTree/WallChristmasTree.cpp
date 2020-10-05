@@ -42,7 +42,7 @@ Melody* merryChristmasMelody =
                100);
 
 void noteCallback(unsigned long time, int note) {
-  strip.setSimpleSequence(random(1000) / 1000.0f, 1.0, 0.4, 0.5);
+  strip.setNoSequence(random(1000) / 1000.0f, 1.0, 0.4, 0.5);
 }
 
 void finalCallback(unsigned long time) {
@@ -97,5 +97,5 @@ void loop() {
     button3.setOn(false);
     button4.setOn(true);
     speaker.stopMelody();
-    }
+  }
 }
