@@ -10,12 +10,18 @@
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
+static const unsigned int DELAY = 50;
+static const float SAT = 1.0;
+static const float VAL = 0.4;
+
 Button button1(D2, D3);
 Button button2(D4, D5);
 Button button3(D6, D7);
 Button button4(D8, D9);
 NeoPixel strip(D11, 35);
 Speaker speaker(D12);
+
+boolean reverse = false;
 
 Melody* santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -42,7 +48,7 @@ Melody* merryChristmasMelody =
                100);
 
 void noteCallback(unsigned long time, int note) {
-  strip.setNoSequence(random(1000) / 1000.0f, 1.0, 0.4, 0.5);
+  strip.setNoSequence(random(100) / 100.0f, SAT, VAL, 0.5);
 }
 
 void finalCallback(unsigned long time) {
@@ -59,8 +65,7 @@ void loop() {
   // update all LazyGalaxy tasks
   Timer::updateTasks();
 
-  int clicks1 = button1.getClicks();
-  if (!button1.isOn() && clicks1 > 0) {
+  if (!button1.isOn() && button1.getClicks() > 0) {
     strip.off();
     button1.setOn(true);
     button2.setOn(false);
@@ -69,8 +74,7 @@ void loop() {
     speaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
   }
 
-  int clicks2 = button2.getClicks();
-  if (!button2.isOn() && clicks2 > 0) {
+  if (!button2.isOn() && button2.getClicks() > 0) {
     strip.off();
     button1.setOn(false);
     button2.setOn(true);
@@ -79,8 +83,7 @@ void loop() {
     speaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
   }
 
-  int clicks3 = button3.getClicks();
-  if (!button3.isOn() && clicks3 > 0) {
+  if (!button3.isOn() && button3.getClicks() > 0) {
     strip.off();
     button1.setOn(false);
     button2.setOn(false);
@@ -89,13 +92,22 @@ void loop() {
     speaker.playMelody(santaClausMelody, noteCallback, finalCallback);
   }
 
-  int clicks4 = button4.getClicks();
-  if (!button4.isOn() && clicks4 > 0) {
+  if (button4.getClicks() > 0) {
     strip.off();
     button1.setOn(false);
     button2.setOn(false);
     button3.setOn(false);
     button4.setOn(true);
     speaker.stopMelody();
+
+    float prob = random(100) / 100.0f;
+    float hue = random(100) / 100.0f;
+
+    if (0.5 >= prob) {
+      strip.setChaseSequence(hue, SAT, VAL, DELAY, 100, 3);
+    } else {
+      strip.setWipeSequence(hue, SAT, VAL, DELAY, reverse);
+      reverse = !reverse;
+    }
   }
 }
