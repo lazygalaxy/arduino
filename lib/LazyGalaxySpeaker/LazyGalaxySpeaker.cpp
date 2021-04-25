@@ -43,6 +43,8 @@ void Speaker::playMelody(Melody *melody, noteCallbackPtr noteCallback,
   _melodyTaskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
+bool Speaker::isPlaying() { return _noteIndex != -1; }
+
 unsigned long Speaker::update(unsigned long time) {
   // a positive index indicates we have a melody to play
   if (_noteIndex >= 0) {

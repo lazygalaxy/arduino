@@ -122,6 +122,7 @@ class Speaker : public Component {
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
                   taskCallbackPtr finalCallback = nullptr);
   void stopMelody();
+  bool isPlaying();
   unsigned long update(unsigned long time) override;
 
  private:
