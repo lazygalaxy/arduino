@@ -8,7 +8,7 @@
 #include <LazyGalaxyTimer.h>
 
 // any pin is ok for a speaker/buzzer, digital(with and without PWM) or analog
-Speaker speaker(D12);
+Speaker speaker(D13);
 
 Melody* santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -38,17 +38,17 @@ void noteCallback(unsigned long time, int note) {
   Serial.println("played " + String(note) + " @" + String(time));
 }
 
-void finalCallback(unsigned long time) {
+void playMelody3(unsigned long time) {
   // play the third melody, provide a note callback
   speaker.playMelody(merryChristmasMelody, noteCallback);
 }
 
-void taskCallback(unsigned long time) {
+void playMelody2(unsigned long time) {
   // stop playing the current melody, this will interrupt the melody playing
   speaker.stopMelody();
   // play the second melody, provide a note callback and final callback to play
   // the third melody
-  speaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
+  speaker.playMelody(jingleBellsMelody, noteCallback, playMelody3);
 }
 
 void setup() {
@@ -56,7 +56,7 @@ void setup() {
   // play the frist melody
   speaker.playMelody(santaClausMelody);
   // schedule a task/function callback to play the second melody in 2 seconds
-  Timer::scheduleTask(2000, taskCallback);
+  Timer::scheduleTask(2000, playMelody2);
 }
 
 void loop() {

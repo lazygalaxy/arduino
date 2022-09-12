@@ -8,7 +8,7 @@
 
 static const unsigned int DELAY = 50;
 
-NeoPixel strip(D11, 35);
+NeoPixel strip(D11, 33);
 
 void allOff(unsigned long time) { strip.off(); }
 

@@ -119,6 +119,8 @@ struct Melody {
 class Speaker : public Component {
  public:
   Speaker(uint8_t pin);
+  void playNote(int note);
+  void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
                   taskCallbackPtr finalCallback = nullptr);
   void stopMelody();
@@ -132,9 +134,6 @@ class Speaker : public Component {
   unsigned long _melodyTaskId = 0;
   noteCallbackPtr _noteCallback;
   taskCallbackPtr _finalCallback;
-
-  void playNote(int note);
-  void stopNote();
 };
 
 #endif
