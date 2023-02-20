@@ -44,16 +44,13 @@
 #include <XInput.h>
 
 // Setup
-const boolean UseLeftJoystick = true;  // set to true to enable left joystick
-const boolean InvertLeftYAxis =
-    false;  // set to true to use inverted left joy Y
+const boolean UseLeftJoystick = true;    // set to true to enable left joystick
+const boolean InvertLeftYAxis = true;   // set to true to use inverted left joy Y
 
 const boolean UseRightJoystick = false;  // set to true to enable right joystick
-const boolean InvertRightYAxis =
-    false;  // set to true to use inverted right joy Y
+const boolean InvertRightYAxis = false;  // set to true to use inverted right joy Y
 
-const boolean UseTriggerButtons =
-    true;  // set to false if using analog triggers
+const boolean UseTriggerButtons = true;  // set to false if using analog triggers
 
 const int ADC_Max = 1023;  // 10 bit
 
