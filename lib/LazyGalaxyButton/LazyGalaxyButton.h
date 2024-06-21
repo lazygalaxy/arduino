@@ -11,8 +11,9 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyTimer.h>
 
-class Button : public Component {
- public:
+class Button : public PinComponent
+{
+public:
   Button(uint8_t buttonPin, uint8_t ledPin = -1);
   int getClicks(unsigned int delay = 200);
   boolean isLongPressed(unsigned int duration);
@@ -20,8 +21,8 @@ class Button : public Component {
   bool isOn();
   void setOn(bool buttonOn);
 
- private:
-  LED* led = nullptr;
+private:
+  LED *led = nullptr;
   unsigned long _pressTime = 0;
   unsigned long _releaseTime = 0;
   int _prevValue = HIGH;

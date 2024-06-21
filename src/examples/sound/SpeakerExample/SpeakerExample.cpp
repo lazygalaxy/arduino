@@ -8,9 +8,9 @@
 #include <LazyGalaxyTimer.h>
 
 // any pin is ok for a speaker/buzzer, digital(with and without PWM) or analog
-Speaker speaker(D13);
+MySpeaker speaker(D13);
 
-Melody* santaClausMelody =
+Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
                        TC5, TE4, TF4, TG4, TG4, TG4, TA4, TG4, TF4, TF4,
                        TE4, TG4, TC4, TE4, TD4, TF4, TB3, TC4, TEND},
@@ -18,7 +18,7 @@ Melody* santaClausMelody =
                        4, 4, 2, 2, 4, 8, 4, 4, 4, 4, 4, 8, 4, 8},
                100);
 
-Melody* jingleBellsMelody =
+Melody *jingleBellsMelody =
     new Melody((int[]){TE5, TE5, TE5, TE5, TE5, TE5, TE5, TG5, TC5,
                        TD5, TE5, TF5, TF5, TF5, TF5, TF5, TE5, TE5,
                        TE5, TE5, TE5, TD5, TD5, TE5, TD5, TG5, TEND},
@@ -26,7 +26,7 @@ Melody* jingleBellsMelody =
                        2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 4},
                100);
 
-Melody* merryChristmasMelody =
+Melody *merryChristmasMelody =
     new Melody((int[]){TB3, TF4, TF4, TG4, TF4, TE4, TD4, TD4, TD4, TG4, TG4,
                        TA4, TG4, TF4, TE4, TE4, TE4, TA4, TA4, TB4, TA4, TG4,
                        TF4, TD4, TB3, TB3, TD4, TG4, TE4, TF4, TEND},
@@ -34,16 +34,19 @@ Melody* merryChristmasMelody =
                        4, 4, 4, 2, 2, 2, 2, 4, 4, 2, 2, 4, 4, 4, 8},
                100);
 
-void noteCallback(unsigned long time, int note) {
+void noteCallback(unsigned long time, int note)
+{
   Serial.println("played " + String(note) + " @" + String(time));
 }
 
-void playMelody3(unsigned long time) {
+void playMelody3(unsigned long time)
+{
   // play the third melody, provide a note callback
   speaker.playMelody(merryChristmasMelody, noteCallback);
 }
 
-void playMelody2(unsigned long time) {
+void playMelody2(unsigned long time)
+{
   // stop playing the current melody, this will interrupt the melody playing
   speaker.stopMelody();
   // play the second melody, provide a note callback and final callback to play
@@ -51,7 +54,8 @@ void playMelody2(unsigned long time) {
   speaker.playMelody(jingleBellsMelody, noteCallback, playMelody3);
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   // play the frist melody
   speaker.playMelody(santaClausMelody);
@@ -59,7 +63,8 @@ void setup() {
   Timer::scheduleTask(2000, playMelody2);
 }
 
-void loop() {
+void loop()
+{
   // update all LazyGalaxy tasks
   Timer::updateTasks();
 }

@@ -26,13 +26,21 @@ static const uint8_t D13 = 13;
 
 typedef void (*taskCallbackPtr)(unsigned long time);
 
-class Component {
- public:
-  explicit Component(uint8_t pin) { _pin = pin; }
-  bool isDigital() { return _pin < A0; }
+class Component
+{
+public:
   virtual unsigned long update(unsigned long time) { return time; }
+  virtual void setup() {}
+};
 
- protected:
+class PinComponent : public Component
+{
+public:
+  explicit PinComponent(uint8_t pin) { _pin = pin; }
+  bool isDigital() { return _pin < A0; }
+  uint8_t getPin() { return _pin; }
+
+protected:
   uint8_t _pin;
 };
 

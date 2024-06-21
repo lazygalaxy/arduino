@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t buttonPin, uint8_t ledPin) : Component(buttonPin) {
+Button::Button(uint8_t buttonPin, uint8_t ledPin) : PinComponent(buttonPin) {
   pinMode(buttonPin, INPUT_PULLUP);
   if (ledPin >= 0) {
     led = new LED(ledPin);

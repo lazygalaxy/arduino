@@ -11,7 +11,7 @@
 #include <LazyGalaxyTimer.h>
 
 // Tones for easy reference
-#define TEND 0  // tone end
+#define TEND 0 // tone end
 #define TB0 31
 #define TC1 33
 #define TCS1 35
@@ -104,8 +104,10 @@
 
 typedef void (*noteCallbackPtr)(unsigned long time, int note);
 
-struct Melody {
-  Melody(int notes[], int beats[], int tempo) {
+struct Melody
+{
+  Melody(int notes[], int beats[], int tempo)
+  {
     this->notes = notes;
     this->beats = beats;
     this->tempo = tempo;
@@ -116,9 +118,10 @@ struct Melody {
   int tempo;
 };
 
-class Speaker : public Component {
- public:
-  Speaker(uint8_t pin);
+class MySpeaker : public PinComponent
+{
+public:
+  MySpeaker(uint8_t pin);
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
@@ -127,7 +130,7 @@ class Speaker : public Component {
   bool isPlaying();
   unsigned long update(unsigned long time) override;
 
- private:
+private:
   bool _isNotePlaying = false;
   Melody *_melody = nullptr;
   int _noteIndex;

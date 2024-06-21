@@ -1,10 +1,10 @@
-//#include <Adafruit_MPU6050.h>
-//#include <Adafruit_Sensor.h>
+// #include <Adafruit_MPU6050.h>
+// #include <Adafruit_Sensor.h>
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
 // Adafruit_MPU6050 accelgyro;
-Speaker speaker(D13);
+MySpeaker speaker(D13);
 
 unsigned long ACC, GYR, COMPL;
 int freq_prev = 20;
@@ -13,22 +13,28 @@ float k = 0.2;
 int counter = 30;
 int change = +1;
 
-void playHum(unsigned long time) {
+void playHum(unsigned long time)
+{
   // unsigned int freq = (cos(time / 100) * 100) + 550;
   // Serial.println(freq);
-  if (counter >= 2000) {
+  if (counter >= 2000)
+  {
     change = -1;
-  } else if (counter <= 500) {
+  }
+  else if (counter <= 500)
+  {
     change = +1;
   }
   counter += change;
   speaker.playNote(counter);
 }
 
-void setup(void) {
+void setup(void)
+{
   Serial.begin(9600);
-  while (!Serial) {
-    delay(10);  // will pause Zero, Leonardo, etc until serial console opens
+  while (!Serial)
+  {
+    delay(10); // will pause Zero, Leonardo, etc until serial console opens
   }
 
   // Try to initialize!
@@ -48,7 +54,8 @@ void setup(void) {
   Timer::scheduleTask(3000, playHum);
 }
 
-void loop() {
+void loop()
+{
   // sensors_event_t a, g, temp;
   // accelgyro.getEvent(&a, &g, &temp);
 

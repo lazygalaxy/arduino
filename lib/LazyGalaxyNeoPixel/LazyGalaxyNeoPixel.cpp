@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyNeoPixel.h>
 
-NeoPixel::NeoPixel(char pin, unsigned short pixels) : Component(pin) {
+NeoPixel::NeoPixel(char pin, unsigned short pixels) : PinComponent(pin) {
   _strip = new Adafruit_NeoPixel(pixels, pin, NEO_GRB + NEO_KHZ800);
   stopSequence();
 }

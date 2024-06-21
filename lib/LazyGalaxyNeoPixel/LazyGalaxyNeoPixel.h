@@ -15,8 +15,9 @@ static const unsigned char NO_SEQUENCE_TYPE = 0;
 static const unsigned char CHASE_SEQUENCE_TYPE = 1;
 static const unsigned char WIPE_SEQUENCE_TYPE = 2;
 
-class NeoPixel : public Component {
- public:
+class NeoPixel : public PinComponent
+{
+public:
   NeoPixel(char pin, unsigned short pixels);
   void setup();
   void setRGBColor(unsigned short pixel, float red, float green, float blue,
@@ -36,8 +37,8 @@ class NeoPixel : public Component {
   void stopSequence();
   unsigned long update(unsigned long time) override;
 
- private:
-  Adafruit_NeoPixel* _strip;
+private:
+  Adafruit_NeoPixel *_strip;
 
   unsigned long _sequenceTaskId;
   unsigned char _sequenceType;

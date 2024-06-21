@@ -22,14 +22,14 @@ Otto9 Otto;
 #define TRIM_RL 0
 #define TRIM_RR -10
 
-#define PIN_Trigger 8       // ultrasound
-#define PIN_Echo 9          // ultrasound
-#define PIN_YL 2            // left leg, servo[0]
-#define PIN_YR 3            // right leg, servo[1]
-#define PIN_RL 4            // left foot, servo[2]
-#define PIN_RR 5            // right foot, servo[3]
-#define PIN_Buzzer 13       // buzzer
-#define PIN_NoiseSensor A6  // buzzer
+#define PIN_Trigger 8      // ultrasound
+#define PIN_Echo 9         // ultrasound
+#define PIN_YL 2           // left leg, servo[0]
+#define PIN_YR 3           // right leg, servo[1]
+#define PIN_RL 4           // left foot, servo[2]
+#define PIN_RR 5           // right foot, servo[3]
+#define PIN_Buzzer 13      // buzzer
+#define PIN_NoiseSensor A6 // buzzer
 
 #define INTERVALTIME 10.0
 
@@ -49,7 +49,8 @@ void swing(int steps, int T = 1000);
 void upDown(int steps, int tempo);
 void flapping(int steps, int T = 1000);
 
-void setup() {
+void setup()
+{
   Otto.init(PIN_YL, PIN_YR, PIN_RL, PIN_RR, true, PIN_NoiseSensor, PIN_Buzzer,
             PIN_Trigger, PIN_Echo);
   Otto.setTrims(TRIM_YL, TRIM_YR, TRIM_RL, TRIM_RR);
@@ -69,16 +70,20 @@ double pause = 0;
 //////////////////////////////////CONTROL
 /// FUNCTIONS//////////////////////////////////
 void oscillate(int A[N_SERVOS], int O[N_SERVOS], int T,
-               double phase_diff[N_SERVOS]) {
-  for (int i = 0; i < 4; i++) {
+               double phase_diff[N_SERVOS])
+{
+  for (int i = 0; i < 4; i++)
+  {
     servo[i].SetO(O[i]);
     servo[i].SetA(A[i]);
     servo[i].SetT(T);
     servo[i].SetPh(phase_diff[i]);
   }
   double ref = millis();
-  for (double x = ref; x < T + ref; x = millis()) {
-    for (int i = 0; i < 4; i++) {
+  for (double x = ref; x < T + ref; x = millis())
+  {
+    for (int i = 0; i < 4; i++)
+    {
       servo[i].refresh();
     }
   }
@@ -91,20 +96,25 @@ int iteration;
 float increment[N_SERVOS];
 int oldPosition[] = {90, 90, 90, 90};
 
-void moveNServos(int time, int newPosition[]) {
+void moveNServos(int time, int newPosition[])
+{
   for (int i = 0; i < N_SERVOS; i++)
     increment[i] = ((newPosition[i]) - oldPosition[i]) / (time / INTERVALTIME);
 
   final_time = millis() + time;
 
   iteration = 1;
-  while (millis() < final_time) {  // Javi del futuro cambia esto
+  while (millis() < final_time)
+  { // Javi del futuro cambia esto
     interval_time = millis() + INTERVALTIME;
 
     oneTime = 0;
-    while (millis() < interval_time) {
-      if (oneTime < 1) {
-        for (int i = 0; i < N_SERVOS; i++) {
+    while (millis() < interval_time)
+    {
+      if (oneTime < 1)
+      {
+        for (int i = 0; i < N_SERVOS; i++)
+        {
           servo[i].SetPosition(oldPosition[i] + (iteration * increment[i]));
         }
         iteration++;
@@ -113,18 +123,21 @@ void moveNServos(int time, int newPosition[]) {
     }
   }
 
-  for (int i = 0; i < N_SERVOS; i++) {
+  for (int i = 0; i < N_SERVOS; i++)
+  {
     oldPosition[i] = newPosition[i];
   }
 }
 ////////////////////////////////Dance Steps////////////////////////////////
-void pasitos(int steps, int tempo) {
+void pasitos(int steps, int tempo)
+{
   int move1[4] = {90, 120, 60, 60};
   int move2[4] = {90, 90, 90, 90};
   int move3[4] = {60, 90, 120, 120};
   int move4[4] = {90, 90, 90, 90};
 
-  for (int i = 0; i < steps; i++) {
+  for (int i = 0; i < steps; i++)
+  {
     pause = millis();
     moveNServos(tempo * 0.25, move1);
     moveNServos(tempo * 0.25, move2);
@@ -135,8 +148,10 @@ void pasitos(int steps, int tempo) {
   }
 }
 
-void patada(int tempo) {
-  for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+void patada(int tempo)
+{
+  for (int i = 0; i < 4; i++)
+    servo[i].SetPosition(90);
   servo[0].SetPosition(115);
   servo[1].SetPosition(120);
   delay(tempo / 4);
@@ -151,11 +166,13 @@ void patada(int tempo) {
   delay(tempo / 4);
 }
 
-void twist(int steps, int tempo) {
+void twist(int steps, int tempo)
+{
   int move1[4] = {90, 90, 50, 130};
   int move2[4] = {90, 90, 90, 90};
 
-  for (int x = 0; x < steps; x++) {
+  for (int x = 0; x < steps; x++)
+  {
     pause = millis();
     moveNServos(tempo * 0.1, move1);
     moveNServos(tempo * 0.1, move2);
@@ -164,13 +181,16 @@ void twist(int steps, int tempo) {
   }
 }
 
-void reverencia1(int steps, int tempo) {
+void reverencia1(int steps, int tempo)
+{
   int move1[4] = {130, 50, 90, 90};
   int move2[4] = {90, 90, 90, 90};
 
-  for (int x = 0; x < steps; x++) {
+  for (int x = 0; x < steps; x++)
+  {
     pause = millis();
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+    for (int i = 0; i < 4; i++)
+      servo[i].SetPosition(90);
     moveNServos(tempo * 0.3, move1);
     delay(tempo * 0.2);
     moveNServos(tempo * 0.3, move2);
@@ -179,14 +199,17 @@ void reverencia1(int steps, int tempo) {
   }
 }
 
-void reverencia2(int steps, int tempo) {
+void reverencia2(int steps, int tempo)
+{
   int move1[4] = {130, 50, 90, 90};
   int move2[4] = {130, 50, 60, 120};
   int move3[4] = {90, 90, 90, 90};
 
-  for (int x = 0; x < steps; x++) {
+  for (int x = 0; x < steps; x++)
+  {
     pause = millis();
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+    for (int i = 0; i < 4; i++)
+      servo[i].SetPosition(90);
     delay(tempo * 0.2);
     moveNServos(tempo * 0.05, move1);
     moveNServos(tempo * 0.05, move2);
@@ -199,13 +222,16 @@ void reverencia2(int steps, int tempo) {
   }
 }
 
-void saludo(int steps, int tempo) {
+void saludo(int steps, int tempo)
+{
   int move1[4] = {60, 60, 90, 90};
   int move2[4] = {120, 60, 90, 90};
 
-  for (int x = 0; x < steps; x++) {
+  for (int x = 0; x < steps; x++)
+  {
     pause = millis();
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+    for (int i = 0; i < 4; i++)
+      servo[i].SetPosition(90);
     moveNServos(tempo * 0.25, move1);
     moveNServos(tempo * 0.25, move2);
     moveNServos(tempo * 0.25, move1);
@@ -215,11 +241,13 @@ void saludo(int steps, int tempo) {
   }
 }
 
-void upDown(int steps, int tempo) {
+void upDown(int steps, int tempo)
+{
   int move1[4] = {50, 130, 90, 90};
   int move2[4] = {90, 90, 90, 90};
 
-  for (int x = 0; x < steps; x++) {
+  for (int x = 0; x < steps; x++)
+  {
     pause = millis();
     moveNServos(tempo * 0.2, move1);
     delay(tempo * 0.4);
@@ -229,8 +257,10 @@ void upDown(int steps, int tempo) {
   }
 }
 
-void lateral_fuerte(boolean side, int tempo) {
-  for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+void lateral_fuerte(boolean side, int tempo)
+{
+  for (int i = 0; i < 4; i++)
+    servo[i].SetPosition(90);
   if (side)
     servo[0].SetPosition(40);
   else
@@ -241,15 +271,18 @@ void lateral_fuerte(boolean side, int tempo) {
   delay(tempo / 2);
 }
 
-void run(int steps, int T) {
+void run(int steps, int T)
+{
   int A[4] = {10, 10, 10, 10};
   int O[4] = {0, 0, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(0), DEG2RAD(90), DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void drunk(int tempo) {
+void drunk(int tempo)
+{
   pause = millis();
 
   int move1[] = {60, 70, 90, 90};
@@ -267,113 +300,133 @@ void drunk(int tempo) {
     ;
 }
 
-void kickLeft(int tempo) {
-  for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+void kickLeft(int tempo)
+{
+  for (int i = 0; i < 4; i++)
+    servo[i].SetPosition(90);
   delay(tempo);
-  servo[0].SetPosition(50);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
+  servo[0].SetPosition(50); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo);
-  servo[0].SetPosition(80);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
+  servo[0].SetPosition(80); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo / 4);
-  servo[0].SetPosition(40);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
+  servo[0].SetPosition(40); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo / 4);
-  servo[0].SetPosition(80);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
+  servo[0].SetPosition(80); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo / 4);
-  servo[0].SetPosition(40);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
+  servo[0].SetPosition(40); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo / 4);
-  servo[0].SetPosition(80);  // pie derecho
-  servo[1].SetPosition(60);  // pie izquiero
-  delay(tempo);
-}
-
-void kickRight(int tempo) {
-  for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
-  delay(tempo);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(130);  // pie izquiero
-  delay(tempo);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(100);  // pie izquiero
-  delay(tempo / 4);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(140);  // pie izquiero
-  delay(tempo / 4);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(80);   // pie izquiero
-  delay(tempo / 4);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(140);  // pie izquiero
-  delay(tempo / 4);
-  servo[0].SetPosition(120);  // pie derecho
-  servo[1].SetPosition(100);  // pie izquiero
+  servo[0].SetPosition(80); // pie derecho
+  servo[1].SetPosition(60); // pie izquiero
   delay(tempo);
 }
 
-void walk(int steps, int T) {
+void kickRight(int tempo)
+{
+  for (int i = 0; i < 4; i++)
+    servo[i].SetPosition(90);
+  delay(tempo);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(130); // pie izquiero
+  delay(tempo);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(100); // pie izquiero
+  delay(tempo / 4);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(140); // pie izquiero
+  delay(tempo / 4);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(80);  // pie izquiero
+  delay(tempo / 4);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(140); // pie izquiero
+  delay(tempo / 4);
+  servo[0].SetPosition(120); // pie derecho
+  servo[1].SetPosition(100); // pie izquiero
+  delay(tempo);
+}
+
+void walk(int steps, int T)
+{
   int A[4] = {15, 15, 30, 30};
   int O[4] = {0, 0, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(0), DEG2RAD(90), DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void backyard(int steps, int T) {
+void backyard(int steps, int T)
+{
   int A[4] = {15, 15, 30, 30};
   int O[4] = {0, 0, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(0), DEG2RAD(-90), DEG2RAD(-90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void moonWalkRight(int steps, int T) {
+void moonWalkRight(int steps, int T)
+{
   int A[4] = {25, 25, 0, 0};
   int O[4] = {-15, 15, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(180 + 120), DEG2RAD(90),
                           DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void moonWalkLeft(int steps, int T) {
+void moonWalkLeft(int steps, int T)
+{
   int A[4] = {25, 25, 0, 0};
   int O[4] = {-15, 15, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(180 - 120), DEG2RAD(90),
                           DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void crusaito(int steps, int T) {
+void crusaito(int steps, int T)
+{
   int A[4] = {25, 25, 30, 30};
   int O[4] = {-15, 15, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(180 + 120), DEG2RAD(90),
                           DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void swing(int steps, int T) {
+void swing(int steps, int T)
+{
   int A[4] = {25, 25, 0, 0};
   int O[4] = {-15, 15, 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(0), DEG2RAD(90), DEG2RAD(90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void flapping(int steps, int T) {
+void flapping(int steps, int T)
+{
   int A[4] = {15, 15, 8, 8};
   int O[4] = {-A[0], A[1], 0, 0};
   double phase_diff[4] = {DEG2RAD(0), DEG2RAD(180), DEG2RAD(90), DEG2RAD(-90)};
 
-  for (int i = 0; i < steps; i++) oscillate(A, O, T, phase_diff);
+  for (int i = 0; i < steps; i++)
+    oscillate(A, O, T, phase_diff);
 }
 
-void loop() {
-  if (Otto.getDistance() < 15) {
+void loop()
+{
+  if (Otto.getDistance() < 15)
+  {
     pasitos(8, t * 2);
     crusaito(1, t);
     patada(t);
@@ -394,7 +447,8 @@ void loop() {
     moonWalkLeft(2, t);
     crusaito(1, t * 2);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++)
+    {
       lateral_fuerte(0, t);
       lateral_fuerte(1, t);
       upDown(1, t * 2);
@@ -404,7 +458,8 @@ void loop() {
     saludo(1, t);
     delay(t);
     swing(3, t);
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+    for (int i = 0; i < 4; i++)
+      servo[i].SetPosition(90);
     delay(t);
 
     lateral_fuerte(0, t);
@@ -435,7 +490,8 @@ void loop() {
 
     upDown(2, t);
     crusaito(1, t * 2);
-    for (int i = 0; i < 4; i++) servo[i].SetPosition(90);
+    for (int i = 0; i < 4; i++)
+      servo[i].SetPosition(90);
     delay(t / 2);
     pasitos(2, t * 2);
     pasitos(2, t);
@@ -443,7 +499,8 @@ void loop() {
     upDown(2, t);
     upDown(1, t * 2);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
       pasitos(1, t);
       delay(t);
     }
@@ -471,7 +528,8 @@ void loop() {
     swing(2, t * 2);
     pasitos(4, t);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
       lateral_fuerte(0, t);
       lateral_fuerte(1, t);
       lateral_fuerte(0, t / 2);
@@ -533,13 +591,15 @@ void loop() {
     upDown(6, t);
     delay(t);
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
       lateral_fuerte(0, t);
       lateral_fuerte(1, t);
     }
 
     delay(t);
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 7; i++)
+    {
       pasitos(2, t);
       swing(2, t);
     }
