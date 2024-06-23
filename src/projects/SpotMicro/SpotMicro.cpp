@@ -4,38 +4,23 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxyServo.h>
+#include <LazyGalaxyServoGroup.h>
 
-MyServo fr1Servo(D8);
-MyServo fr2Servo(D9);
-MyServo fr3Servo(D10);
+uint8_t extend[] = {0, 1, 2};
+uint8_t retract[] = {178, 179, 180};
 
-MyServo fl1Servo(D11);
-MyServo fl2Servo(D12);
-MyServo fl3Servo(D13);
+ServoGroup rightFrontLeg(D8, D9, D10);
 
 void setup()
 {
-   fr1Servo.setup();
-   fr2Servo.setup();
-   fr3Servo.setup();
-
-   fl1Servo.setup();
-   fl2Servo.setup();
-   fl3Servo.setup();
-
-   delay(1000);
+   Serial.begin(9600);
+   rightFrontLeg.setup();
 }
 
 void loop()
 {
-   while (fr2Servo.getLastAngle() < 180)
-   {
-      fr2Servo.addAngle(90);
-   }
-
-   while (fr2Servo.getLastAngle() > 0)
-   {
-      fr2Servo.addAngle(-90);
-   }
+   rightFrontLeg.setAngles(extend);
+   delay(2000);
+   rightFrontLeg.setAngles(retract);
+   delay(2000);
 }

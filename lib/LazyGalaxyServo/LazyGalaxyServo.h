@@ -15,16 +15,17 @@ class MyServo : PinComponent
 {
 
 private:
-  Servo servo;
-  int lastAngle;
+  Servo _servo;
+  uint8_t _lastAngle;
 
 public:
+  MyServo();
   MyServo(uint8_t pin);
-  MyServo(uint8_t pin, int angle);
-  int setAngle(int angle);
-  int getLastAngle();
-  int addAngle(int angle);
+  MyServo(uint8_t pin, uint8_t angle);
   void setup();
+  uint8_t setAngle(uint8_t angle);
+  uint8_t addAngle(uint8_t angle);
+  uint8_t getLastAngle();
 };
 
 #endif

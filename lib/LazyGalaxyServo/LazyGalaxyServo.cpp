@@ -6,17 +6,26 @@
 
 #include <LazyGalaxyServo.h>
 
+MyServo::MyServo() : PinComponent(0) {}
+
 MyServo::MyServo(uint8_t pin) : PinComponent(pin)
 {
-  lastAngle = 90;
+  _lastAngle = 90;
 }
 
-MyServo::MyServo(uint8_t pin, int angle) : PinComponent(pin)
+MyServo::MyServo(uint8_t pin, uint8_t angle) : PinComponent(pin)
 {
-  lastAngle = angle;
+  _lastAngle = angle;
 }
 
-int MyServo::setAngle(int angle)
+void MyServo::setup()
+{
+  _servo.attach(_pin);
+  setAngle(_lastAngle);
+  Serial.println("setup servo on pin " + String(_pin) + " at angle " + String(_lastAngle));
+}
+
+uint8_t MyServo::setAngle(uint8_t angle)
 {
   if (angle < 0)
     angle = 0;
@@ -24,24 +33,18 @@ int MyServo::setAngle(int angle)
   if (angle > 180)
     angle = 180;
 
-  servo.write(angle);
-  delay(abs(lastAngle - angle) * 3);
-  lastAngle = angle;
-  return lastAngle;
+  _servo.write(angle);
+  uint8_t diff = abs(_lastAngle - angle);
+  _lastAngle = angle;
+  return diff;
 }
 
-int MyServo::getLastAngle()
+uint8_t MyServo::addAngle(uint8_t angle)
 {
-  return lastAngle;
+  return setAngle(_lastAngle + angle);
 }
 
-int MyServo::addAngle(int angle)
+uint8_t MyServo::getLastAngle()
 {
-  return setAngle(lastAngle + angle);
-}
-
-void MyServo::setup()
-{
-  servo.attach(_pin);
-  setAngle(lastAngle);
+  return _lastAngle;
 }
