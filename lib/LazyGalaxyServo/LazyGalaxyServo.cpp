@@ -6,7 +6,9 @@
 
 #include <LazyGalaxyServo.h>
 
-MyServo::MyServo() : PinComponent(0) {}
+MyServo::MyServo() : PinComponent(D0)
+{
+}
 
 MyServo::MyServo(uint8_t pin) : PinComponent(pin)
 {

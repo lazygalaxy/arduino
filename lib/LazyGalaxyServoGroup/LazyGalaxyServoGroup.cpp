@@ -6,19 +6,27 @@
 
 #include <LazyGalaxyServoGroup.h>
 
-ServoGroup::ServoGroup(uint8_t pin1, uint8_t pin2, uint8_t pin3)
+ServoGroup::ServoGroup(uint8_t total, uint8_t pins[])
 {
-  _total = 3;
+  _total = total;
   _servos = new MyServo[_total];
-  _servos[0] = MyServo(pin1);
-  _servos[1] = MyServo(pin2);
-  _servos[2] = MyServo(pin3);
+  // for (int i = 0; i < _total; i++)
+  //  _servos[i] = MyServo(pins[i]);
+}
+
+ServoGroup::ServoGroup(uint8_t total, uint8_t pins[], uint8_t angles[])
+{
+  _total = total;
+  _servos = new MyServo[_total];
+  for (int i = 0; i < _total; i++)
+    _servos[i] = MyServo(pins[i], angles[i]);
 }
 
 void ServoGroup::setup()
 {
   for (int i = 0; i < _total; i++)
     _servos[i].setup();
+  delay(1000);
 }
 
 void ServoGroup::setAngles(uint8_t angles[])

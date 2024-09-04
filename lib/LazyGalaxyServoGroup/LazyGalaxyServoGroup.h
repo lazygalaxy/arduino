@@ -12,11 +12,12 @@
 class ServoGroup
 {
 private:
-  uint8_t _total;
-  MyServo *_servos;
+  uint8_t _total = 0;
+  MyServo *_servos = nullptr;
 
 public:
-  ServoGroup(uint8_t pin1, uint8_t pin2, uint8_t pin3);
+  ServoGroup(uint8_t total, uint8_t pins[]);
+  ServoGroup(uint8_t total, uint8_t pins[], uint8_t angles[]);
   void setup();
   void setAngles(uint8_t angles[]);
   void addAngles(uint8_t angles[]);
