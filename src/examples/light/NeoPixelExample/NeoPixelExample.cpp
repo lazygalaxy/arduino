@@ -1,5 +1,5 @@
 /*
-   Circus.ino - Example on how to use the LazyGalaxy NeoPixel library.
+   Example on how to use the LazyGalaxy NeoPixel library.
    Created by LazyGalaxy - Evangelos Papakonstantis, November 8, 2018.
    Released into the public domain.
 */
@@ -12,13 +12,16 @@ NeoPixel strip(D11, 33);
 
 void allOff(unsigned long time) { strip.off(); }
 
-void wipeSequenceReverse(unsigned long time) {
+void wipeSequenceReverse(unsigned long time)
+{
   strip.setWipeSequence(0.75, 1.0, 0.5, DELAY, true, allOff);
 }
-void wipeSequence(unsigned long time) {
+void wipeSequence(unsigned long time)
+{
   strip.setWipeSequence(0.5, 1.0, 0.5, DELAY, false, wipeSequenceReverse);
 }
-void chaseSequence(unsigned long time) {
+void chaseSequence(unsigned long time)
+{
   strip.setChaseSequence(0, 1.0, 0.5, DELAY, 1000, 3);
 }
 
@@ -26,7 +29,8 @@ void allRed(unsigned long time) { strip.setNoSequence(0.00, 1.0, 0.5); }
 void allGreen(unsigned long time) { strip.setNoSequence(0.33, 1.0, 0.5); }
 void allBlue(unsigned long time) { strip.setNoSequence(0.66, 1.0, 0.5); }
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   strip.setup();
 
@@ -42,7 +46,8 @@ void setup() {
   Timer::scheduleTask(8000, wipeSequence);
 }
 
-void loop() {
+void loop()
+{
   // update all LazyGalaxy tasks
   Timer::updateTasks();
 }

@@ -16,9 +16,10 @@ class Button : public PinComponent
 public:
   Button(uint8_t buttonPin, uint8_t ledPin = -1);
   int getClicks(unsigned int delay = 200);
-  boolean isLongPressed(unsigned int duration);
+  boolean isLongPressed(unsigned int duration = 1000);
 
   bool isOn();
+  bool isOff();
   void setOn(bool buttonOn);
 
 private:

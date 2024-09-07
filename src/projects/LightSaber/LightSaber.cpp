@@ -1,86 +1,78 @@
-// #include <Adafruit_MPU6050.h>
-// #include <Adafruit_Sensor.h>
-#include <LazyGalaxySpeaker.h>
-#include <LazyGalaxyTimer.h>
+/*
+   LightSaber.cpp - LightSaber implementation.
+   Created by LazyGalaxy - Evangelos Papakonstantis, September 6, 2024.
+   Released into the public domain.
+*/
 
-// Adafruit_MPU6050 accelgyro;
-MySpeaker speaker(D13);
+#include <LazyGalaxyButton.h>
+#include <LazyGalaxyNeoPixel.h>
 
-unsigned long ACC, GYR, COMPL;
-int freq_prev = 20;
-float k = 0.2;
+static const unsigned int DELAY = 10;
+static const float SAT = 1.0;
+static const float VAL = 0.5;
 
-int counter = 30;
-int change = +1;
+Button button(D2, D3);
+NeoPixel strip(D11, 33);
 
-void playHum(unsigned long time)
+long taskId = -1;
+float hue = 0.0;
+
+void turnOnFinalCallback(unsigned long time)
 {
-  // unsigned int freq = (cos(time / 100) * 100) + 550;
-  // Serial.println(freq);
-  if (counter >= 2000)
-  {
-    change = -1;
-  }
-  else if (counter <= 500)
-  {
-    change = +1;
-  }
-  counter += change;
-  speaker.playNote(counter);
 }
 
-void setup(void)
+void changeHueCallback(unsigned long time)
+{
+  if (taskId != -1)
+  {
+    hue += 0.01;
+    if (hue > 1.0)
+    {
+      hue = 0.0;
+    }
+    strip.setNoSequence(hue, SAT, VAL);
+    taskId = -1;
+  }
+}
+
+void setup()
 {
   Serial.begin(9600);
-  while (!Serial)
-  {
-    delay(10); // will pause Zero, Leonardo, etc until serial console opens
-  }
-
-  // Try to initialize!
-  // if (!accelgyro.begin()) {
-  //   Serial.println("Failed to find MPU6050 chip");
-  //   while (1) {
-  //     delay(10);
-  //   }
-  // }
-
-  // accelgyro.setAccelerometerRange(MPU6050_RANGE_16_G);
-  // accelgyro.setGyroRange(MPU6050_RANGE_250_DEG);
-  // accelgyro.setFilterBandwidth(MPU6050_BAND_21_HZ);
-  // Serial.println("");
-  // delay(100);
-
-  Timer::scheduleTask(3000, playHum);
+  strip.setup();
 }
 
 void loop()
 {
-  // sensors_event_t a, g, temp;
-  // accelgyro.getEvent(&a, &g, &temp);
-
-  // // vector sum
-  // ACC = sq((long)a.acceleration.x) + sq((long)a.acceleration.y) +
-  //       sq((long)a.acceleration.z);
-  // ACC = sqrt(ACC);
-  // GYR = sq((long)g.gyro.x) + sq((long)g.gyro.y) + sq((long)g.gyro.z);
-  // GYR = sqrt((long)GYR);
-  // COMPL = ACC + GYR;
-  // /*
-  //    // отладка работы IMU
-  //    Serial.print("$");
-  //    Serial.print(gyroX);
-  //    Serial.print(" ");
-  //    Serial.print(gyroY);
-  //    Serial.print(" ");
-  //    Serial.print(gyroZ);
-  //    Serial.println(";");
-  // */
-  // int freq_new = (long)COMPL * COMPL;  // parabolic tone change
-  //                                      // freq = constrain(freq, 18, 300);
-  // freq_new = (freq_prev * k) + (freq_new * (1 - k));  // smooth filter
-  // // Serial.println(freq_new);
-  // freq_prev = freq_new;
-
+  // first update all tasks
   Timer::updateTasks();
+
+  // then implement the light saber logic
+  if (button.isOff() && button.getClicks() > 0)
+  {
+    // turn on the light saber with any button click
+    button.setOn(true);
+    strip.setWipeSequence(hue, SAT, VAL, DELAY, false, turnOnFinalCallback);
+  }
+  else if (button.isOn())
+  {
+    if (button.isLongPressed())
+    {
+      // if there is a long press cycle the hue color
+      if (taskId == -1)
+      {
+        taskId = Timer::scheduleTask(100, changeHueCallback);
+      }
+    }
+    else if (button.getClicks() == 1)
+    {
+      // if there is 1 click, stop the light saber
+      strip.off();
+      button.setOn(false);
+    }
+    else
+    {
+      // if there is no button press
+      taskId = -1;
+    }
+  }
 }

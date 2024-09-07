@@ -9,29 +9,34 @@
 
 #include <LazyGalaxyCommon.h>
 
-class Timer {
- public:
-  static Timer* getInstance() {
-    static Timer* instance = new Timer();
+class Timer
+{
+public:
+  static Timer *getInstance()
+  {
+    static Timer *instance = new Timer();
     return instance;
   }
 
-  static void scheduleTask(unsigned int delay, taskCallbackPtr updateCallback) {
-    getInstance()->schedule(millis() + delay, updateCallback);
+  static long scheduleTask(unsigned int delay, taskCallbackPtr updateCallback)
+  {
+    return getInstance()->schedule(millis() + delay, updateCallback);
   }
 
   static void updateTasks() { getInstance()->update(millis()); }
 
   unsigned long schedule(unsigned long triggerTime,
                          taskCallbackPtr updateCallback);
-  unsigned long schedule(unsigned long triggerTime, Component* component);
+  unsigned long schedule(unsigned long triggerTime, Component *component);
   bool unschedule(unsigned long taskId);
   void update(unsigned long time);
 
- private:
-  struct TimerTask {
+private:
+  struct TimerTask
+  {
     TimerTask(unsigned long id, unsigned long triggerTime,
-              taskCallbackPtr updateCallback) {
+              taskCallbackPtr updateCallback)
+    {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
@@ -41,7 +46,8 @@ class Timer {
     }
 
     TimerTask(unsigned long id, unsigned long triggerTime,
-              Component* component) {
+              Component *component)
+    {
       this->id = id;
       this->triggerTime = triggerTime;
       this->isActive = true;
@@ -54,17 +60,17 @@ class Timer {
     unsigned long triggerTime;
     bool isActive;
     taskCallbackPtr updateCallback;
-    Component* component;
-    TimerTask* next;
+    Component *component;
+    TimerTask *next;
   };
 
   Timer();
-  void addTask(TimerTask* task);
+  void addTask(TimerTask *task);
   void cleanTasks();
 
   unsigned long idCounter = 0;
-  TimerTask* head = nullptr;
-  TimerTask* tail = nullptr;
+  TimerTask *head = nullptr;
+  TimerTask *tail = nullptr;
 };
 
 #endif

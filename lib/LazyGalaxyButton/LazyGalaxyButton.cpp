@@ -6,30 +6,38 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t buttonPin, uint8_t ledPin) : PinComponent(buttonPin) {
+Button::Button(uint8_t buttonPin, uint8_t ledPin) : PinComponent(buttonPin)
+{
   pinMode(buttonPin, INPUT_PULLUP);
-  if (ledPin >= 0) {
+  if (ledPin >= 0)
+  {
     led = new LED(ledPin);
   }
 }
 
-int Button::getClicks(unsigned int delay) {
+int Button::getClicks(unsigned int delay)
+{
   unsigned long time = millis();
   int value = digitalRead(_pin);
 
-  if (value == LOW && _pressTime == 0) {
+  if (value == LOW && _pressTime == 0)
+  {
     _pressTime = time;
     _releaseTime = 0;
-  } else if (value == HIGH && _prevValue == LOW) {
+  }
+  else if (value == HIGH && _prevValue == LOW)
+  {
     _clickCounter += 1;
     _releaseTime = time;
     _pressTime = 0;
   }
 
-  if (_releaseTime != 0 && (time - _releaseTime) >= delay) {
+  if (_releaseTime != 0 && (time - _releaseTime) >= delay)
+  {
     int clickCounter = _clickCounter;
 
-    if (_longPressed) {
+    if (_longPressed)
+    {
       clickCounter = 0;
     }
 
@@ -46,9 +54,11 @@ int Button::getClicks(unsigned int delay) {
   return 0;
 }
 
-boolean Button::isLongPressed(unsigned int duration) {
+boolean Button::isLongPressed(unsigned int duration)
+{
   int value = digitalRead(_pin);
-  if (value == LOW) {
+  if (value == LOW)
+  {
     unsigned long time = millis();
     _longPressed = (_pressTime != 0 && (time - _pressTime) >= duration);
     return _longPressed;
@@ -58,11 +68,17 @@ boolean Button::isLongPressed(unsigned int duration) {
 
 bool Button::isOn() { return _buttonOn; }
 
-void Button::setOn(bool buttonOn) {
+bool Button::isOff() { return !_buttonOn; }
+
+void Button::setOn(bool buttonOn)
+{
   _buttonOn = buttonOn;
-  if (led != nullptr && buttonOn) {
+  if (led != nullptr && buttonOn)
+  {
     led->setLight(true);
-  } else if (led != nullptr && !buttonOn) {
+  }
+  else if (led != nullptr && !buttonOn)
+  {
     led->setLight(false);
   }
 }
