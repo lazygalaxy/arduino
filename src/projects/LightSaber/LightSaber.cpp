@@ -17,10 +17,6 @@ NeoPixel strip(D11, 33);
 long taskId = -1;
 float hue = 0.0;
 
-void turnOnFinalCallback(unsigned long time)
-{
-}
-
 void changeHueCallback(unsigned long time)
 {
   if (taskId != -1)
@@ -51,7 +47,7 @@ void loop()
   {
     // turn on the light saber with any button click
     button.setOn(true);
-    strip.setWipeSequence(hue, SAT, VAL, DELAY, false, turnOnFinalCallback);
+    strip.setWipeSequence(hue, SAT, VAL, DELAY, false);
   }
   else if (button.isOn())
   {
@@ -59,9 +55,7 @@ void loop()
     {
       // if there is a long press cycle the hue color
       if (taskId == -1)
-      {
         taskId = Timer::scheduleTask(100, changeHueCallback);
-      }
     }
     else if (button.getClicks() == 1)
     {
