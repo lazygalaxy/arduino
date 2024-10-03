@@ -1,5 +1,5 @@
 /*
-   AsyncMelody.ino - Asynchronous melody playing example.
+   SpeakerExample.cpp - Asynchronous melody playing example.
    Created by LazyGalaxy - Evangelos Papakonstantis, November 22, 2018.
    Released into the public domain.
 */
@@ -8,7 +8,7 @@
 #include <LazyGalaxyTimer.h>
 
 // any pin is ok for a speaker/buzzer, digital(with and without PWM) or analog
-MySpeaker speaker(D13);
+MySpeaker speaker(D9);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -47,8 +47,6 @@ void playMelody3(unsigned long time)
 
 void playMelody2(unsigned long time)
 {
-  // stop playing the current melody, this will interrupt the melody playing
-  speaker.stopMelody();
   // play the second melody, provide a note callback and final callback to play
   // the third melody
   speaker.playMelody(jingleBellsMelody, noteCallback, playMelody3);
@@ -57,6 +55,8 @@ void playMelody2(unsigned long time)
 void setup()
 {
   Serial.begin(9600);
+  speaker.enableDebug();
+
   // play the frist melody
   speaker.playMelody(santaClausMelody);
   // schedule a task/function callback to play the second melody in 2 seconds

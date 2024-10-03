@@ -9,6 +9,7 @@
 
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
+#include <TMRpcm.h>
 
 // Tones for easy reference
 #define TEND 0 // tone end
@@ -126,17 +127,20 @@ public:
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
                   taskCallbackPtr finalCallback = nullptr);
-  void stopMelody();
-  bool isPlaying();
+  void playWav(char *filename, taskCallbackPtr finalCallback = nullptr);
+  void silence();
+  bool isNotePlaying();
   unsigned long update(unsigned long time) override;
 
 private:
+  bool _isWavPlayed = false;
   bool _isNotePlaying = false;
   Melody *_melody = nullptr;
   int _noteIndex;
-  unsigned long _melodyTaskId = 0;
+  unsigned long _taskId = 0;
   noteCallbackPtr _noteCallback;
   taskCallbackPtr _finalCallback;
+  TMRpcm tmrpcm;
 };
 
 #endif

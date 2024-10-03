@@ -36,12 +36,32 @@ public:
 class PinComponent : public Component
 {
 public:
-  explicit PinComponent(uint8_t pin) { _pin = pin; }
-  bool isDigital() { return _pin < A0; }
+  explicit PinComponent(uint8_t pin)
+  {
+    _pin = pin;
+    _debug = false;
+  }
+
   uint8_t getPin() { return _pin; }
+
+  bool isDigital() { return _pin < A0; }
+
+  bool isDebug() { return _debug; }
+
+  void enableDebug()
+  {
+    _debug = true;
+  }
+
+  void debugPrintln(String message)
+  {
+    if (isDebug())
+      Serial.println(message);
+  }
 
 protected:
   uint8_t _pin;
+  bool _debug;
 };
 
 #endif

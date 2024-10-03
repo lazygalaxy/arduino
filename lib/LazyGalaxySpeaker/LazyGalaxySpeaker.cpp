@@ -9,13 +9,14 @@
 MySpeaker::MySpeaker(uint8_t pin) : PinComponent(pin)
 {
   pinMode(_pin, OUTPUT);
-  stopMelody();
+  silence();
+  tmrpcm.speakerPin = _pin;
 }
 
 void MySpeaker::playNote(int note)
 {
-  tone(_pin, note);
   _isNotePlaying = true;
+  tone(_pin, note);
 }
 
 void MySpeaker::stopNote()
@@ -24,37 +25,67 @@ void MySpeaker::stopNote()
   _isNotePlaying = false;
 }
 
-void MySpeaker::stopMelody()
+void MySpeaker::silence()
 {
+  _isWavPlayed = false;
+  tmrpcm.disable();
+
   _melody = nullptr;
   _noteCallback = nullptr;
   _finalCallback = nullptr;
   _noteIndex = -1;
-  if (_melodyTaskId > 0)
+  if (_taskId > 0)
   {
-    Timer::getInstance()->unschedule(_melodyTaskId);
+    Timer::getInstance()->unschedule(_taskId);
   }
-  _melodyTaskId = 0;
+  _taskId = 0;
   stopNote();
 }
 
 void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback,
                            taskCallbackPtr finalCallback)
 {
-  stopMelody();
+  silence();
   _melody = melody;
   _noteCallback = noteCallback;
   _finalCallback = finalCallback;
   _noteIndex = 0;
-  _melodyTaskId = Timer::getInstance()->schedule(update(millis()), this);
+  _taskId = Timer::getInstance()->schedule(update(millis()), this);
 }
 
-bool MySpeaker::isPlaying() { return _noteIndex != -1; }
+void MySpeaker::playWav(char *filename, taskCallbackPtr finalCallback)
+{
+  silence();
+  _finalCallback = finalCallback;
+  _taskId = Timer::getInstance()->schedule(update(millis()), this);
+
+  debugPrintln("playing wav");
+  tmrpcm.play(filename);
+  _isWavPlayed = true;
+}
+
+bool MySpeaker::isNotePlaying() { return _noteIndex != -1; }
 
 unsigned long MySpeaker::update(unsigned long time)
 {
+  // isWavPlayed indicates we need to play a wav file
+  if (_isWavPlayed == true)
+  {
+    if (!tmrpcm.isPlaying())
+    {
+      debugPrintln("wav playing ended");
+      taskCallbackPtr tempFinalCallback = _finalCallback;
+      silence();
+      if (tempFinalCallback != nullptr)
+        tempFinalCallback(time);
+    }
+    else
+    {
+      return time + 50;
+    }
+  }
   // a positive index indicates we have a melody to play
-  if (_noteIndex >= 0)
+  else if (_noteIndex >= 0)
   {
     if (_melody->notes[_noteIndex])
     {
@@ -76,11 +107,9 @@ unsigned long MySpeaker::update(unsigned long time)
     else
     {
       taskCallbackPtr tempFinalCallback = _finalCallback;
-      stopMelody();
+      silence();
       if (tempFinalCallback != nullptr)
-      {
         tempFinalCallback(time);
-      }
     }
   }
   return time;

@@ -67,7 +67,7 @@
 #include "MPU6050.h"
 #include <toneAC.h>  // hum generation library
 #include "FastLED.h" // addressable LED library
-#include <EEPROM.h>
+// #include <EEPROM.h>
 
 CRGB leds[NUM_LEDS];
 #define SD_ChipSelectPin 10
@@ -198,6 +198,16 @@ void setColor(byte color)
         blue = 255;
         break;
     }
+
+    if (DEBUG)
+    {
+        Serial.print(F("setPixel "));
+        Serial.print(String(red));
+        Serial.print(F(" "));
+        Serial.print(String(green));
+        Serial.print(F(" "));
+        Serial.println(String(blue));
+    }
 }
 
 byte voltage_measure()
@@ -270,17 +280,20 @@ void setup()
         SD.begin(SD_ChipSelectPin);
     }
 
-    if ((EEPROM.read(0) >= 0) && (EEPROM.read(0) <= 5))
-    {                              // check first start
-        nowColor = EEPROM.read(0); // remember color
-        HUMmode = EEPROM.read(1);  // remember mode
-    }
-    else
-    {                       // first start
-        EEPROM.write(0, 0); // set default
-        EEPROM.write(1, 0); // set default
-        nowColor = 0;       // set default
-    }
+    // if ((EEPROM.read(0) >= 0) && (EEPROM.read(0) <= 5))
+    // {                              // check first start
+    //     nowColor = EEPROM.read(0); // remember color
+    //     HUMmode = EEPROM.read(1);  // remember mode
+    // }
+    // else
+    // {                       // first start
+    //     EEPROM.write(0, 0); // set default
+    //     EEPROM.write(1, 0); // set default
+    //     nowColor = 0;       // set default
+    // }
+
+    nowColor = 2;
+    HUMmode = false;
 
     setColor(nowColor);
     byte capacity = voltage_measure();                       // get battery level
@@ -314,8 +327,8 @@ void swingTick()
             {
                 nowNumber = random(5);
                 // читаем название трека из PROGMEM
-                // strcpy_P(BUFFER, (char *)pgm_read_word(&(swings[nowNumber])));
-                // tmrpcm.play(BUFFER);
+                strcpy_P(BUFFER, (char *)pgm_read_word(&(swings[nowNumber])));
+                tmrpcm.play(BUFFER);
                 humTimer = millis() - 9000 + swing_time[nowNumber];
                 swing_flag = 0;
                 swing_timer = millis();
@@ -325,8 +338,8 @@ void swingTick()
             {
                 nowNumber = random(5);
                 // читаем название трека из PROGMEM
-                // strcpy_P(BUFFER, (char *)pgm_read_word(&(swings_L[nowNumber])));
-                // tmrpcm.play(BUFFER);
+                strcpy_P(BUFFER, (char *)pgm_read_word(&(swings_L[nowNumber])));
+                tmrpcm.play(BUFFER);
                 humTimer = millis() - 9000 + swing_time_L[nowNumber];
                 swing_flag = 0;
                 swing_timer = millis();
@@ -522,12 +535,12 @@ void on_off_sound()
             if (DEBUG)
                 Serial.println(F("SABER OFF"));
             ls_state = false;
-            if (eeprom_flag)
-            {
-                eeprom_flag = 0;
-                EEPROM.write(0, nowColor); // write color in EEPROM
-                EEPROM.write(1, HUMmode);  // write mode in EEPROM
-            }
+            // if (eeprom_flag)
+            // {
+            //     eeprom_flag = 0;
+            //     EEPROM.write(0, nowColor); // write color in EEPROM
+            //     EEPROM.write(1, HUMmode);  // write mode in EEPROM
+            // }
         }
         ls_chg_state = 0;
     }
@@ -568,7 +581,7 @@ void strikeTick()
         nowNumber = random(8);
         // читаем название трека из PROGMEM
         strcpy_P(BUFFER, (char *)pgm_read_word(&(strikes_short[nowNumber])));
-        // tmrpcm.play(BUFFER);
+        tmrpcm.play(BUFFER);
         hit_flash();
         if (!HUMmode)
             bzzTimer = millis() + strike_s_time[nowNumber] - FLASH_DELAY;
@@ -583,7 +596,7 @@ void strikeTick()
         nowNumber = random(8);
         // читаем название трека из PROGMEM
         strcpy_P(BUFFER, (char *)pgm_read_word(&(strikes[nowNumber])));
-        // tmrpcm.play(BUFFER);
+        tmrpcm.play(BUFFER);
         hit_flash();
         if (!HUMmode)
             bzzTimer = millis() + strike_time[nowNumber] - FLASH_DELAY;
