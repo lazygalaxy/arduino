@@ -74,7 +74,7 @@ void loop()
   // update all LazyGalaxy tasks
   Timer::updateTasks();
 
-  if (!speaker.isPlaying() && button1.getClicks() > 0)
+  if (!speaker.isNotePlaying() && button1.getClicks() > 0)
   {
     strip.off();
     button1.setOn(true);
@@ -84,7 +84,7 @@ void loop()
     speaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
   }
 
-  if (!speaker.isPlaying() && button2.getClicks() > 0)
+  if (!speaker.isNotePlaying() && button2.getClicks() > 0)
   {
     strip.off();
     button1.setOn(false);
@@ -94,7 +94,7 @@ void loop()
     speaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
   }
 
-  if (!speaker.isPlaying() && button3.getClicks() > 0)
+  if (!speaker.isNotePlaying() && button3.getClicks() > 0)
   {
     strip.off();
     button1.setOn(false);
@@ -104,14 +104,14 @@ void loop()
     speaker.playMelody(santaClausMelody, noteCallback, finalCallback);
   }
 
-  if (!speaker.isPlaying() && button4.getClicks() > 0)
+  if (!speaker.isNotePlaying() && button4.getClicks() > 0)
   {
     strip.off();
     button1.setOn(false);
     button2.setOn(false);
     button3.setOn(false);
     button4.setOn(true);
-    speaker.stopMelody();
+    speaker.silence();
 
     float prob = random(100) / 100.0f;
     float hue = random(100) / 100.0f;
