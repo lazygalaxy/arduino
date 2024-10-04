@@ -1,5 +1,5 @@
 /*
-   LazyGalaxySDCard.spp - Library for SD Card.
+   LazyGalaxySDCard.cpp - Library for SD Card.
    Created by LazyGalaxy - Evangelos Papakonstantis, September 22, 2024.
    Released into the public domain.
  */

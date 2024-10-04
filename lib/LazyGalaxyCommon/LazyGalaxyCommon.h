@@ -53,6 +53,12 @@ public:
     _debug = true;
   }
 
+  void debugPrint(String message)
+  {
+    if (isDebug())
+      Serial.print(message);
+  }
+
   void debugPrintln(String message)
   {
     if (isDebug())

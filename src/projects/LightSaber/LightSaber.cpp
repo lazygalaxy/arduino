@@ -5,6 +5,7 @@
 */
 
 #include <LazyGalaxyButton.h>
+#include <LazyGalaxyMotion.h>
 #include <LazyGalaxyNeoPixel.h>
 
 static const unsigned int DELAY = 10;
