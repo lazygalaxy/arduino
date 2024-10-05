@@ -19,7 +19,7 @@ Button button2(D4, D5);
 Button button3(D6, D7);
 Button button4(D8, D9);
 NeoPixel strip(D11, 123);
-MySpeaker speaker(D12);
+MySpeaker speaker(D12, 5);
 
 boolean reverse = false;
 

@@ -6,22 +6,24 @@
 
 #include <LazyGalaxySpeaker.h>
 
-MySpeaker::MySpeaker(uint8_t pin) : PinComponent(pin)
+MySpeaker::MySpeaker(uint8_t pin, char volume) : PinComponent(pin)
 {
   pinMode(_pin, OUTPUT);
   silence();
   tmrpcm.speakerPin = _pin;
+  tmrpcm.setVolume(volume);
+  tmrpcm.quality(1);
 }
 
 void MySpeaker::playNote(int note)
 {
   _isNotePlaying = true;
-  tone(_pin, note);
+  toneAC(note);
 }
 
 void MySpeaker::stopNote()
 {
-  noTone(_pin);
+  noToneAC();
   _isNotePlaying = false;
 }
 

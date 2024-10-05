@@ -4,11 +4,12 @@
    Released into the public domain.
 */
 
+#include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-// any pin is ok for a speaker/buzzer, digital(with and without PWM) or analog
-MySpeaker speaker(D9);
+MySDCard sdcard(D10);
+MySpeaker speaker(D9, 5);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -39,28 +40,31 @@ void noteCallback(unsigned long time, int note)
   Serial.println("played " + String(note) + " @" + String(time));
 }
 
-void playMelody3(unsigned long time)
+void playWav2(unsigned long time)
 {
-  // play the third melody, provide a note callback
-  speaker.playMelody(merryChristmasMelody, noteCallback);
+  speaker.playWav("OFF.wav");
 }
 
 void playMelody2(unsigned long time)
 {
-  // play the second melody, provide a note callback and final callback to play
-  // the third melody
-  speaker.playMelody(jingleBellsMelody, noteCallback, playMelody3);
+  speaker.playMelody(merryChristmasMelody, noteCallback, playWav2);
+}
+
+void playWav1(unsigned long time)
+{
+  speaker.playWav("ON.wav", playMelody2);
 }
 
 void setup()
 {
   Serial.begin(9600);
   speaker.enableDebug();
+  sdcard.setup();
 
   // play the frist melody
-  speaker.playMelody(santaClausMelody);
+  speaker.playMelody(santaClausMelody, noteCallback);
   // schedule a task/function callback to play the second melody in 2 seconds
-  Timer::scheduleTask(2000, playMelody2);
+  Timer::scheduleTask(2000, playWav1);
 }
 
 void loop()

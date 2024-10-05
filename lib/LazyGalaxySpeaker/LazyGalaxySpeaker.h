@@ -10,6 +10,7 @@
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 #include <TMRpcm.h>
+#include <toneAC.h>
 
 // Tones for easy reference
 #define TEND 0 // tone end
@@ -122,7 +123,7 @@ struct Melody
 class MySpeaker : public PinComponent
 {
 public:
-  MySpeaker(uint8_t pin);
+  MySpeaker(uint8_t pin, char volume);
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
