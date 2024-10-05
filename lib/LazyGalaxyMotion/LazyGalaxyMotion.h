@@ -11,10 +11,12 @@
 #include <LazyGalaxyCommon.h>
 #include "MPU6050.h"
 
+typedef void (*motionCallbackPtr)(unsigned long time, unsigned long accel, unsigned long gyro);
+
 class MyMotion : public PinComponent
 {
 public:
-  MyMotion();
+  MyMotion(unsigned long updateTime = 50, motionCallbackPtr motionCallback = nullptr);
   void setup() override;
   unsigned long update(unsigned long time) override;
   int16_t getAx();
@@ -30,6 +32,8 @@ private:
   MPU6050 _accelgyro;
   int16_t _ax, _ay, _az, _gx, _gy, _gz;
   unsigned long _accel, _gyro;
+  unsigned long _updateTime;
+  motionCallbackPtr _motionCallback;
 };
 
 #endif

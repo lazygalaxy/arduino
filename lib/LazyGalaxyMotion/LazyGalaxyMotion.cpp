@@ -6,8 +6,10 @@
 
 #include <LazyGalaxyMotion.h>
 
-MyMotion::MyMotion() : PinComponent(255)
+MyMotion::MyMotion(unsigned long updateTime, motionCallbackPtr motionCallback) : PinComponent(255)
 {
+  _updateTime = updateTime;
+  _motionCallback = motionCallback;
 }
 
 void MyMotion::setup()
@@ -44,9 +46,14 @@ unsigned long MyMotion::update(unsigned long time)
   _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
   _gyro = sqrt((long)_gyro);
 
+  if (_motionCallback != nullptr)
+  {
+    _motionCallback(time, _accel, _gyro);
+  }
+
   debugPrintln(String(getAccel()) + " " + String(getGyro()) + " " + String(getAx()) + " " + String(getAy()) + " " + String(getAz()) + " " + String(getGx()) + " " + String(getGy()) + " " + String(getGz()));
 
-  return time + 1000;
+  return time + _updateTime;
 }
 
 int16_t MyMotion::getAx() { return _ax; }
