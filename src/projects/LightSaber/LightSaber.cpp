@@ -22,21 +22,16 @@ NeoPixel strip(D6, 33);
 
 long taskId = -1;
 float hue = 0.0;
-boolean humEnable = false;
 
-void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
-{
-  if (humEnable)
-  {
-    unsigned long COMPL = accel + gyro;
-    int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
-    freq = constrain(freq, 18, 300);
-    int freq_f = freq * k + freq_f * (1 - k); // smooth filter
-    // speaker.playNote(freq_f);
-  }
-}
-
-// MyMotion motion(100);
+// void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
+// {
+//   unsigned long COMPL = accel + gyro;
+//   int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
+//   freq = constrain(freq, 18, 300);
+//   int freq_f = freq * k + freq_f * (1 - k); // smooth filter
+//                                             // speaker.playNote(freq_f);
+// }
+// MyMotion motion(2000);
 
 void changeHueCallback(unsigned long time)
 {
@@ -55,6 +50,10 @@ void changeHueCallback(unsigned long time)
 void setup()
 {
   Serial.begin(9600);
+  Timer::getInstance()->enableDebug();
+  sdcard.enableDebug();
+  // motion.enableDebug();
+  speaker.enableDebug();
 
   sdcard.setup();
   strip.setup();
@@ -64,11 +63,6 @@ void setup()
 void completeOff()
 {
   button.setOn(false);
-}
-
-void completeOn()
-{
-  humEnable = true;
 }
 
 void loop()
@@ -82,7 +76,7 @@ void loop()
     // turn on the light saber with any button click
     button.setOn(true);
     strip.setWipeSequence(hue, SAT, VAL, DELAY, false);
-    speaker.playWav("ON.wav", completeOn);
+    speaker.playWav("ON.wav");
   }
   else if (button.isOn())
   {
@@ -96,7 +90,6 @@ void loop()
     {
       // if there is 1 click, stop the light saber
       strip.setWipeSequence(0.0, 0.0, 0.0, DELAY, true);
-      humEnable = false;
       speaker.playWav("OFF.wav", completeOff);
     }
     else

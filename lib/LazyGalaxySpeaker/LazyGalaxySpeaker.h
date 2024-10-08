@@ -123,7 +123,7 @@ struct Melody
 class MySpeaker : public PinComponent
 {
 public:
-  MySpeaker(uint8_t pin, char volume);
+  MySpeaker(uint8_t pin, char volume = 5);
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,

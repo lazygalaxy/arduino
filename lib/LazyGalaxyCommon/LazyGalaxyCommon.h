@@ -66,8 +66,8 @@ public:
   }
 
 protected:
-  uint8_t _pin;
   bool _debug;
+  uint8_t _pin;
 };
 
 #endif

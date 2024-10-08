@@ -47,6 +47,8 @@ int Button::getClicks(unsigned int delay)
     _clickCounter = 0;
     _longPressed = false;
 
+    debugPrintln("getClicks returns " + String(clickCounter));
+
     return clickCounter;
   }
 

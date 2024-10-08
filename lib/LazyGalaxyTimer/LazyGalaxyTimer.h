@@ -25,6 +25,11 @@ public:
 
   static void updateTasks() { getInstance()->update(millis()); }
 
+  bool isDebug();
+  void debugPrint(String message);
+  void debugPrintln(String message);
+  void enableDebug();
+
   unsigned long schedule(unsigned long triggerTime,
                          taskCallbackPtr updateCallback);
   unsigned long schedule(unsigned long triggerTime, Component *component);
@@ -32,6 +37,7 @@ public:
   void update(unsigned long time);
 
 private:
+  bool _debug;
   struct TimerTask
   {
     TimerTask(unsigned long id, unsigned long triggerTime,

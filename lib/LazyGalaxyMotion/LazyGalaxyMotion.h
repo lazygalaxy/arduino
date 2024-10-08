@@ -30,7 +30,7 @@ public:
 
 private:
   MPU6050 _accelgyro;
-  int16_t _ax, _ay, _az, _gx, _gy, _gz;
+  int16_t _ax, _ay, _az, _gx, _gy, _gz = 0;
   unsigned long _accel, _gyro;
   unsigned long _updateTime;
   motionCallbackPtr _motionCallback;

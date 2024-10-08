@@ -14,37 +14,37 @@ MyMotion::MyMotion(unsigned long updateTime, motionCallbackPtr motionCallback) :
 
 void MyMotion::setup()
 {
-  _accelgyro.initialize();
-  _accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
-  _accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
-  if (isDebug())
-  {
-    if (_accelgyro.testConnection())
-      Serial.println(F("MPU6050 OK"));
-    else
-      Serial.println(F("MPU6050 fail"));
-  }
+  //_accelgyro.initialize();
+  //_accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+  //_accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
+  // if (isDebug())
+  //{
+  //  if (_accelgyro.testConnection())
+  //     Serial.println(F("MPU6050 OK"));
+  //  else
+  //    Serial.println(F("MPU6050 fail"));
+  //}
 
   Timer::getInstance()->schedule(update(millis()), this);
 }
 
 unsigned long MyMotion::update(unsigned long time)
 {
-  _accelgyro.getMotion6(&_ax, &_ay, &_az, &_gx, &_gy, &_gz);
+  //_accelgyro.getMotion6(&_ax, &_ay, &_az, &_gx, &_gy, &_gz);
 
   // find absolute and divide on 100
-  int gyroX = abs(_gx / 100);
-  int gyroY = abs(_gy / 100);
-  int gyroZ = abs(_gz / 100);
-  int accelX = abs(_ax / 100);
-  int accelY = abs(_ay / 100);
-  int accelZ = abs(_az / 100);
+  // int gyroX = abs(_gx / 100);
+  // int gyroY = abs(_gy / 100);
+  // int gyroZ = abs(_gz / 100);
+  // int accelX = abs(_ax / 100);
+  // int accelY = abs(_ay / 100);
+  // int accelZ = abs(_az / 100);
 
   // vector sum
-  _accel = sq((long)accelX) + sq((long)accelY) + sq((long)accelZ);
-  _accel = sqrt(_accel);
-  _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
-  _gyro = sqrt((long)_gyro);
+  // _accel = sq((long)accelX) + sq((long)accelY) + sq((long)accelZ);
+  // _accel = sqrt(_accel);
+  // _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
+  // _gyro = sqrt((long)_gyro);
 
   if (_motionCallback != nullptr)
   {
@@ -52,7 +52,6 @@ unsigned long MyMotion::update(unsigned long time)
   }
 
   debugPrintln(String(getAccel()) + " " + String(getGyro()) + " " + String(getAx()) + " " + String(getAy()) + " " + String(getAz()) + " " + String(getGx()) + " " + String(getGy()) + " " + String(getGz()));
-
   return time + _updateTime;
 }
 
