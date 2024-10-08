@@ -31,7 +31,6 @@ void Timer::debugPrintln(String message)
 unsigned long Timer::schedule(unsigned long triggerTime,
                               taskCallbackPtr updateCallback)
 {
-  // debugPrintln("schedule callback task " + String(idCounter + 1));
   TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback);
   addTask(task);
   return task->id;
@@ -39,7 +38,6 @@ unsigned long Timer::schedule(unsigned long triggerTime,
 
 unsigned long Timer::schedule(unsigned long triggerTime, Component *component)
 {
-  // debugPrintln("schedule component task " + String(idCounter + 1));
   TimerTask *task = new TimerTask(++idCounter, triggerTime, component);
   addTask(task);
   return task->id;
@@ -48,97 +46,45 @@ unsigned long Timer::schedule(unsigned long triggerTime, Component *component)
 void Timer::addTask(TimerTask *task)
 {
   debugPrintln("added task " + String(task->id));
-  if (head == nullptr)
-  {
-    head = task;
-    tail = task;
-  }
-  else
-  {
-    tail->next = task;
-    tail = task;
-  }
-}
-
-void Timer::cleanTasks()
-{
-  TimerTask *current = head;
-  TimerTask *previous = nullptr;
-  while (current != nullptr)
-  {
-    if (!current->isActive)
-    {
-      TimerTask *temp = current;
-      if (previous == nullptr)
-      {
-        head = head->next;
-        if (head == nullptr)
-        {
-          tail = nullptr;
-        }
-        current = current->next;
-      }
-      else
-      {
-        previous->next = current->next;
-        if (current->next == nullptr)
-        {
-          tail = current;
-        }
-        current = current->next;
-      }
-      debugPrintln("delete task " + String(temp->id));
-      delete temp;
-    }
-    else
-    {
-      previous = current;
-      current = current->next;
-    }
-  }
+  tasks.put(task);
+  debugPrintln("task size now " + String(tasks.elements()));
 }
 
 bool Timer::unschedule(unsigned long taskId)
 {
-  TimerTask *current = head;
-  while (current != nullptr)
+  for (TimerTask *task : tasks)
   {
-    if (current->id == taskId)
+    if (task->id == taskId)
     {
-      current->isActive = false;
-      debugPrintln("inactive task " + String(current->id));
+      debugPrintln("unschedule task " + String(task->id));
+      tasks.remove(task);
       return true;
     }
-    current = current->next;
   }
   return false;
 }
 
 void Timer::update(unsigned long time)
 {
-  TimerTask *current = head;
-  while (current != nullptr)
+  // debugPrintln("update tasks " + String(tasks.size()) + " " + String(time));
+  for (TimerTask *task : tasks)
   {
-    // Serial.println("task: " + String(current->id) + " " + String(current->isActive) + " " + String(time) + " " + String(current->triggerTime));
+    // debugPrintln("task: " + String(task->id) + " " + String(task->isActive) + " " + String(task->triggerTime));
 
-    if (current->isActive && current->triggerTime <= time)
+    if (task->triggerTime <= time)
     {
-      if (current->updateCallback != nullptr)
+      if (task->updateCallback != nullptr)
       {
-        current->updateCallback(time);
+        task->updateCallback(time);
         // Serial.println("callback: " + String(time) + " " + String(current->triggerTime));
       }
-      if (current->component != nullptr)
+      if (task->component != nullptr)
       {
-        current->triggerTime = current->component->update(time);
+        task->triggerTime = task->component->update(time);
         // Serial.println("component: " + String(current->id) + " " + String(time) + " " + String(current->triggerTime));
       }
-      if (current->triggerTime <= time)
-      {
-        current->isActive = false;
-      }
-    }
-    current = current->next;
+      if (task->triggerTime <= time)
+        tasks.remove(task);
+        }
   }
-  cleanTasks();
 }

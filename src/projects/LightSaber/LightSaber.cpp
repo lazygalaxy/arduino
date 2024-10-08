@@ -23,15 +23,15 @@ NeoPixel strip(D6, 33);
 long taskId = -1;
 float hue = 0.0;
 
-// void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
-// {
-//   unsigned long COMPL = accel + gyro;
-//   int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
-//   freq = constrain(freq, 18, 300);
-//   int freq_f = freq * k + freq_f * (1 - k); // smooth filter
-//                                             // speaker.playNote(freq_f);
-// }
-// MyMotion motion(2000);
+void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
+{
+  unsigned long COMPL = accel + gyro;
+  int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
+  freq = constrain(freq, 18, 300);
+  int freq_f = freq * k + freq_f * (1 - k); // smooth filter
+                                            // speaker.playNote(freq_f);
+}
+MyMotion motion(2000, motionCallback);
 
 void changeHueCallback(unsigned long time)
 {
@@ -52,12 +52,12 @@ void setup()
   Serial.begin(9600);
   Timer::getInstance()->enableDebug();
   sdcard.enableDebug();
-  // motion.enableDebug();
+  motion.enableDebug();
   speaker.enableDebug();
 
   sdcard.setup();
   strip.setup();
-  // motion.setup();
+  motion.setup();
 }
 
 void completeOff()

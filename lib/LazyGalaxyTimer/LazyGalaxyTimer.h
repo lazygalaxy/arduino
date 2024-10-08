@@ -8,6 +8,7 @@
 #define LAZYGALAXYTIMER_H
 
 #include <LazyGalaxyCommon.h>
+#include <SimpleVector.h>
 
 class Timer
 {
@@ -40,15 +41,21 @@ private:
   bool _debug;
   struct TimerTask
   {
+    TimerTask()
+    {
+      this->id = 0;
+      this->triggerTime = 0;
+      this->updateCallback = nullptr;
+      this->component = nullptr;
+    }
+
     TimerTask(unsigned long id, unsigned long triggerTime,
               taskCallbackPtr updateCallback)
     {
       this->id = id;
       this->triggerTime = triggerTime;
-      this->isActive = true;
       this->updateCallback = updateCallback;
       this->component = nullptr;
-      this->next = nullptr;
     }
 
     TimerTask(unsigned long id, unsigned long triggerTime,
@@ -56,27 +63,21 @@ private:
     {
       this->id = id;
       this->triggerTime = triggerTime;
-      this->isActive = true;
       this->updateCallback = nullptr;
       this->component = component;
-      this->next = nullptr;
     }
 
     unsigned long id;
     unsigned long triggerTime;
-    bool isActive;
     taskCallbackPtr updateCallback;
     Component *component;
-    TimerTask *next;
   };
 
   Timer();
   void addTask(TimerTask *task);
-  void cleanTasks();
 
   unsigned long idCounter = 0;
-  TimerTask *head = nullptr;
-  TimerTask *tail = nullptr;
+  SimpleVector<TimerTask *> tasks;
 };
 
 #endif
