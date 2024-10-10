@@ -12,33 +12,7 @@
 
 class Timer
 {
-public:
-  static Timer *getInstance()
-  {
-    static Timer *instance = new Timer();
-    return instance;
-  }
-
-  static long scheduleTask(unsigned int delay, taskCallbackPtr updateCallback)
-  {
-    return getInstance()->schedule(millis() + delay, updateCallback);
-  }
-
-  static void updateTasks() { getInstance()->update(millis()); }
-
-  bool isDebug();
-  void debugPrint(String message);
-  void debugPrintln(String message);
-  void enableDebug();
-
-  unsigned long schedule(unsigned long triggerTime,
-                         taskCallbackPtr updateCallback);
-  unsigned long schedule(unsigned long triggerTime, Component *component);
-  bool unschedule(unsigned long taskId);
-  void update(unsigned long time);
-
 private:
-  bool _debug;
   struct TimerTask
   {
     TimerTask()
@@ -67,14 +41,48 @@ private:
       this->component = component;
     }
 
+    ~TimerTask(void)
+    {
+      this->updateCallback = nullptr;
+      this->component = nullptr;
+    }
+
     unsigned long id;
     unsigned long triggerTime;
     taskCallbackPtr updateCallback;
     Component *component;
   };
 
+public:
+  static Timer *getInstance()
+  {
+    static Timer *instance = new Timer();
+    return instance;
+  }
+
+  static long scheduleTask(unsigned int delay, taskCallbackPtr updateCallback)
+  {
+    return getInstance()->schedule(millis() + delay, updateCallback);
+  }
+
+  static void updateTasks() { getInstance()->update(millis()); }
+
+  bool isDebug();
+  void debugPrint(String message);
+  void debugPrintln(String message);
+  void enableDebug();
+
+  unsigned long schedule(unsigned long triggerTime,
+                         taskCallbackPtr updateCallback);
+  unsigned long schedule(unsigned long triggerTime, Component *component);
+  bool unschedule(unsigned long taskId);
+  void update(unsigned long time);
+
+private:
+  bool _debug;
   Timer();
-  void addTask(TimerTask *task);
+  unsigned long schedule(TimerTask *task);
+  bool unschedule(TimerTask *task);
 
   unsigned long idCounter = 0;
   SimpleVector<TimerTask *> tasks;

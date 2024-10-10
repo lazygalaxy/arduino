@@ -32,41 +32,50 @@ unsigned long Timer::schedule(unsigned long triggerTime,
                               taskCallbackPtr updateCallback)
 {
   TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback);
-  addTask(task);
-  return task->id;
+  return schedule(task);
 }
 
 unsigned long Timer::schedule(unsigned long triggerTime, Component *component)
 {
   TimerTask *task = new TimerTask(++idCounter, triggerTime, component);
-  addTask(task);
+  return schedule(task);
+}
+
+unsigned long Timer::schedule(TimerTask *task)
+{
+  debugPrintln("add task " + String(task->id) + " " + String(task->triggerTime));
+  tasks.put(task);
+  debugPrintln("task size now " + String(tasks.elements()));
   return task->id;
 }
 
-void Timer::addTask(TimerTask *task)
+bool Timer::unschedule(TimerTask *task)
 {
-  debugPrintln("added task " + String(task->id));
-  tasks.put(task);
+  debugPrintln("rem task " + String(task->id) + " " + String(task->triggerTime));
+  unsigned int beforeElements = tasks.elements();
+  tasks.remove(task);
+  delete task;
+  task = nullptr;
   debugPrintln("task size now " + String(tasks.elements()));
+  return beforeElements > tasks.elements();
 }
 
 bool Timer::unschedule(unsigned long taskId)
 {
+  TimerTask *foundTask = nullptr;
   for (TimerTask *task : tasks)
   {
     if (task->id == taskId)
-    {
-      debugPrintln("unschedule task " + String(task->id));
-      tasks.remove(task);
-      return true;
-    }
+      foundTask = task;
   }
+  if (foundTask != nullptr)
+    return unschedule(foundTask);
   return false;
 }
 
 void Timer::update(unsigned long time)
 {
-  // debugPrintln("update tasks " + String(tasks.size()) + " " + String(time));
+  TimerTask *foundTask = nullptr;
   for (TimerTask *task : tasks)
   {
     // debugPrintln("task: " + String(task->id) + " " + String(task->isActive) + " " + String(task->triggerTime));
@@ -74,17 +83,15 @@ void Timer::update(unsigned long time)
     if (task->triggerTime <= time)
     {
       if (task->updateCallback != nullptr)
-      {
         task->updateCallback(time);
-        // Serial.println("callback: " + String(time) + " " + String(current->triggerTime));
-      }
+
       if (task->component != nullptr)
-      {
         task->triggerTime = task->component->update(time);
-        // Serial.println("component: " + String(current->id) + " " + String(time) + " " + String(current->triggerTime));
-      }
+
       if (task->triggerTime <= time)
-        tasks.remove(task);
-        }
+        TimerTask *foundTask = nullptr;
+    }
   }
+  if (foundTask != nullptr)
+    unschedule(foundTask);
 }

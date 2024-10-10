@@ -30,8 +30,10 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   freq = constrain(freq, 18, 300);
   int freq_f = freq * k + freq_f * (1 - k); // smooth filter
                                             // speaker.playNote(freq_f);
+
+  Serial.println(String(freq_f));
 }
-MyMotion motion(2000, motionCallback);
+MyMotion motion(2000);
 
 void changeHueCallback(unsigned long time)
 {
@@ -60,11 +62,6 @@ void setup()
   motion.setup();
 }
 
-void completeOff()
-{
-  button.setOn(false);
-}
-
 void loop()
 {
   // first update all tasks
@@ -90,7 +87,8 @@ void loop()
     {
       // if there is 1 click, stop the light saber
       strip.setWipeSequence(0.0, 0.0, 0.0, DELAY, true);
-      speaker.playWav("OFF.wav", completeOff);
+      speaker.playWav("OFF.wav");
+      button.setOn(false);
     }
     else
     {

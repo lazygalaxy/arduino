@@ -75,7 +75,7 @@ unsigned long MySpeaker::update(unsigned long time)
   {
     if (!tmrpcm.isPlaying())
     {
-      debugPrintln("wav playing ended");
+      debugPrintln("wav playing ended " + String(time));
       taskCallbackPtr tempFinalCallback = _finalCallback;
       silence();
       if (tempFinalCallback != nullptr)
@@ -101,9 +101,8 @@ unsigned long MySpeaker::update(unsigned long time)
       }
       playNote(_melody->notes[_noteIndex]);
       if (_noteCallback != nullptr)
-      {
         _noteCallback(time, _melody->notes[_noteIndex]);
-      }
+
       return time + (_melody->beats[_noteIndex++] * _melody->tempo);
     }
     else
