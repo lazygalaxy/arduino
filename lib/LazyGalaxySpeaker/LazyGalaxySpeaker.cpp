@@ -77,9 +77,9 @@ unsigned long MySpeaker::update(unsigned long time)
     {
       debugPrintln("wav playing ended " + String(time));
       taskCallbackPtr tempFinalCallback = _finalCallback;
-      silence();
       if (tempFinalCallback != nullptr)
         tempFinalCallback(time);
+      silence();
     }
     else
     {
@@ -108,9 +108,9 @@ unsigned long MySpeaker::update(unsigned long time)
     else
     {
       taskCallbackPtr tempFinalCallback = _finalCallback;
-      silence();
       if (tempFinalCallback != nullptr)
         tempFinalCallback(time);
+      silence();
     }
   }
   return time;

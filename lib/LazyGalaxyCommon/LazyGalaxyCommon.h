@@ -24,7 +24,7 @@ static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
 
-typedef void (*taskCallbackPtr)(unsigned long time);
+typedef unsigned long (*taskCallbackPtr)(unsigned long time);
 
 class Component
 {

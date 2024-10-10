@@ -28,8 +28,7 @@ void Timer::debugPrintln(String message)
     Serial.println(message);
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime,
-                              taskCallbackPtr updateCallback)
+unsigned long Timer::schedule(unsigned long triggerTime, taskCallbackPtr updateCallback)
 {
   TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback);
   return schedule(task);
@@ -44,7 +43,7 @@ unsigned long Timer::schedule(unsigned long triggerTime, Component *component)
 unsigned long Timer::schedule(TimerTask *task)
 {
   debugPrintln("add task " + String(task->id) + " " + String(task->triggerTime));
-  tasks.put(task);
+  tasks.push_back(task);
   debugPrintln("task size now " + String(tasks.elements()));
   return task->id;
 }
@@ -54,7 +53,7 @@ bool Timer::unschedule(TimerTask *task)
   debugPrintln("rem task " + String(task->id) + " " + String(task->triggerTime));
   unsigned int beforeElements = tasks.elements();
   tasks.remove(task);
-  delete task;
+  // delete task;
   task = nullptr;
   debugPrintln("task size now " + String(tasks.elements()));
   return beforeElements > tasks.elements();
@@ -63,35 +62,41 @@ bool Timer::unschedule(TimerTask *task)
 bool Timer::unschedule(unsigned long taskId)
 {
   TimerTask *foundTask = nullptr;
+
   for (TimerTask *task : tasks)
   {
     if (task->id == taskId)
       foundTask = task;
   }
+
   if (foundTask != nullptr)
     return unschedule(foundTask);
+
   return false;
 }
 
 void Timer::update(unsigned long time)
 {
   TimerTask *foundTask = nullptr;
+
   for (TimerTask *task : tasks)
   {
-    // debugPrintln("task: " + String(task->id) + " " + String(task->isActive) + " " + String(task->triggerTime));
-
     if (task->triggerTime <= time)
     {
       if (task->updateCallback != nullptr)
-        task->updateCallback(time);
+        task->triggerTime = task->updateCallback(time);
 
       if (task->component != nullptr)
         task->triggerTime = task->component->update(time);
 
       if (task->triggerTime <= time)
-        TimerTask *foundTask = nullptr;
+      {
+        debugPrintln("found task to remove " + String(task->id) + " " + String(task->triggerTime) + " " + String(time));
+        foundTask = task;
+      }
     }
   }
+
   if (foundTask != nullptr)
     unschedule(foundTask);
 }

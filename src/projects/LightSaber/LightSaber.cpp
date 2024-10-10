@@ -20,8 +20,8 @@ MySDCard sdcard(D10);
 MySpeaker speaker(D9, 5);
 NeoPixel strip(D6, 33);
 
-long taskId = -1;
 float hue = 0.0;
+// long taskId = 0;
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -33,20 +33,22 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 
   Serial.println(String(freq_f));
 }
-MyMotion motion(2000);
+// MyMotion motion(2000);
 
-void changeHueCallback(unsigned long time)
+unsigned long changeHueCallback(unsigned long time)
 {
-  if (taskId != -1)
+  hue += 0.01;
+  if (hue > 1.0)
   {
-    hue += 0.01;
-    if (hue > 1.0)
-    {
-      hue = 0.0;
-    }
-    strip.setNoSequence(hue, SAT, VAL);
-    taskId = -1;
+    hue = 0.0;
   }
+  strip.setNoSequence(hue, SAT, VAL);
+
+  if (button.isLongPressed())
+    return time + 100;
+
+  // taskId = 0;
+  return time;
 }
 
 void setup()
@@ -54,12 +56,12 @@ void setup()
   Serial.begin(9600);
   Timer::getInstance()->enableDebug();
   sdcard.enableDebug();
-  motion.enableDebug();
+  // motion.enableDebug();
   speaker.enableDebug();
 
   sdcard.setup();
   strip.setup();
-  motion.setup();
+  // motion.setup();
 }
 
 void loop()
@@ -77,11 +79,10 @@ void loop()
   }
   else if (button.isOn())
   {
-    if (button.isLongPressed())
+    if (button.isLongPressed() == 0)
     {
       // if there is a long press cycle the hue color
-      if (taskId == -1)
-        taskId = Timer::scheduleTask(100, changeHueCallback);
+      // taskId = Timer::scheduleTask(100, changeHueCallback);
     }
     else if (button.getClicks() == 1)
     {
@@ -89,11 +90,6 @@ void loop()
       strip.setWipeSequence(0.0, 0.0, 0.0, DELAY, true);
       speaker.playWav("OFF.wav");
       button.setOn(false);
-    }
-    else
-    {
-      // if there is no button press
-      taskId = -1;
     }
   }
 }

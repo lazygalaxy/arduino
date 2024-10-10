@@ -15,14 +15,6 @@ class Timer
 private:
   struct TimerTask
   {
-    TimerTask()
-    {
-      this->id = 0;
-      this->triggerTime = 0;
-      this->updateCallback = nullptr;
-      this->component = nullptr;
-    }
-
     TimerTask(unsigned long id, unsigned long triggerTime,
               taskCallbackPtr updateCallback)
     {
@@ -43,6 +35,8 @@ private:
 
     ~TimerTask(void)
     {
+      this->id = 0;
+      this->triggerTime = 0;
       this->updateCallback = nullptr;
       this->component = nullptr;
     }
