@@ -8,8 +8,8 @@
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-MySDCard sdcard(D10);
-MySpeaker speaker(D9, 5);
+MySDCard sdcard(10);
+MySpeaker speaker(9, 5);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -27,17 +27,9 @@ Melody *jingleBellsMelody =
                        2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 4},
                100);
 
-Melody *merryChristmasMelody =
-    new Melody((int[]){TB3, TF4, TF4, TG4, TF4, TE4, TD4, TD4, TD4, TG4, TG4,
-                       TA4, TG4, TF4, TE4, TE4, TE4, TA4, TA4, TB4, TA4, TG4,
-                       TF4, TD4, TB3, TB3, TD4, TG4, TE4, TF4, TEND},
-               (int[]){4, 4, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2, 2, 2, 4,
-                       4, 4, 4, 2, 2, 2, 2, 4, 4, 2, 2, 4, 4, 4, 8},
-               100);
-
 void noteCallback(unsigned long time, int note)
 {
-  printf("note play %i %u\n", note, time);
+  // printf("note play %i %u\n", note, time);
 }
 
 void finalPlayWav2(unsigned long time)
@@ -49,7 +41,7 @@ void finalPlayWav2(unsigned long time)
 void finalPlayMelody2(unsigned long time)
 {
   printf("finalPlayMelody2\n");
-  speaker.playMelody(merryChristmasMelody, noteCallback, finalPlayWav2);
+  speaker.playMelody(jingleBellsMelody, noteCallback, finalPlayWav2);
 }
 
 unsigned long updatePlayWav1(unsigned long time)
@@ -69,7 +61,7 @@ void setup()
   // play the first melody
   speaker.playMelody(santaClausMelody, noteCallback);
   // schedule a task/function callback to play the second melody in 2 seconds
-  Timer::scheduleTask(2000, updatePlayWav1, "updatePlayWav1");
+  Timer::scheduleTask(2000, updatePlayWav1);
 }
 
 void loop()

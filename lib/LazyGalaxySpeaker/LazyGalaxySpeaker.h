@@ -126,13 +126,9 @@ public:
   MySpeaker(uint8_t pin, char volume = 5);
   void playNote(int note);
   void stopNote();
-  void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
-                  finalCallbackPtr finalCallback = nullptr);
+  void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
   void playWav(char *filename, finalCallbackPtr finalCallback = nullptr);
   void silence();
-  bool isMelodyPlaying();
-  bool isWavPlaying();
-  bool isSpeakerPlaying();
   unsigned long update(unsigned long time) override;
 
 private:
@@ -148,7 +144,6 @@ private:
 
   // common
   unsigned long _taskId = 0;
-  finalCallbackPtr _finalCallback;
 };
 
 #endif

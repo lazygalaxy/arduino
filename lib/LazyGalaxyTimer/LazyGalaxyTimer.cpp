@@ -13,15 +13,15 @@ void Timer::enableDebug()
   _debug = true;
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, char *label)
+unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback, char *label)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, label);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, finalCallback, label);
   return schedule(task);
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, Component *component, char *label)
+unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback, char *label)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, label);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, finalCallback, label);
   return schedule(task);
 }
 
@@ -60,11 +60,9 @@ bool Timer::unschedule(unsigned long taskId)
 
 void Timer::update(unsigned long time)
 {
-  TimerTask *foundTask = nullptr;
-
   for (TimerTask *task : tasks)
   {
-    if (task->triggerTime <= time)
+    if (task->active && task->triggerTime <= time)
     {
       if (task->updateCallback != nullptr)
         task->triggerTime = task->updateCallback(time);
@@ -72,14 +70,12 @@ void Timer::update(unsigned long time)
       if (task->component != nullptr)
         task->triggerTime = task->component->update(time);
 
-      if (!task->active || task->triggerTime <= time)
+      if (task->triggerTime <= time)
       {
-        printf("to remove task %s %u\n", task->label, time);
-        foundTask = task;
+        if (task->finalCallback != nullptr)
+          task->finalCallback(time);
+        task->active = false;
       }
     }
   }
-
-  if (foundTask != nullptr)
-    unschedule(foundTask);
 }
