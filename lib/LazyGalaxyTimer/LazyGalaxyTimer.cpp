@@ -8,69 +8,52 @@
 
 Timer::Timer() {}
 
-bool Timer::isDebug() { return _debug; }
-
-void Timer::debugPrint(String message)
-{
-  if (isDebug())
-    Serial.print(message);
-}
-
 void Timer::enableDebug()
 {
   _debug = true;
-  Serial.println("timer debug enabled, id is " + String(idCounter));
 }
 
-void Timer::debugPrintln(String message)
+unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, char *label)
 {
-  if (isDebug())
-    Serial.println(message);
-}
-
-unsigned long Timer::schedule(unsigned long triggerTime, taskCallbackPtr updateCallback)
-{
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, label);
   return schedule(task);
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, Component *component)
+unsigned long Timer::schedule(unsigned long triggerTime, Component *component, char *label)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, component);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, label);
   return schedule(task);
 }
 
 unsigned long Timer::schedule(TimerTask *task)
 {
-  debugPrintln("add task " + String(task->id) + " " + String(task->triggerTime));
+  debugPrintln(_debug, 32, "add task %s", 1, task->label);
   tasks.push_back(task);
-  debugPrintln("task size now " + String(tasks.elements()));
+  debugPrintln(_debug, 32, "task size now %u", 1, tasks.elements());
   return task->id;
 }
 
 bool Timer::unschedule(TimerTask *task)
 {
-  debugPrintln("rem task " + String(task->id) + " " + String(task->triggerTime));
+  debugPrintln(_debug, 32, "rem task %s %d %d", 3, task->label, task->triggerTime, task->active);
   unsigned int beforeElements = tasks.elements();
   tasks.remove(task);
-  // delete task;
+  delete task;
   task = nullptr;
-  debugPrintln("task size now " + String(tasks.elements()));
+  debugPrintln(_debug, 32, "task size now %u", 1, tasks.elements());
   return beforeElements > tasks.elements();
 }
 
 bool Timer::unschedule(unsigned long taskId)
 {
-  TimerTask *foundTask = nullptr;
-
   for (TimerTask *task : tasks)
   {
     if (task->id == taskId)
-      foundTask = task;
+    {
+      task->active = false;
+      return true;
+    }
   }
-
-  if (foundTask != nullptr)
-    return unschedule(foundTask);
 
   return false;
 }
@@ -89,9 +72,9 @@ void Timer::update(unsigned long time)
       if (task->component != nullptr)
         task->triggerTime = task->component->update(time);
 
-      if (task->triggerTime <= time)
+      if (!task->active || task->triggerTime <= time)
       {
-        debugPrintln("found task to remove " + String(task->id) + " " + String(task->triggerTime) + " " + String(time));
+        debugPrintln(_debug, 32, "found remove task %s %d", 2, task->label, time);
         foundTask = task;
       }
     }

@@ -127,21 +127,28 @@ public:
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr,
-                  taskCallbackPtr finalCallback = nullptr);
-  void playWav(char *filename, taskCallbackPtr finalCallback = nullptr);
+                  finalCallbackPtr finalCallback = nullptr);
+  void playWav(char *filename, finalCallbackPtr finalCallback = nullptr);
   void silence();
-  bool isNotePlaying();
+  bool isMelodyPlaying();
+  bool isWavPlaying();
+  bool isSpeakerPlaying();
   unsigned long update(unsigned long time) override;
 
 private:
-  bool _isWavPlayed = false;
-  bool _isNotePlaying = false;
+  // note
   Melody *_melody = nullptr;
+  bool _isNotePlaying = false;
   int _noteIndex;
-  unsigned long _taskId = 0;
   noteCallbackPtr _noteCallback;
-  taskCallbackPtr _finalCallback;
+
+  // wav
+  bool _isWavPlaing = false;
   TMRpcm tmrpcm;
+
+  // common
+  unsigned long _taskId = 0;
+  finalCallbackPtr _finalCallback;
 };
 
 #endif

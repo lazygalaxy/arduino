@@ -24,7 +24,46 @@ static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
 
-typedef unsigned long (*taskCallbackPtr)(unsigned long time);
+typedef unsigned long (*updateCallbackPtr)(unsigned long time);
+typedef void (*finalCallbackPtr)(unsigned long time);
+
+static void debugPrintln(boolean isDebug, int buffSize, const char *message, va_list args)
+{
+  if (isDebug)
+  {
+    char buff[buffSize];
+    sprintf(buff, message, args);
+    Serial.println(buff);
+  }
+}
+
+static void debugPrintln(boolean isDebug, int buffSize, const char *message, int argSize, ...)
+{
+  if (isDebug)
+  {
+    va_list args;
+    va_start(args, argSize);
+    debugPrintln(isDebug, buffSize, message, args);
+  }
+}
+
+static void debugPrintln(int buffSize, const char *message, int argSize, ...)
+{
+  va_list args;
+  va_start(args, argSize);
+  debugPrintln(true, buffSize, message, args);
+}
+
+static void debugPrintln(boolean isDebug, const char *message)
+{
+  if (isDebug)
+    Serial.println(message);
+}
+
+static void debugPrintln(const char *message)
+{
+  debugPrintln(true, message);
+}
 
 class Component
 {
@@ -46,23 +85,9 @@ public:
 
   bool isDigital() { return _pin < A0; }
 
-  bool isDebug() { return _debug; }
-
   void enableDebug()
   {
     _debug = true;
-  }
-
-  void debugPrint(String message)
-  {
-    if (isDebug())
-      Serial.print(message);
-  }
-
-  void debugPrintln(String message)
-  {
-    if (isDebug())
-      Serial.println(message);
   }
 
 protected:

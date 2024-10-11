@@ -47,7 +47,6 @@ unsigned long changeHueCallback(unsigned long time)
   if (button.isLongPressed())
     return time + 100;
 
-  // taskId = 0;
   return time;
 }
 
@@ -55,6 +54,7 @@ void setup()
 {
   Serial.begin(9600);
   Timer::getInstance()->enableDebug();
+  button.enableDebug();
   sdcard.enableDebug();
   // motion.enableDebug();
   speaker.enableDebug();
@@ -79,7 +79,7 @@ void loop()
   }
   else if (button.isOn())
   {
-    if (button.isLongPressed() == 0)
+    if (button.isLongPressed())
     {
       // if there is a long press cycle the hue color
       // taskId = Timer::scheduleTask(100, changeHueCallback);

@@ -37,34 +37,39 @@ Melody *merryChristmasMelody =
 
 void noteCallback(unsigned long time, int note)
 {
-  Serial.println("played " + String(note) + " @" + String(time));
+  debugPrintln(32, "note play %u %i", 2, note, time);
 }
 
-void playWav2(unsigned long time)
+void finalPlayWav2(unsigned long time)
 {
+  debugPrintln("finalPlayWav2");
   speaker.playWav("OFF.wav");
 }
 
-void playMelody2(unsigned long time)
+void finalPlayMelody2(unsigned long time)
 {
-  speaker.playMelody(merryChristmasMelody, noteCallback, playWav2);
+  debugPrintln("finalPlayMelody2");
+  speaker.playMelody(merryChristmasMelody, noteCallback, finalPlayWav2);
 }
 
-void playWav1(unsigned long time)
+unsigned long updatePlayWav1(unsigned long time)
 {
-  speaker.playWav("ON.wav", playMelody2);
+  debugPrintln(32, "updatePlayWav1 %d", 1, time);
+  speaker.playWav("ON.wav", finalPlayMelody2);
+  return time;
 }
 
 void setup()
 {
   Serial.begin(9600);
+  Timer::getInstance()->enableDebug();
   speaker.enableDebug();
-  sdcard.setup();
 
+  sdcard.setup();
   // play the frist melody
   speaker.playMelody(santaClausMelody, noteCallback);
   // schedule a task/function callback to play the second melody in 2 seconds
-  Timer::scheduleTask(2000, playWav1);
+  Timer::scheduleTask(2000, updatePlayWav1, "updatePlayWav1");
 }
 
 void loop()
