@@ -35,7 +35,7 @@ unsigned long Timer::schedule(TimerTask *task)
 
 bool Timer::unschedule(TimerTask *task)
 {
-  debugPrintln(_debug, 32, "rem task %s %d %d", 3, task->label, task->triggerTime, task->active);
+  debugPrintln(_debug, 32, "removing task %s %d %d", 3, task->label, task->triggerTime, task->active);
   unsigned int beforeElements = tasks.elements();
   tasks.remove(task);
   delete task;
@@ -74,7 +74,7 @@ void Timer::update(unsigned long time)
 
       if (!task->active || task->triggerTime <= time)
       {
-        debugPrintln(_debug, 32, "found remove task %s %d", 2, task->label, time);
+        debugPrintln(_debug, 32, "to remove task %s %d", 2, task->label, time);
         foundTask = task;
       }
     }
