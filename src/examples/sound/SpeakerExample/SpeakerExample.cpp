@@ -8,8 +8,8 @@
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-MySDCard sdcard(10);
-MySpeaker speaker(9, 5);
+MySDCard sdcard(D10);
+MySpeaker speaker(D9, 5);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,

@@ -27,11 +27,11 @@ public:
   void off();
   void setWipeSequence(float hue, float saturation, float value,
                        unsigned int delay = 50, bool reverse = false,
-                       taskCallbackPtr finalCallback = nullptr);
+                       finalCallbackPtr finalCallback = nullptr);
   void setChaseSequence(float hue, float saturation, float value,
                         unsigned int delay = 50, unsigned short cycles = 50,
                         unsigned char gap = 3,
-                        taskCallbackPtr finalCallback = nullptr);
+                        finalCallbackPtr finalCallback = nullptr);
   void setNoSequence(float hue, float saturation, float value,
                      float probability = 1.0);
   void stopSequence();
@@ -50,7 +50,6 @@ private:
   unsigned short _sequenceCycles;
   unsigned char _sequenceGap;
   uint16_t _sequenceIndex;
-  taskCallbackPtr _sequenceFinalCallback;
 };
 
 #endif

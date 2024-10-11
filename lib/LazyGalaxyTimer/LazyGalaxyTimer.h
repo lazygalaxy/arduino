@@ -15,7 +15,7 @@ class Timer
 private:
   struct TimerTask
   {
-    TimerTask(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback, char *label)
+    TimerTask(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
     {
       this->id = id;
       this->triggerTime = triggerTime;
@@ -23,10 +23,9 @@ private:
       this->updateCallback = updateCallback;
       this->finalCallback = finalCallback;
       this->component = nullptr;
-      this->label = label;
     }
 
-    TimerTask(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback, char *label)
+    TimerTask(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
     {
       this->id = id;
       this->triggerTime = triggerTime;
@@ -34,7 +33,6 @@ private:
       this->updateCallback = nullptr;
       this->finalCallback = finalCallback;
       this->component = component;
-      this->label = label;
     }
 
     ~TimerTask(void)
@@ -45,7 +43,6 @@ private:
       this->updateCallback = nullptr;
       this->finalCallback = nullptr;
       this->component = nullptr;
-      this->label = nullptr;
     }
 
     unsigned long id;
@@ -54,7 +51,6 @@ private:
     updateCallbackPtr updateCallback;
     finalCallbackPtr finalCallback;
     Component *component;
-    char *label;
   };
 
 public:
@@ -64,17 +60,17 @@ public:
     return instance;
   }
 
-  static long scheduleTask(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr, char *label = "")
+  static long scheduleTask(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr)
   {
-    return getInstance()->schedule(millis() + delay, updateCallback, finalCallback, label);
+    return getInstance()->schedule(millis() + delay, updateCallback, finalCallback);
   }
 
   static void updateTasks() { getInstance()->update(millis()); }
 
   void enableDebug();
 
-  unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback, char *label);
-  unsigned long schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback, char *label);
+  unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
+  unsigned long schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback = nullptr);
   bool unschedule(unsigned long taskId);
   void update(unsigned long time);
 

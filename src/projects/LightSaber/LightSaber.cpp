@@ -30,8 +30,6 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   freq = constrain(freq, 18, 300);
   int freq_f = freq * k + freq_f * (1 - k); // smooth filter
                                             // speaker.playNote(freq_f);
-
-  Serial.println(String(freq_f));
 }
 // MyMotion motion(2000);
 

@@ -51,7 +51,6 @@ unsigned long MyMotion::update(unsigned long time)
     _motionCallback(time, _accel, _gyro);
   }
 
-  debugPrintln(String(getAccel()) + " " + String(getGyro()) + " " + String(getAx()) + " " + String(getAy()) + " " + String(getAz()) + " " + String(getGx()) + " " + String(getGy()) + " " + String(getGz()));
   return time + _updateTime;
 }
 

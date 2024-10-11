@@ -13,21 +13,21 @@ void Timer::enableDebug()
   _debug = true;
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback, char *label)
+unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, finalCallback, label);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, finalCallback);
   return schedule(task);
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback, char *label)
+unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, finalCallback, label);
+  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, finalCallback);
   return schedule(task);
 }
 
 unsigned long Timer::schedule(TimerTask *task)
 {
-  printf("add task %s\n", task->label);
+  printf("add task %u\n", task->id);
   tasks.push_back(task);
   printf("task size now %u\n", tasks.elements());
   return task->id;
@@ -35,7 +35,7 @@ unsigned long Timer::schedule(TimerTask *task)
 
 bool Timer::unschedule(TimerTask *task)
 {
-  printf("removing task %s %u %i\n", task->label, task->triggerTime, task->active);
+  printf("removing task %u %u %i\n", task->id, task->triggerTime, task->active);
   unsigned int beforeElements = tasks.elements();
   tasks.remove(task);
   delete task;
