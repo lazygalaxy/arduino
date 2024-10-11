@@ -8,6 +8,7 @@
 #define LAZYGALAXYCOMMON_H
 
 #include <Arduino.h>
+#include <LibPrintf.h>
 
 static const uint8_t D0 = 0;
 static const uint8_t D1 = 1;
@@ -27,43 +28,28 @@ static const uint8_t D13 = 13;
 typedef unsigned long (*updateCallbackPtr)(unsigned long time);
 typedef void (*finalCallbackPtr)(unsigned long time);
 
-static void debugPrintln(boolean isDebug, int buffSize, const char *message, va_list args)
-{
-  if (isDebug)
-  {
-    char buff[buffSize];
-    sprintf(buff, message, args);
-    Serial.println(buff);
-  }
-}
+// static void debugPrintf(boolean isDebug, const char *message, va_list args)
+// {
+//   if (isDebug)
+//     printf(message, args);
+// }
 
-static void debugPrintln(boolean isDebug, int buffSize, const char *message, int argSize, ...)
-{
-  if (isDebug)
-  {
-    va_list args;
-    va_start(args, argSize);
-    debugPrintln(isDebug, buffSize, message, args);
-  }
-}
+// static void debugPrintf(boolean isDebug, const char *message, ...)
+// {
+//   if (isDebug)
+//   {
+//     va_list args;
+//     va_start(args, message);
+//     va_end(args);
+//     debugPrintf(isDebug, message, args);
+//   }
+// }
 
-static void debugPrintln(int buffSize, const char *message, int argSize, ...)
-{
-  va_list args;
-  va_start(args, argSize);
-  debugPrintln(true, buffSize, message, args);
-}
-
-static void debugPrintln(boolean isDebug, const char *message)
-{
-  if (isDebug)
-    Serial.println(message);
-}
-
-static void debugPrintln(const char *message)
-{
-  debugPrintln(true, message);
-}
+// static void debugPrint(boolean isDebug, const char *message)
+// {
+//   if (isDebug)
+//     printf(message);
+// }
 
 class Component
 {

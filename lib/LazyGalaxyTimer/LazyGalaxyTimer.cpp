@@ -27,20 +27,20 @@ unsigned long Timer::schedule(unsigned long triggerTime, Component *component, c
 
 unsigned long Timer::schedule(TimerTask *task)
 {
-  debugPrintln(_debug, 32, "add task %s", 1, task->label);
+  printf("add task %s\n", task->label);
   tasks.push_back(task);
-  debugPrintln(_debug, 32, "task size now %u", 1, tasks.elements());
+  printf("task size now %u\n", tasks.elements());
   return task->id;
 }
 
 bool Timer::unschedule(TimerTask *task)
 {
-  debugPrintln(_debug, 32, "removing task %s %d %d", 3, task->label, task->triggerTime, task->active);
+  printf("removing task %s %u %i\n", task->label, task->triggerTime, task->active);
   unsigned int beforeElements = tasks.elements();
   tasks.remove(task);
   delete task;
   task = nullptr;
-  debugPrintln(_debug, 32, "task size now %u", 1, tasks.elements());
+  printf("task size now %u\n", tasks.elements());
   return beforeElements > tasks.elements();
 }
 
@@ -74,7 +74,7 @@ void Timer::update(unsigned long time)
 
       if (!task->active || task->triggerTime <= time)
       {
-        debugPrintln(_debug, 32, "to remove task %s %d", 2, task->label, time);
+        printf("to remove task %s %u\n", task->label, time);
         foundTask = task;
       }
     }

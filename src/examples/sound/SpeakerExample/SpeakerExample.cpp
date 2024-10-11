@@ -37,24 +37,24 @@ Melody *merryChristmasMelody =
 
 void noteCallback(unsigned long time, int note)
 {
-  debugPrintln(32, "note play %u %i", 2, note, time);
+  printf("note play %i %u\n", note, time);
 }
 
 void finalPlayWav2(unsigned long time)
 {
-  debugPrintln("finalPlayWav2");
+  printf("finalPlayWav2\n");
   speaker.playWav("OFF.wav");
 }
 
 void finalPlayMelody2(unsigned long time)
 {
-  debugPrintln("finalPlayMelody2");
+  printf("finalPlayMelody2\n");
   speaker.playMelody(merryChristmasMelody, noteCallback, finalPlayWav2);
 }
 
 unsigned long updatePlayWav1(unsigned long time)
 {
-  debugPrintln(32, "updatePlayWav1 %d", 1, time);
+  printf("updatePlayWav1 %u\n", time);
   speaker.playWav("ON.wav", finalPlayMelody2);
   return time;
 }
@@ -66,7 +66,7 @@ void setup()
   speaker.enableDebug();
 
   sdcard.setup();
-  // play the frist melody
+  // play the first melody
   speaker.playMelody(santaClausMelody, noteCallback);
   // schedule a task/function callback to play the second melody in 2 seconds
   Timer::scheduleTask(2000, updatePlayWav1, "updatePlayWav1");
