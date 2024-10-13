@@ -47,6 +47,7 @@ int Button::getClicks(unsigned int delay)
     _clickCounter = 0;
     _longPressed = false;
 
+    printf("clickCounter %i", clickCounter);
     return clickCounter;
   }
 

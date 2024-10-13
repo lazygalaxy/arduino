@@ -46,7 +46,7 @@ void finalPlayMelody2(unsigned long time)
 
 unsigned long updatePlayWav1(unsigned long time)
 {
-  printf("updatePlayWav1 %u\n", time);
+  printf("updatePlayWav1 %lu\n", time);
   speaker.playWav("ON.wav", finalPlayMelody2);
   return time;
 }

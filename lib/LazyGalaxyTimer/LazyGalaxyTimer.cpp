@@ -15,33 +15,32 @@ void Timer::enableDebug()
 
 unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, updateCallback, finalCallback);
-  return schedule(task);
+  for (TimerTask *task : tasks)
+  {
+    if (!task->active)
+    {
+      task->setAsUpdateCallback(++idCounter, triggerTime, updateCallback, finalCallback);
+      printf("add callback task %lu\n", task->id);
+      return task->id;
+    }
+  }
+  printf("failed callback task at %lu", idCounter);
+  return 0;
 }
 
 unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
 {
-  TimerTask *task = new TimerTask(++idCounter, triggerTime, component, finalCallback);
-  return schedule(task);
-}
-
-unsigned long Timer::schedule(TimerTask *task)
-{
-  printf("add task %u\n", task->id);
-  tasks.push_back(task);
-  printf("task size now %u\n", tasks.elements());
-  return task->id;
-}
-
-bool Timer::unschedule(TimerTask *task)
-{
-  printf("removing task %u %u %i\n", task->id, task->triggerTime, task->active);
-  unsigned int beforeElements = tasks.elements();
-  tasks.remove(task);
-  delete task;
-  task = nullptr;
-  printf("task size now %u\n", tasks.elements());
-  return beforeElements > tasks.elements();
+  for (TimerTask *task : tasks)
+  {
+    if (!task->active)
+    {
+      task->setAsUpdateComponent(++idCounter, triggerTime, component, finalCallback);
+      printf("add component task %lu\n", task->id);
+      return task->id;
+    }
+  }
+  printf("failed component task at %lu", idCounter);
+  return 0;
 }
 
 bool Timer::unschedule(unsigned long taskId)
@@ -72,9 +71,9 @@ void Timer::update(unsigned long time)
 
       if (task->triggerTime <= time)
       {
+        task->active = false;
         if (task->finalCallback != nullptr)
           task->finalCallback(time);
-        task->active = false;
       }
     }
   }

@@ -15,7 +15,17 @@ class Timer
 private:
   struct TimerTask
   {
-    TimerTask(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
+    TimerTask(void)
+    {
+      this->id = 0;
+      this->triggerTime = 0;
+      this->active = false;
+      this->updateCallback = nullptr;
+      this->finalCallback = nullptr;
+      this->component = nullptr;
+    }
+
+    void setAsUpdateCallback(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
     {
       this->id = id;
       this->triggerTime = triggerTime;
@@ -25,7 +35,7 @@ private:
       this->component = nullptr;
     }
 
-    TimerTask(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
+    void setAsUpdateComponent(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
     {
       this->id = id;
       this->triggerTime = triggerTime;
@@ -33,16 +43,6 @@ private:
       this->updateCallback = nullptr;
       this->finalCallback = finalCallback;
       this->component = component;
-    }
-
-    ~TimerTask(void)
-    {
-      this->id = 0;
-      this->triggerTime = 0;
-      this->active = false;
-      this->updateCallback = nullptr;
-      this->finalCallback = nullptr;
-      this->component = nullptr;
     }
 
     unsigned long id;
@@ -77,11 +77,9 @@ public:
 private:
   bool _debug;
   Timer();
-  unsigned long schedule(TimerTask *task);
-  bool unschedule(TimerTask *task);
 
   unsigned long idCounter = 0;
-  SimpleVector<TimerTask *> tasks;
+  SimpleVector<TimerTask *> tasks = SimpleVector<TimerTask *>{(3)};
 };
 
 #endif

@@ -127,7 +127,7 @@ public:
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
-  void playWav(char *filename, finalCallbackPtr finalCallback = nullptr);
+  void playWav(const char *filename, finalCallbackPtr finalCallback = nullptr);
   void silence();
   unsigned long update(unsigned long time) override;
 
