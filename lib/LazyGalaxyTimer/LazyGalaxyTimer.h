@@ -8,7 +8,7 @@
 #define LAZYGALAXYTIMER_H
 
 #include <LazyGalaxyCommon.h>
-#include <SimpleVector.h>
+#include <Vector.h>
 
 class Timer
 {
@@ -57,6 +57,7 @@ public:
   static Timer *getInstance()
   {
     static Timer *instance = new Timer();
+    instance->tasks.assign(5, TimerTask());
     return instance;
   }
 
@@ -79,7 +80,7 @@ private:
   Timer();
 
   unsigned long idCounter = 0;
-  SimpleVector<TimerTask *> tasks = SimpleVector<TimerTask *>{(3)};
+  Vector<TimerTask *> tasks;
 };
 
 #endif

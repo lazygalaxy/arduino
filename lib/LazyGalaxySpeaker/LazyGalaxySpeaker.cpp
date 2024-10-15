@@ -68,7 +68,7 @@ unsigned long MySpeaker::update(unsigned long time)
       return time + 50;
     else
     {
-      printf("wav playing ended %u\n", time);
+      printf("wav playing ended %lu\n", time);
       silence();
     }
   }
