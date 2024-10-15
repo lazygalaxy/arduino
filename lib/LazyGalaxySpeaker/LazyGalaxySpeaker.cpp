@@ -53,7 +53,7 @@ void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, finalCa
 void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
 {
   silence();
-  printf("playing wav %s\n", filename);
+  // printf("playing wav %s\n", filename);
   tmrpcm.play(filename);
   _isWavPlaing = true;
   _taskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
@@ -68,7 +68,7 @@ unsigned long MySpeaker::update(unsigned long time)
       return time + 50;
     else
     {
-      printf("wav playing ended %lu\n", time);
+      // printf("wav playing ended %lu\n", time);
       silence();
     }
   }

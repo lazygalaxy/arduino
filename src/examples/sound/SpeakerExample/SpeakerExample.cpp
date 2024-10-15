@@ -34,19 +34,19 @@ void noteCallback(unsigned long time, int note)
 
 void finalPlayWav2(unsigned long time)
 {
-  printf("finalPlayWav2\n");
+  // printf("finalPlayWav2\n");
   speaker.playWav("OFF.wav");
 }
 
 void finalPlayMelody2(unsigned long time)
 {
-  printf("finalPlayMelody2\n");
+  // printf("finalPlayMelody2\n");
   speaker.playMelody(jingleBellsMelody, noteCallback, finalPlayWav2);
 }
 
 unsigned long updatePlayWav1(unsigned long time)
 {
-  printf("updatePlayWav1 %lu\n", time);
+  // printf("updatePlayWav1 %lu\n", time);
   speaker.playWav("ON.wav", finalPlayMelody2);
   return time;
 }
@@ -54,8 +54,7 @@ unsigned long updatePlayWav1(unsigned long time)
 void setup()
 {
   Serial.begin(9600);
-  Timer::getInstance()->enableDebug();
-  speaker.enableDebug();
+  Debug.setDebugLevel(DBG_VERBOSE);
 
   sdcard.setup();
   // play the first melody

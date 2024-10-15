@@ -15,49 +15,38 @@ class Timer
 private:
   struct TimerTask
   {
-    TimerTask(void)
-    {
-      this->id = 0;
-      this->triggerTime = 0;
-      this->active = false;
-      this->updateCallback = nullptr;
-      this->finalCallback = nullptr;
-      this->component = nullptr;
-    }
-
     void setAsUpdateCallback(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
     {
-      this->id = id;
-      this->triggerTime = triggerTime;
-      this->active = true;
-      this->updateCallback = updateCallback;
-      this->finalCallback = finalCallback;
-      this->component = nullptr;
+      _id = id;
+      _triggerTime = triggerTime;
+      _active = true;
+      _updateCallback = updateCallback;
+      _finalCallback = finalCallback;
+      _component = nullptr;
     }
 
     void setAsUpdateComponent(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
     {
-      this->id = id;
-      this->triggerTime = triggerTime;
-      this->active = true;
-      this->updateCallback = nullptr;
-      this->finalCallback = finalCallback;
-      this->component = component;
+      _id = id;
+      _triggerTime = triggerTime;
+      _active = true;
+      _updateCallback = nullptr;
+      _finalCallback = finalCallback;
+      _component = component;
     }
 
-    unsigned long id;
-    unsigned long triggerTime;
-    boolean active;
-    updateCallbackPtr updateCallback;
-    finalCallbackPtr finalCallback;
-    Component *component;
+    unsigned long _id;
+    unsigned long _triggerTime;
+    boolean _active;
+    updateCallbackPtr _updateCallback;
+    finalCallbackPtr _finalCallback;
+    Component *_component;
   };
 
 public:
   static Timer *getInstance()
   {
-    static Timer *instance = new Timer();
-    instance->tasks.assign(5, TimerTask());
+    static Timer *instance = new Timer(5);
     return instance;
   }
 
@@ -68,19 +57,16 @@ public:
 
   static void updateTasks() { getInstance()->update(millis()); }
 
-  void enableDebug();
-
   unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
   unsigned long schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback = nullptr);
   bool unschedule(unsigned long taskId);
   void update(unsigned long time);
 
 private:
-  bool _debug;
-  Timer();
-
   unsigned long idCounter = 0;
-  Vector<TimerTask *> tasks;
+  Vector<TimerTask> tasks;
+
+  Timer(size_t size);
 };
 
 #endif

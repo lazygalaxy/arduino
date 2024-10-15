@@ -14,8 +14,8 @@ void MySDCard::setup()
 {
   if (!SD.begin(_pin))
   { // see if the card is present and can be initialized:
-    printf("SD fail\n");
+    DEBUG_ERROR("SD fail");
     return; // don't do anything more if not
   }
-  printf("SD OK\n");
+  DEBUG_DEBUG("SD OK");
 }

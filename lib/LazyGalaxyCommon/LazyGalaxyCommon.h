@@ -8,7 +8,7 @@
 #define LAZYGALAXYCOMMON_H
 
 #include <Arduino.h>
-#include <LibPrintf.h>
+#include <Arduino_DebugUtils.h>
 
 static const uint8_t D0 = 0;
 static const uint8_t D1 = 1;
@@ -28,29 +28,6 @@ static const uint8_t D13 = 13;
 typedef unsigned long (*updateCallbackPtr)(unsigned long time);
 typedef void (*finalCallbackPtr)(unsigned long time);
 
-// static void debugPrintf(boolean isDebug, const char *message, va_list args)
-// {
-//   if (isDebug)
-//     printf(message, args);
-// }
-
-// static void debugPrintf(boolean isDebug, const char *message, ...)
-// {
-//   if (isDebug)
-//   {
-//     va_list args;
-//     va_start(args, message);
-//     va_end(args);
-//     debugPrintf(isDebug, message, args);
-//   }
-// }
-
-// static void debugPrint(boolean isDebug, const char *message)
-// {
-//   if (isDebug)
-//     printf(message);
-// }
-
 class Component
 {
 public:
@@ -64,20 +41,13 @@ public:
   explicit PinComponent(uint8_t pin)
   {
     _pin = pin;
-    _debug = false;
   }
 
   uint8_t getPin() { return _pin; }
 
   bool isDigital() { return _pin < A0; }
 
-  void enableDebug()
-  {
-    _debug = true;
-  }
-
 protected:
-  bool _debug;
   uint8_t _pin;
 };
 
