@@ -6,22 +6,21 @@
 
 #include <LazyGalaxyTimer.h>
 
-Timer::Timer(size_t size)
+Timer::Timer(char size)
 {
-  TimerTask storage_array[size];
-  tasks.setStorage(storage_array, size, size);
-  DEBUG_DEBUG("timer with size %i", tasks.size());
+  for (char i = 0; i < size; i++)
+    tasks.put(new TimerTask(i));
+  DEBUG_DEBUG("timer size %i tasks", tasks.elements());
 }
 
 unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
 {
-  for (TimerTask task : tasks)
+  for (TimerTask *task : tasks)
   {
-    if (!task._active)
+    if (!task->_active)
     {
-      task.setAsUpdateCallback(++idCounter, triggerTime, updateCallback, finalCallback);
-      DEBUG_DEBUG("add callback task %lu at %lu", task._id, task._triggerTime);
-      return task._id;
+      task->setAsUpdateCallback(++idCounter, triggerTime, updateCallback, finalCallback);
+      return task->_id;
     }
   }
   DEBUG_ERROR("failed callback task %lu at %lu", idCounter, triggerTime);
@@ -30,53 +29,52 @@ unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updat
 
 unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
 {
-  for (TimerTask task : tasks)
+  for (TimerTask *task : tasks)
   {
-    if (!task._active)
+    if (!task->_active)
     {
-      task.setAsUpdateComponent(++idCounter, triggerTime, component, finalCallback);
-      DEBUG_DEBUG("add component task %lu at %lu", task._id, task._triggerTime);
-      return task._id;
+      task->setAsUpdateComponent(++idCounter, triggerTime, component, finalCallback);
+      return task->_id;
     }
   }
-  DEBUG_ERROR("failed component task %lu", idCounter, triggerTime);
+  DEBUG_ERROR("failed component task %lu at %lu", idCounter, triggerTime);
   return 0;
 }
 
-bool Timer::unschedule(unsigned long taskId)
+boolean Timer::unschedule(unsigned long taskId)
 {
-  for (TimerTask task : tasks)
+  for (TimerTask *task : tasks)
   {
-    if (task._id == taskId)
+    if (task->_id == taskId)
     {
-      task._active = false;
+      task->reset();
       return true;
     }
   }
-
+  DEBUG_ERROR("failed to unschedule %lu", taskId);
   return false;
 }
 
 void Timer::update(unsigned long time)
 {
-  for (TimerTask task : tasks)
+  for (TimerTask *task : tasks)
   {
-    if (task._active)
+    if (task->_active)
     {
-      DEBUG_VERBOSE("active task %lu with trigger %lu at %lu", task._id, task._triggerTime, time);
-      if (task._triggerTime <= time)
+      DEBUG_VERBOSE("active task %i with id %lu and trigger %lu at %lu", task->_posi, task->_id, task->_triggerTime, time);
+      if (task->_triggerTime <= time)
       {
-        if (task._updateCallback != nullptr)
-          task._triggerTime = task._updateCallback(time);
+        if (task->_updateCallback != nullptr)
+          task->_triggerTime = task->_updateCallback(time);
 
-        if (task._component != nullptr)
-          task._triggerTime = task._component->update(time);
+        if (task->_component != nullptr)
+          task->_triggerTime = task->_component->update(time);
 
-        if (task._triggerTime <= time)
+        if (task->_triggerTime <= time)
         {
-          task._active = false;
-          if (task._finalCallback != nullptr)
-            task._finalCallback(time);
+          task->reset();
+          if (task->_finalCallback != nullptr)
+            task->_finalCallback(time);
         }
       }
     }

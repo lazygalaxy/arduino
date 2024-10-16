@@ -6,24 +6,31 @@
 
 #include <LazyGalaxyTimer.h>
 
-void printHello(unsigned long time) {
-  Serial.println("Hello @" + String(time));
+unsigned long printHello(unsigned long time)
+{
+  DEBUG_INFO("Hello %lu", time);
+  return time;
 }
 
-void printGoodbye(unsigned long time) {
-  Serial.println("Goodbye @" + String(time));
+unsigned long printGoodbye(unsigned long time)
+{
+  DEBUG_INFO("Goodbye %lu", time);
+  return time;
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
+  Debug.setDebugLevel(DBG_VERBOSE);
 
   // schedule a task to print "Hello" in 3 seconds
-  Timer::scheduleTask(3000, printHello);
+  scheduleTask(3000, printHello);
   // schedule a task to print "Goodbye" in 6 seconds
-  Timer::scheduleTask(6000, printGoodbye);
+  scheduleTask(6000, printGoodbye);
 }
 
-void loop() {
+void loop()
+{
   // update all LazyGalaxy tasks
-  Timer::updateTasks();
+  updateTasks();
 }

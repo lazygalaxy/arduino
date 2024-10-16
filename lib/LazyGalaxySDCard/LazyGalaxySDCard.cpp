@@ -17,5 +17,5 @@ void MySDCard::setup()
     DEBUG_ERROR("SD fail");
     return; // don't do anything more if not
   }
-  DEBUG_DEBUG("SD OK");
+  DEBUG_INFO("SD OK");
 }

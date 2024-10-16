@@ -59,12 +59,12 @@ void setup()
   sdcard.setup();
   // play the first melody
   speaker.playMelody(santaClausMelody, noteCallback);
-  // schedule a task/function callback to play the second melody in 2 seconds
-  Timer::scheduleTask(2000, updatePlayWav1);
+  schedule a task / function callback to play the second melody in 2 seconds
+                        scheduleTask(2000, updatePlayWav1);
 }
 
 void loop()
 {
   // update all LazyGalaxy tasks
-  Timer::updateTasks();
+  updateTasks();
 }

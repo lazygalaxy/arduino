@@ -36,7 +36,7 @@ void MySpeaker::silence()
   _noteCallback = nullptr;
   _noteIndex = -1;
   if (_taskId > 0)
-    Timer::getInstance()->unschedule(_taskId);
+    timerInstance->unschedule(_taskId);
   _taskId = 0;
   stopNote();
 }
@@ -47,7 +47,7 @@ void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, finalCa
   _melody = melody;
   _noteCallback = noteCallback;
   _noteIndex = 0;
-  _taskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
+  _taskId = timerInstance->schedule(update(millis()), this, finalCallback);
 }
 
 void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
@@ -56,7 +56,7 @@ void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
   // printf("playing wav %s\n", filename);
   tmrpcm.play(filename);
   _isWavPlaing = true;
-  _taskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
+  _taskId = timerInstance->schedule(update(millis()), this, finalCallback);
 }
 
 unsigned long MySpeaker::update(unsigned long time)
