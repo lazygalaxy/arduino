@@ -63,7 +63,7 @@ void Timer::update(unsigned long time)
   {
     if (task._active)
     {
-      DEBUG_VERBOSE("check task %lu with trigger %lu at %lu", task._id, task._triggerTime, time);
+      DEBUG_VERBOSE("active task %lu with trigger %lu at %lu", task._id, task._triggerTime, time);
       if (task._triggerTime <= time)
       {
         if (task._updateCallback != nullptr)
