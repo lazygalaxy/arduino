@@ -19,8 +19,8 @@ void TimerTask::setAsUpdateCallback(unsigned long id, unsigned long triggerTime,
   _triggerTime = triggerTime;
   _active = true;
   _updateCallback = updateCallback;
-  _finalCallback = finalCallback;
   _component = nullptr;
+  _finalCallback = finalCallback;
   DEBUG_DEBUG("set callback task %i with id %lu at %lu", _posi, _id, _triggerTime);
 }
 
@@ -53,6 +53,5 @@ void TimerTask::reset()
   _triggerTime = 0;
   _active = false;
   _updateCallback = nullptr;
-  _finalCallback = nullptr;
   _component = nullptr;
 }

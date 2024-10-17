@@ -29,6 +29,7 @@ void MySpeaker::stopNote()
 
 void MySpeaker::silence()
 {
+  DEBUG_DEBUG("silence");
   _isWavPlaing = false;
   tmrpcm.disable();
   _melody = nullptr;
@@ -52,7 +53,7 @@ void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, finalCa
 void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
 {
   silence();
-  // printf("playing wav %s\n", filename);
+  DEBUG_INFO("play wav %s", filename);
   tmrpcm.play(filename);
   _isWavPlaing = true;
   _taskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);

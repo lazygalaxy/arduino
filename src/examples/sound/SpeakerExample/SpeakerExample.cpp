@@ -4,11 +4,11 @@
    Released into the public domain.
 */
 
-// #include <LazyGalaxySDCard.h>
+#include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-// MySDCard sdcard(D10);
+MySDCard sdcard(D10);
 MySpeaker speaker(D9, 5);
 
 Melody *santaClausMelody =
@@ -32,39 +32,31 @@ void noteCallback(unsigned long time, int note)
   DEBUG_DEBUG("note play %i %u", note, time);
 }
 
-void step4(unsigned long time)
-{
-  DEBUG_INFO("step4");
-  // speaker.playWav("OFF.wav");
-  speaker.playMelody(santaClausMelody, noteCallback);
-}
+// void step4(unsigned long time)
+// {
+//   DEBUG_INFO("step4");
+//   speaker.playWav("OFF.wav");
+// }
 
 void step3(unsigned long time)
 {
   DEBUG_INFO("step3");
-  speaker.playMelody(jingleBellsMelody, noteCallback, step4);
+  speaker.playMelody(santaClausMelody, noteCallback);
 }
 
 void step2(unsigned long time)
 {
   DEBUG_INFO("step2");
-  speaker.playMelody(santaClausMelody, noteCallback, step3);
-}
-
-void step1(unsigned long time)
-{
-  DEBUG_INFO("step1 %lu", time);
-  speaker.playMelody(jingleBellsMelody, noteCallback, step2);
-  // speaker.playWav("ON.wav", step2);
+  speaker.playWav("ON.wav", step3);
 }
 
 void setup()
 {
   Serial.begin(9600);
-  Debug.setDebugLevel(DBG_VERBOSE);
+  Debug.setDebugLevel(DBG_DEBUG);
 
-  // sdcard.setup();
-  step1(millis());
+  sdcard.setup();
+  speaker.playMelody(jingleBellsMelody, noteCallback, step2);
   // schedule a task / function callback to play the future
   // Timer::scheduleTask(2000, updatePlayWav1);
 }
