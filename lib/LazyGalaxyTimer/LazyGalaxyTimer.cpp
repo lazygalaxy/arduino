@@ -9,14 +9,15 @@
 Timer::Timer(char size)
 {
   for (char i = 0; i < size; i++)
-    tasks.put(new TimerTask(i));
-  DEBUG_DEBUG("timer size %i tasks", tasks.elements());
+    tasks.add(new TimerTask(i));
+  DEBUG_DEBUG("timer size %i tasks", tasks.size());
 }
 
 unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
 {
-  for (TimerTask *task : tasks)
+  for (int i = 0; i < tasks.size(); i++)
   {
+    TimerTask *task = tasks.get(i);
     if (!task->_active)
     {
       task->setAsUpdateCallback(++idCounter, triggerTime, updateCallback, finalCallback);
@@ -29,8 +30,9 @@ unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updat
 
 unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
 {
-  for (TimerTask *task : tasks)
+  for (int i = 0; i < tasks.size(); i++)
   {
+    TimerTask *task = tasks.get(i);
     if (!task->_active)
     {
       task->setAsUpdateComponent(++idCounter, triggerTime, component, finalCallback);
@@ -43,8 +45,9 @@ unsigned long Timer::schedule(unsigned long triggerTime, Component *component, f
 
 boolean Timer::unschedule(unsigned long taskId)
 {
-  for (TimerTask *task : tasks)
+  for (int i = 0; i < tasks.size(); i++)
   {
+    TimerTask *task = tasks.get(i);
     if (task->_id == taskId)
     {
       task->reset();
@@ -57,8 +60,9 @@ boolean Timer::unschedule(unsigned long taskId)
 
 void Timer::update(unsigned long time)
 {
-  for (TimerTask *task : tasks)
+  for (int i = 0; i < tasks.size(); i++)
   {
+    TimerTask *task = tasks.get(i);
     if (task->_active)
     {
       DEBUG_VERBOSE("active task %i with id %lu and trigger %lu at %lu", task->_posi, task->_id, task->_triggerTime, time);
@@ -72,7 +76,8 @@ void Timer::update(unsigned long time)
 
         if (task->_triggerTime <= time)
         {
-          task->reset();
+          if (task->_active)
+            task->reset();
           if (task->_finalCallback != nullptr)
             task->_finalCallback(time);
         }

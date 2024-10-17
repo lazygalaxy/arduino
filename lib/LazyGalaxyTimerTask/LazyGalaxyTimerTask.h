@@ -8,15 +8,14 @@
 #define LAZYGALAXYTIMERTASK_H
 
 #include <LazyGalaxyCommon.h>
-#include <SimpleVector.h>
 
 class TimerTask
 {
 private:
 public:
-  char _posi = -1;
+  char _posi;
   boolean _active;
-  unsigned long _id = 0;
+  unsigned long _id;
   unsigned long _triggerTime;
   updateCallbackPtr _updateCallback;
   finalCallbackPtr _finalCallback;

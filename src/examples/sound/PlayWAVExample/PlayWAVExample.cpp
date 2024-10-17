@@ -6,7 +6,6 @@
 
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
-#include <LazyGalaxyTimer.h>
 
 MySDCard sdcard(D10);
 MySpeaker speaker(D9);
@@ -18,6 +17,7 @@ unsigned long playWav2(unsigned long time)
 }
 
 void setup()
+
 {
     Serial.begin(9600);
     Debug.setDebugLevel(DBG_VERBOSE);
@@ -25,12 +25,12 @@ void setup()
     sdcard.setup();
 
     speaker.playWav("ON.wav");
-    // schedule a task/function callback to play the second melody in 2 seconds
-    scheduleTask(1000, playWav2);
+    // schedule a task/function callback to play in the future
+    Timer::scheduleTask(2000, playWav2);
 }
 
 void loop()
 {
     // update all LazyGalaxy tasks
-    updateTasks();
+    Timer::updateTasks();
 }
