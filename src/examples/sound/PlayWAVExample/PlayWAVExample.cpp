@@ -10,14 +10,12 @@
 MySDCard sdcard(D10);
 MySpeaker speaker(D9);
 
-unsigned long playWav2(unsigned long time)
+void playWav2(unsigned long time)
 {
     speaker.playWav("OFF.wav");
-    return time;
 }
 
 void setup()
-
 {
     Serial.begin(9600);
     Debug.setDebugLevel(DBG_VERBOSE);
@@ -26,7 +24,7 @@ void setup()
 
     speaker.playWav("ON.wav");
     // schedule a task/function callback to play in the future
-    Timer::scheduleTask(2000, playWav2);
+    Timer::scheduleTask(500, playWav2);
 }
 
 void loop()

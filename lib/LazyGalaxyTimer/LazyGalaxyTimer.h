@@ -22,17 +22,23 @@ private:
 public:
   unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
   unsigned long schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback = nullptr);
+  unsigned long schedule(unsigned long triggerTime, finalCallbackPtr finalCallback);
   boolean unschedule(unsigned long taskId);
 
   static Timer *getInstance()
   {
-    static Timer *timerInstance = new Timer(5);
+    static Timer *timerInstance = new Timer(3);
     return timerInstance;
   }
 
-  static long scheduleTask(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr)
+  static long scheduleTask(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
   {
     return getInstance()->schedule(millis() + delay, updateCallback, finalCallback);
+  }
+
+  static long scheduleTask(unsigned int delay, finalCallbackPtr finalCallback)
+  {
+    return getInstance()->schedule(millis() + delay, finalCallback);
   }
 
   static void updateTasks() { getInstance()->update(millis()); }

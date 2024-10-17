@@ -43,6 +43,21 @@ unsigned long Timer::schedule(unsigned long triggerTime, Component *component, f
   return 0;
 }
 
+unsigned long Timer::schedule(unsigned long triggerTime, finalCallbackPtr finalCallback)
+{
+  for (int i = 0; i < tasks.size(); i++)
+  {
+    TimerTask *task = tasks.get(i);
+    if (!task->_active)
+    {
+      task->setAsFinalCallback(++idCounter, triggerTime, finalCallback);
+      return task->_id;
+    }
+  }
+  DEBUG_ERROR("failed callback task %lu at %lu", idCounter, triggerTime);
+  return 0;
+}
+
 boolean Timer::unschedule(unsigned long taskId)
 {
   for (int i = 0; i < tasks.size(); i++)
@@ -70,16 +85,16 @@ void Timer::update(unsigned long time)
       {
         if (task->_updateCallback != nullptr)
           task->_triggerTime = task->_updateCallback(time);
-
-        if (task->_component != nullptr)
+        else if (task->_component != nullptr)
           task->_triggerTime = task->_component->update(time);
 
         if (task->_triggerTime <= time)
         {
-          if (task->_active)
-            task->reset();
           if (task->_finalCallback != nullptr)
             task->_finalCallback(time);
+
+          if (task->_active && task->_triggerTime <= time)
+            task->reset();
         }
       }
     }

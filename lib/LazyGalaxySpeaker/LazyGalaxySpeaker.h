@@ -7,7 +7,6 @@
 #ifndef LAZYGALAXYSPEAKER_H
 #define LAZYGALAXYSPEAKER_H
 
-#include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 #include <TMRpcm.h>
 #include <toneAC.h>

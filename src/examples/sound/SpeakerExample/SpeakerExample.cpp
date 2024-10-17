@@ -4,11 +4,11 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxySDCard.h>
+// #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 #include <LazyGalaxyTimer.h>
 
-MySDCard sdcard(D10);
+// MySDCard sdcard(D10);
 MySpeaker speaker(D9, 5);
 
 Melody *santaClausMelody =
@@ -29,26 +29,33 @@ Melody *jingleBellsMelody =
 
 void noteCallback(unsigned long time, int note)
 {
-  // printf("note play %i %u\n", note, time);
+  DEBUG_DEBUG("note play %i %u", note, time);
 }
 
-void finalPlayWav2(unsigned long time)
+void step4(unsigned long time)
 {
-  // printf("finalPlayWav2\n");
-  speaker.playWav("OFF.wav");
+  DEBUG_INFO("step4");
+  // speaker.playWav("OFF.wav");
+  speaker.playMelody(santaClausMelody, noteCallback);
 }
 
-void finalPlayMelody2(unsigned long time)
+void step3(unsigned long time)
 {
-  // printf("finalPlayMelody2\n");
-  speaker.playMelody(jingleBellsMelody, noteCallback, finalPlayWav2);
+  DEBUG_INFO("step3");
+  speaker.playMelody(jingleBellsMelody, noteCallback, step4);
 }
 
-unsigned long updatePlayWav1(unsigned long time)
+void step2(unsigned long time)
 {
-  // printf("updatePlayWav1 %lu\n", time);
-  speaker.playWav("ON.wav", finalPlayMelody2);
-  return time;
+  DEBUG_INFO("step2");
+  speaker.playMelody(santaClausMelody, noteCallback, step3);
+}
+
+void step1(unsigned long time)
+{
+  DEBUG_INFO("step1 %lu", time);
+  speaker.playMelody(jingleBellsMelody, noteCallback, step2);
+  // speaker.playWav("ON.wav", step2);
 }
 
 void setup()
@@ -56,15 +63,14 @@ void setup()
   Serial.begin(9600);
   Debug.setDebugLevel(DBG_VERBOSE);
 
-  sdcard.setup();
-  // play the first melody
-  speaker.playMelody(santaClausMelody, noteCallback);
-  schedule a task / function callback to play the second melody in 2 seconds
-                        scheduleTask(2000, updatePlayWav1);
+  // sdcard.setup();
+  step1(millis());
+  // schedule a task / function callback to play the future
+  // Timer::scheduleTask(2000, updatePlayWav1);
 }
 
 void loop()
 {
   // update all LazyGalaxy tasks
-  updateTasks();
+  Timer::updateTasks();
 }

@@ -10,6 +10,7 @@ TimerTask::TimerTask(char posi)
 {
   _posi = posi;
   reset();
+  _finalCallback = nullptr;
 }
 
 void TimerTask::setAsUpdateCallback(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
@@ -29,9 +30,20 @@ void TimerTask::setAsUpdateComponent(unsigned long id, unsigned long triggerTime
   _triggerTime = triggerTime;
   _active = true;
   _updateCallback = nullptr;
-  _finalCallback = finalCallback;
   _component = component;
+  _finalCallback = finalCallback;
   DEBUG_DEBUG("set component task %i with id %lu at %lu", _posi, _id, _triggerTime);
+}
+
+void TimerTask::setAsFinalCallback(unsigned long id, unsigned long triggerTime, finalCallbackPtr finalCallback)
+{
+  _id = id;
+  _triggerTime = triggerTime;
+  _active = true;
+  _updateCallback = nullptr;
+  _component = nullptr;
+  _finalCallback = finalCallback;
+  DEBUG_DEBUG("set final task %i with id %lu at %lu", _posi, _id, _triggerTime);
 }
 
 void TimerTask::reset()

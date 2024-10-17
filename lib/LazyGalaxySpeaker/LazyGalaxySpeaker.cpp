@@ -31,7 +31,6 @@ void MySpeaker::silence()
 {
   _isWavPlaing = false;
   tmrpcm.disable();
-
   _melody = nullptr;
   _noteCallback = nullptr;
   _noteIndex = -1;
@@ -67,10 +66,7 @@ unsigned long MySpeaker::update(unsigned long time)
     if (tmrpcm.isPlaying())
       return time + 50;
     else
-    {
-      // printf("wav playing ended %lu\n", time);
       silence();
-    }
   }
   // a positive index indicates we have a melody to play
   else if (_noteIndex >= 0)
