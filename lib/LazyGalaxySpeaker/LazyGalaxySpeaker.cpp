@@ -52,8 +52,8 @@ void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, finalCa
 
 void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
 {
-  silence();
   DEBUG_INFO("play wav %s", filename);
+  silence();
   tmrpcm.play(filename);
   _isWavPlaing = true;
   _taskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
