@@ -9,7 +9,6 @@
 
 #include <Adafruit_NeoPixel.h>
 #include <LazyGalaxyCommon.h>
-#include <LazyGalaxyTimer.h>
 
 static const unsigned char NO_SEQUENCE_TYPE = 0;
 static const unsigned char CHASE_SEQUENCE_TYPE = 1;

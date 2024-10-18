@@ -5,13 +5,13 @@
 */
 
 #include <LazyGalaxySystem.h>
+#include <LazyGalaxyTimer.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 
-MySDCard *sdcard = new MySDCard(D10);
 MySpeaker *speaker = new MySpeaker(D9);
 
-void playWav2(unsigned long time)
+void playOffWav(unsigned long time)
 {
     speaker->playWav("OFF.wav");
 }
@@ -20,19 +20,19 @@ void setup()
 {
     Debug.setDebugLevel(DBG_DEBUG);
 
-    System::getInstance()->add(sdcard);
-    System::getInstance()->add(speaker);
+    System::add(new MySDCard(D10));
+    System::add(speaker);
 
-    System::getInstance()->setup();
+    System::setup();
 
     speaker->playWav("ON.wav");
     // schedule a task/function callback to play in the future
-    Timer::scheduleTask(500, playWav2);
+    Timer::schedule(500, playOffWav);
 }
 
 void loop()
 {
-    System::getInstance()->loop(millis());
+    System::loop();
     // update all LazyGalaxy tasks
-    Timer::updateTasks();
+    Timer::update();
 }

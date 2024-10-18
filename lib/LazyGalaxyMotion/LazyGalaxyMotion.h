@@ -7,7 +7,6 @@
 #ifndef LAZYGALAXYMOTION_H
 #define LAZYGALAXYMOTION_H
 
-#include <LazyGalaxyTimer.h>
 #include <LazyGalaxyCommon.h>
 #include "MPU6050.h"
 

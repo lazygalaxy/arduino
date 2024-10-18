@@ -4,11 +4,10 @@
    Released into the public domain.
 */
 #include <LazyGalaxySystem.h>
+#include <LazyGalaxyTimer.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
-#include <LazyGalaxyTimer.h>
 
-MySDCard *sdcard = new MySDCard(D10);
 MySpeaker *speaker = new MySpeaker(D9, 5);
 
 Melody *santaClausMelody =
@@ -54,10 +53,10 @@ void setup()
 {
   Debug.setDebugLevel(DBG_DEBUG);
 
-  System::getInstance()->add(sdcard);
-  System::getInstance()->add(speaker);
+  System::add(new MySDCard(D10));
+  System::add(speaker);
 
-  System::getInstance()->setup();
+  System::setup();
 
   speaker->playMelody(jingleBellsMelody, noteCallback, step2);
   // schedule a task / function callback to play the future
@@ -66,5 +65,6 @@ void setup()
 
 void loop()
 {
-  System::getInstance()->loop(millis());
+  System::loop();
+  Timer::update();
 }

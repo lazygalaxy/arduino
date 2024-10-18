@@ -13,7 +13,7 @@ Timer::Timer(char size)
   DEBUG_DEBUG("timer size %i tasks", tasks.size());
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
+unsigned long Timer::scheduleTask(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
 {
   for (int i = 0; i < tasks.size(); i++)
   {
@@ -28,7 +28,7 @@ unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updat
   return 0;
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, finalCallbackPtr finalCallback)
+unsigned long Timer::scheduleTask(unsigned long triggerTime, finalCallbackPtr finalCallback)
 {
   for (int i = 0; i < tasks.size(); i++)
   {
@@ -43,22 +43,7 @@ unsigned long Timer::schedule(unsigned long triggerTime, finalCallbackPtr finalC
   return 0;
 }
 
-boolean Timer::unschedule(unsigned long taskId)
-{
-  for (int i = 0; i < tasks.size(); i++)
-  {
-    TimerTask *task = tasks.get(i);
-    if (task->_id == taskId)
-    {
-      task->reset();
-      return true;
-    }
-  }
-  DEBUG_ERROR("failed to unschedule %lu", taskId);
-  return false;
-}
-
-void Timer::update(unsigned long time)
+void Timer::updateTask(unsigned long time)
 {
   for (int i = 0; i < tasks.size(); i++)
   {

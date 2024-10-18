@@ -17,12 +17,9 @@ private:
   LinkedList<TimerTask *> tasks = LinkedList<TimerTask *>();
 
   Timer(char size);
-  void update(unsigned long time);
-
-public:
-  unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
-  unsigned long schedule(unsigned long triggerTime, finalCallbackPtr finalCallback);
-  boolean unschedule(unsigned long taskId);
+  unsigned long scheduleTask(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
+  unsigned long scheduleTask(unsigned long triggerTime, finalCallbackPtr finalCallback);
+  void updateTask(unsigned long time);
 
   static Timer *getInstance()
   {
@@ -30,17 +27,18 @@ public:
     return timerInstance;
   }
 
-  static long scheduleTask(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
+public:
+  static long schedule(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
   {
-    return getInstance()->schedule(millis() + delay, updateCallback, finalCallback);
+    return getInstance()->scheduleTask(millis() + delay, updateCallback, finalCallback);
   }
 
-  static long scheduleTask(unsigned int delay, finalCallbackPtr finalCallback)
+  static long schedule(unsigned int delay, finalCallbackPtr finalCallback)
   {
-    return getInstance()->schedule(millis() + delay, finalCallback);
+    return getInstance()->scheduleTask(millis() + delay, finalCallback);
   }
 
-  static void updateTasks() { getInstance()->update(millis()); }
+  static void update() { getInstance()->updateTask(millis()); }
 };
 
 #endif

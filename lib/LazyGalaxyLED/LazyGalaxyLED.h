@@ -8,7 +8,6 @@
 #define LAZYGALAXYLED_H
 
 #include <LazyGalaxyCommon.h>
-#include <LazyGalaxyTimer.h>
 
 class LED : public PinComponent
 {

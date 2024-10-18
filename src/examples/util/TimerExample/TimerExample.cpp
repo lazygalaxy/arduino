@@ -34,13 +34,13 @@ void setup()
   Debug.setDebugLevel(DBG_DEBUG);
 
   // schedule a task to print "Hello" three times in 2 seconds, then print "Goodbye"
-  Timer::scheduleTask(2000, printHello, printGoodbye);
+  Timer::schedule(2000, printHello, printGoodbye);
   // schedule a task to print "Goodbye" in 6 seconds
-  Timer::scheduleTask(8000, printHaveANiceDay);
+  Timer::schedule(8000, printHaveANiceDay);
 }
 
 void loop()
 {
   // update all LazyGalaxy tasks
-  Timer::updateTasks();
+  Timer::update();
 }

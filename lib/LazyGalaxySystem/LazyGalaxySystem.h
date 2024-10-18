@@ -16,16 +16,30 @@ private:
   LinkedList<Component *> _components = LinkedList<Component *>();
 
   System();
-
-public:
-  void add(Component *component);
-  void setup();
-  void loop(unsigned long time);
+  void addComponent(Component *component);
+  void setupComponents();
+  void loopComponents();
 
   static System *getInstance()
   {
     static System *systemInstance = new System();
     return systemInstance;
+  }
+
+public:
+  static void add(Component *component)
+  {
+    getInstance()->addComponent(component);
+  }
+
+  static void setup()
+  {
+    getInstance()->setupComponents();
+  }
+
+  static void loop()
+  {
+    getInstance()->loopComponents();
   }
 };
 

@@ -10,20 +10,21 @@ System::System()
 {
 }
 
-void System::add(Component *component)
+void System::addComponent(Component *component)
 {
   _components.add(component);
 }
 
-void System::setup()
+void System::setupComponents()
 {
   Serial.begin(9600);
   for (int i = 0; i < _components.size(); i++)
     _components[i]->setup();
 }
 
-void System::loop(unsigned long time)
+void System::loopComponents()
 {
+  unsigned long time = millis();
   for (int i = 0; i < _components.size(); i++)
   {
     if (_components[i]->_triggerTime > 0 && time >= _components[i]->_triggerTime)
