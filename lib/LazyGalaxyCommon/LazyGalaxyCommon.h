@@ -31,6 +31,8 @@ typedef void (*finalCallbackPtr)(unsigned long time);
 class Component
 {
 public:
+  unsigned long _triggerTime = 0;
+  finalCallbackPtr _finalCallback = nullptr;
   virtual unsigned long update(unsigned long time) { return time; }
   virtual void setup() {}
 };

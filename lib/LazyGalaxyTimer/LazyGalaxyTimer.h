@@ -21,7 +21,6 @@ private:
 
 public:
   unsigned long schedule(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
-  unsigned long schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback = nullptr);
   unsigned long schedule(unsigned long triggerTime, finalCallbackPtr finalCallback);
   boolean unschedule(unsigned long taskId);
 

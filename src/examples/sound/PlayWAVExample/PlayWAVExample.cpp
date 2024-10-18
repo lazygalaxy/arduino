@@ -4,31 +4,35 @@
    Released into the public domain.
 */
 
+#include <LazyGalaxySystem.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 
-MySDCard sdcard(D10);
-MySpeaker speaker(D9);
+MySDCard *sdcard = new MySDCard(D10);
+MySpeaker *speaker = new MySpeaker(D9);
 
 void playWav2(unsigned long time)
 {
-    speaker.playWav("OFF.wav");
+    speaker->playWav("OFF.wav");
 }
 
 void setup()
 {
-    Serial.begin(9600);
-    Debug.setDebugLevel(DBG_VERBOSE);
+    Debug.setDebugLevel(DBG_DEBUG);
 
-    sdcard.setup();
+    System::getInstance()->add(sdcard);
+    System::getInstance()->add(speaker);
 
-    speaker.playWav("ON.wav");
+    System::getInstance()->setup();
+
+    speaker->playWav("ON.wav");
     // schedule a task/function callback to play in the future
     Timer::scheduleTask(500, playWav2);
 }
 
 void loop()
 {
+    System::getInstance()->loop(millis());
     // update all LazyGalaxy tasks
     Timer::updateTasks();
 }

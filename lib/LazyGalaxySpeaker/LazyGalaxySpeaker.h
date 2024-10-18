@@ -140,9 +140,6 @@ private:
   // wav
   bool _isWavPlaing = false;
   TMRpcm tmrpcm;
-
-  // common
-  unsigned long _taskId = 0;
 };
 
 #endif

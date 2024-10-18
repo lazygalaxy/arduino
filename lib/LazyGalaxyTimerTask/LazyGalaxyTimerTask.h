@@ -12,17 +12,13 @@
 class TimerTask
 {
 public:
-  char _posi;
-  boolean _active;
   unsigned long _id = 0;
-  unsigned long _triggerTime;
-  updateCallbackPtr _updateCallback;
-  finalCallbackPtr _finalCallback;
-  Component *_component;
+  unsigned long _triggerTime = 0;
+  updateCallbackPtr _updateCallback = nullptr;
+  finalCallbackPtr _finalCallback = nullptr;
 
   TimerTask(char posi);
   void setAsUpdateCallback(unsigned long id, unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback);
-  void setAsUpdateComponent(unsigned long id, unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback);
   void setAsFinalCallback(unsigned long id, unsigned long triggerTime, finalCallbackPtr finalCallback);
   void reset();
 };

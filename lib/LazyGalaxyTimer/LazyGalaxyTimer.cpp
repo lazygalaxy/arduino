@@ -18,7 +18,7 @@ unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updat
   for (int i = 0; i < tasks.size(); i++)
   {
     TimerTask *task = tasks.get(i);
-    if (!task->_active)
+    if (task->_triggerTime == 0)
     {
       task->setAsUpdateCallback(++idCounter, triggerTime, updateCallback, finalCallback);
       return task->_id;
@@ -28,27 +28,12 @@ unsigned long Timer::schedule(unsigned long triggerTime, updateCallbackPtr updat
   return 0;
 }
 
-unsigned long Timer::schedule(unsigned long triggerTime, Component *component, finalCallbackPtr finalCallback)
-{
-  for (int i = 0; i < tasks.size(); i++)
-  {
-    TimerTask *task = tasks.get(i);
-    if (!task->_active)
-    {
-      task->setAsUpdateComponent(++idCounter, triggerTime, component, finalCallback);
-      return task->_id;
-    }
-  }
-  DEBUG_ERROR("failed component task %lu at %lu", idCounter, triggerTime);
-  return 0;
-}
-
 unsigned long Timer::schedule(unsigned long triggerTime, finalCallbackPtr finalCallback)
 {
   for (int i = 0; i < tasks.size(); i++)
   {
     TimerTask *task = tasks.get(i);
-    if (!task->_active)
+    if (task->_triggerTime == 0)
     {
       task->setAsFinalCallback(++idCounter, triggerTime, finalCallback);
       return task->_id;
@@ -78,22 +63,20 @@ void Timer::update(unsigned long time)
   for (int i = 0; i < tasks.size(); i++)
   {
     TimerTask *task = tasks.get(i);
-    if (task->_active)
+    if (task->_triggerTime > 0)
     {
-      DEBUG_VERBOSE("active task %i with id %lu and trigger %lu at %lu", task->_posi, task->_id, task->_triggerTime, time);
+      DEBUG_VERBOSE("active task %lu and trigger %lu at %lu", task->_id, task->_triggerTime, time);
       if (task->_triggerTime <= time)
       {
         if (task->_updateCallback != nullptr)
           task->_triggerTime = task->_updateCallback(time);
-        else if (task->_component != nullptr)
-          task->_triggerTime = task->_component->update(time);
 
         if (task->_triggerTime <= time)
         {
           if (task->_finalCallback != nullptr)
             task->_finalCallback(time);
 
-          if (task->_active && task->_triggerTime <= time)
+          if (task->_triggerTime > 0 && task->_triggerTime <= time)
             task->reset();
         }
       }
