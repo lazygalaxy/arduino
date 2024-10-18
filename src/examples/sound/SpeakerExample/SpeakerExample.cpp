@@ -1,10 +1,9 @@
 /*
-   SpeakerExample.cpp - Asynchronous melody playing example.
+   SpeakerExample.cpp - Asynchronous melody and sound playing example.
    Created by LazyGalaxy - Evangelos Papakonstantis, November 22, 2018.
    Released into the public domain.
 */
 #include <LazyGalaxySystem.h>
-#include <LazyGalaxyTimer.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 
@@ -51,20 +50,17 @@ void step2(unsigned long time)
 
 void setup()
 {
-  Debug.setDebugLevel(DBG_DEBUG);
+  Debug.setDebugLevel(DBG_VERBOSE);
 
   System::add(new MySDCard(D10));
   System::add(speaker);
-
   System::setup();
 
   speaker->playMelody(jingleBellsMelody, noteCallback, step2);
-  // schedule a task / function callback to play the future
-  // Timer::scheduleTask(2000, updatePlayWav1);
 }
 
 void loop()
 {
   System::loop();
-  Timer::update();
+  // Timer::update();
 }

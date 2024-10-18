@@ -4,47 +4,48 @@
    Released into the public domain.
  */
 
-#include <LazyGalaxyLED.h>
+#include <LazyGalaxySystem.h>
 #include <LazyGalaxyTimer.h>
+#include <LazyGalaxyLED.h>
 
 // any pin is ok for the LEDs, digital(with and without PWM) or analog
-LED led1(D3);
-LED led2(D5);
-LED led3(D7);
+LED *led = new LED(D4);
 
-void lightOff(unsigned long time) {
-  led1.setLight(false);
-  led2.setLight(false);
-  led3.setLight(false);
+void lightOff(unsigned long time)
+{
+  led->setLight(false);
 }
 
-void blinkOn(unsigned long time) {
-  led1.setBlink(true);
-  led2.setBlink(true);
-  led3.setBlink(true);
+void blinkOn(unsigned long time)
+{
+  led->setBlink(true);
 }
 
-void blinkOff(unsigned long time) {
-  led1.setBlink(false);
-  led2.setBlink(false);
-  led3.setBlink(false);
+void blinkOff(unsigned long time)
+{
+  led->setBlink(false);
 }
 
-void setup() {
+void setup()
+{
+  Debug.setDebugLevel(DBG_VERBOSE);
+
+  System::add(led);
+  System::setup();
+
   // light all 3 LEDS on startup
-  led1.setLight(true);
-  led2.setLight(true);
-  led3.setLight(true);
+  led->setLight(true);
 
   // schedule a task/function to switch the lights of all LEDs in 3 seconds
-  Timer::scheduleTask(3000, lightOff);
+  Timer::schedule(3000, lightOff);
   // schedule a task/function to start the blink of all LEDs in 6 seconds
-  Timer::scheduleTask(6000, blinkOn);
+  Timer::schedule(6000, blinkOn);
   // schedule a task/function to stop the blink of all LEDs in 9 seconds
-  Timer::scheduleTask(9000, blinkOff);
+  Timer::schedule(9000, blinkOff);
 }
 
-void loop() {
-  // update all LazyGalaxy tasks
-  Timer::updateTasks();
+void loop()
+{
+  System::loop();
+  Timer::update();
 }
