@@ -33,14 +33,14 @@ void setup()
   System::add(led);
   System::setup();
 
-  // light all 3 LEDS on startup
+  // light LED on startup
   led->setLight(true);
 
-  // schedule a task/function to switch the lights of all LEDs in 3 seconds
+  // schedule a task/function to switch the light off in 3 seconds
   Timer::schedule(3000, lightOff);
-  // schedule a task/function to start the blink of all LEDs in 6 seconds
+  // schedule a task/function to start the blink in 6 seconds
   Timer::schedule(6000, blinkOn);
-  // schedule a task/function to stop the blink of all LEDs in 9 seconds
+  // schedule a task/function to stop the blink in 9 seconds
   Timer::schedule(9000, blinkOff);
 }
 
