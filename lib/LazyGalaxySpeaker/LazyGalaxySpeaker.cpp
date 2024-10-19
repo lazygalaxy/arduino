@@ -19,12 +19,12 @@ void MySpeaker::reset()
 {
   DEBUG_DEBUG("reset speaker");
   Component::reset();
-  _isWavPlaing = false;
-  tmrpcm.disable();
   _melody = nullptr;
   _noteCallback = nullptr;
   _noteIndex = -1;
   stopNote();
+  _isWavPlaing = false;
+  tmrpcm.disable();
 }
 
 void MySpeaker::playNote(int note)

@@ -35,7 +35,7 @@ void allBlue(unsigned long time) { strip->setNoSequence(0.66, 1.0, 0.5); }
 void setup()
 {
   Serial.begin(9600);
-  Debug.setDebugLevel(DBG_DEBUG);
+  Debug.setDebugLevel(DBG_VERBOSE);
 
   System::add(strip);
   System::setup();

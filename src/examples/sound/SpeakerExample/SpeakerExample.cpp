@@ -60,6 +60,7 @@ void setup()
   System::setup();
 
   speaker->playMelody(jingleBellsMelody, noteCallback, step2);
+  // Timer::schedule(3000, step2);
 }
 
 void loop()

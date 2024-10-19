@@ -16,14 +16,14 @@ private:
   unsigned long idCounter = 0;
   LinkedList<TimerTask *> tasks = LinkedList<TimerTask *>();
 
-  Timer(char size);
+  Timer();
   unsigned long scheduleTask(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
   unsigned long scheduleTask(unsigned long triggerTime, finalCallbackPtr finalCallback);
   void updateTasks(unsigned long time);
 
   static Timer *getInstance()
   {
-    static Timer *timerInstance = new Timer(5);
+    static Timer *timerInstance = new Timer();
     return timerInstance;
   }
 

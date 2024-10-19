@@ -19,7 +19,7 @@ void playOffWav(unsigned long time)
 void setup()
 {
     Serial.begin(9600);
-    Debug.setDebugLevel(DBG_DEBUG);
+    Debug.setDebugLevel(DBG_VERBOSE);
 
     System::add(new MySDCard(D10));
     System::add(speaker);

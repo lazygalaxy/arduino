@@ -28,7 +28,8 @@ void blinkOff(unsigned long time)
 
 void setup()
 {
-  Debug.setDebugLevel(DBG_VERBOSE);
+  Serial.begin(9600);
+  Debug.setDebugLevel(DBG_DEBUG);
 
   System::add(led);
   System::setup();

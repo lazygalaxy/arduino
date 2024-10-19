@@ -25,7 +25,7 @@ void MyMotion::setup()
   //     debugPrintln(F("MPU6050 fail"));
   // }
 
-  Timer::getInstance()->schedule(update(millis()), this);
+  // Timer::getInstance()->schedule(update(millis()), this);
 }
 
 unsigned long MyMotion::update(unsigned long time)

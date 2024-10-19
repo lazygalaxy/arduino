@@ -42,6 +42,11 @@ public:
     _triggerTime = 0;
     _finalCallback = nullptr;
   }
+
+  virtual boolean isActive()
+  {
+    return _triggerTime > 0;
+  }
 };
 
 class PinComponent : public Component

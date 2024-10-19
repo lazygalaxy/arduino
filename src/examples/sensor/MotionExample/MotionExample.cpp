@@ -4,20 +4,20 @@
    Released into the public domain.
  */
 
-#include <LazyGalaxyTimer.h>
+#include <LazyGalaxySystem.h>
 #include <LazyGalaxyMotion.h>
-
-MyMotion motion;
 
 void setup()
 {
   Serial.begin(9600);
-  motion.enableDebug();
-  motion.setup();
+  Debug.setDebugLevel(DBG_DEBUG);
+
+  System::add(new MyMotion());
+  System::setup();
 }
 
 void loop()
 {
   // update all LazyGalaxy tasks
-  Timer::updateTasks();
+  System::loop();
 }
