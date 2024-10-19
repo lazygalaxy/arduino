@@ -123,11 +123,11 @@ class MySpeaker : public PinComponent
 {
 public:
   MySpeaker(uint8_t pin, char volume = 5);
+  void reset();
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
   void playWav(const char *filename, finalCallbackPtr finalCallback = nullptr);
-  void silence();
   unsigned long update(unsigned long time) override;
 
 private:

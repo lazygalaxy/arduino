@@ -3,7 +3,9 @@
    Created by LazyGalaxy - Evangelos Papakonstantis, November 22, 2018.
    Released into the public domain.
 */
+
 #include <LazyGalaxySystem.h>
+#include <LazyGalaxyTimer.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 
@@ -50,6 +52,7 @@ void step2(unsigned long time)
 
 void setup()
 {
+  Serial.begin(9600);
   Debug.setDebugLevel(DBG_VERBOSE);
 
   System::add(new MySDCard(D10));
@@ -62,5 +65,5 @@ void setup()
 void loop()
 {
   System::loop();
-  // Timer::update();
+  Timer::loop();
 }

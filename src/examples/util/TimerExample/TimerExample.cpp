@@ -42,5 +42,5 @@ void setup()
 void loop()
 {
   // update all LazyGalaxy tasks
-  Timer::update();
+  Timer::loop();
 }

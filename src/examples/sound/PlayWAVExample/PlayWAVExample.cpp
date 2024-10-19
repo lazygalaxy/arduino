@@ -18,6 +18,7 @@ void playOffWav(unsigned long time)
 
 void setup()
 {
+    Serial.begin(9600);
     Debug.setDebugLevel(DBG_DEBUG);
 
     System::add(new MySDCard(D10));
@@ -33,6 +34,5 @@ void setup()
 void loop()
 {
     System::loop();
-    // update all LazyGalaxy tasks
-    Timer::update();
+    Timer::loop();
 }

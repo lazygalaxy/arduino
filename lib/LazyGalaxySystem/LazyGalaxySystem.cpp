@@ -17,7 +17,6 @@ void System::addComponent(Component *component)
 
 void System::setupComponents()
 {
-  Serial.begin(9600);
   for (int i = 0; i < _components.size(); i++)
     _components[i]->setup();
 }

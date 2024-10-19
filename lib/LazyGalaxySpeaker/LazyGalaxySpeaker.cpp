@@ -8,11 +8,23 @@
 
 MySpeaker::MySpeaker(uint8_t pin, char volume) : PinComponent(pin)
 {
+  reset();
   pinMode(_pin, OUTPUT);
-  silence();
   tmrpcm.speakerPin = _pin;
   tmrpcm.setVolume(volume);
   tmrpcm.quality(1);
+}
+
+void MySpeaker::reset()
+{
+  DEBUG_DEBUG("reset speaker");
+  Component::reset();
+  _isWavPlaing = false;
+  tmrpcm.disable();
+  _melody = nullptr;
+  _noteCallback = nullptr;
+  _noteIndex = -1;
+  stopNote();
 }
 
 void MySpeaker::playNote(int note)
@@ -27,39 +39,28 @@ void MySpeaker::stopNote()
   _isNotePlaying = false;
 }
 
-void MySpeaker::silence()
-{
-  DEBUG_DEBUG("silence");
-  _isWavPlaing = false;
-  tmrpcm.disable();
-  _melody = nullptr;
-  _noteCallback = nullptr;
-  _noteIndex = -1;
-  stopNote();
-}
-
 void MySpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, finalCallbackPtr finalCallback)
 {
-  silence();
+  reset();
 
   _melody = melody;
   _noteCallback = noteCallback;
-  _finalCallback = finalCallback;
-
   _noteIndex = 0;
+
   _triggerTime = update(millis());
+  _finalCallback = finalCallback;
 }
 
 void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
 {
-  silence();
+  reset();
 
   DEBUG_INFO("play wav %s", filename);
   tmrpcm.play(filename);
-  _finalCallback = finalCallback;
-
   _isWavPlaing = true;
+
   _triggerTime = update(millis());
+  _finalCallback = finalCallback;
 }
 
 unsigned long MySpeaker::update(unsigned long time)
@@ -69,8 +70,6 @@ unsigned long MySpeaker::update(unsigned long time)
   {
     if (tmrpcm.isPlaying())
       return time + 50;
-    else
-      silence();
   }
   // a positive index indicates we have a melody to play
   else if (_noteIndex >= 0)
@@ -91,8 +90,6 @@ unsigned long MySpeaker::update(unsigned long time)
 
       return time + (_melody->beats[_noteIndex++] * _melody->tempo);
     }
-    else
-      silence();
   }
   return 0;
 }
