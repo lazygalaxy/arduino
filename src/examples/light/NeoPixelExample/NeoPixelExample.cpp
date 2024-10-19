@@ -16,11 +16,12 @@ void allOff(unsigned long time) { strip->off(); }
 
 void wipeSequenceReverse(unsigned long time)
 {
-  strip->setWipeSequence(0.75, 1.0, 0.5, DELAY, true, allOff);
+  DEBUG_DEBUG("wipeSequenceReverse");
+  strip->setWipeSequence(0.66, 1.0, 0.5, DELAY, true, allOff);
 }
 void wipeSequence(unsigned long time)
 {
-  strip->setWipeSequence(0.5, 1.0, 0.5, DELAY, false, wipeSequenceReverse);
+  strip->setWipeSequence(0.33, 1.0, 0.5, DELAY, false, wipeSequenceReverse);
 }
 void chaseSequence(unsigned long time)
 {

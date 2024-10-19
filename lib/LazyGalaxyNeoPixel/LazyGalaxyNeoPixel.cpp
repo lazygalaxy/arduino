@@ -8,8 +8,8 @@
 
 NeoPixel::NeoPixel(char pin, unsigned short pixels) : PinComponent(pin)
 {
+  reset();
   _strip = new Adafruit_NeoPixel(pixels, pin, NEO_GRB + NEO_KHZ800);
-  stopSequence();
 }
 
 void NeoPixel::setup()
@@ -19,84 +19,10 @@ void NeoPixel::setup()
   off();
 }
 
-void NeoPixel::setRGBColor(unsigned short pixel, float red, float green,
-                           float blue, bool mustShow)
+void NeoPixel::reset()
 {
-  uint8_t convertRed = 255 * red;
-  uint8_t convertGre = 255 * green;
-  uint8_t convertBlu = 255 * blue;
-
-  _strip->setPixelColor(pixel,
-                        _strip->Color(convertRed, convertGre, convertBlu));
-  if (mustShow)
-    _strip->show();
-}
-
-void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation,
-                           float value, bool mustShow)
-{
-  uint16_t convertHue = 65535 * hue;
-  uint8_t convertSat = 255 * saturation;
-  uint8_t convertVal = 255 * value;
-
-  _strip->setPixelColor(pixel, _strip->gamma32(_strip->ColorHSV(
-                                   convertHue, convertSat, convertVal)));
-  if (mustShow)
-    _strip->show();
-}
-
-void NeoPixel::off() { setNoSequence(0.0, 0.0, 0.0); }
-
-void NeoPixel::setWipeSequence(float hue, float saturation, float value,
-                               unsigned int delay, bool reverse,
-                               finalCallbackPtr finalCallback)
-{
-  stopSequence();
-  _sequenceType = WIPE_SEQUENCE_TYPE;
-  _sequenceHue = hue;
-  _sequenceSaturation = saturation;
-  _sequenceValue = value;
-  _sequenceDelay = delay;
-  _sequenceReverse = reverse;
-
-  _triggerTime = update(millis());
-  _finalCallback = finalCallback;
-}
-
-void NeoPixel::setChaseSequence(float hue, float saturation, float value,
-                                unsigned int delay, unsigned short cycles,
-                                unsigned char gap,
-                                finalCallbackPtr finalCallback)
-{
-  stopSequence();
-  _sequenceType = CHASE_SEQUENCE_TYPE;
-  _sequenceHue = hue;
-  _sequenceSaturation = saturation;
-  _sequenceValue = value;
-  _sequenceDelay = delay;
-  _sequenceCycles = cycles;
-  _sequenceGap = gap;
-
-  _triggerTime = update(millis());
-  _finalCallback = finalCallback;
-}
-
-void NeoPixel::setNoSequence(float hue, float saturation, float value,
-                             float probability)
-{
-  stopSequence();
-  for (uint16_t i = 0; i < _strip->numPixels(); i++)
-  {
-    if (probability >= random(1000) / 1000.0f)
-      setHSVColor(i, hue, saturation, value, false);
-    else
-      setHSVColor(i, 0.0, 0.0, 0.0, false);
-  }
-  _strip->show();
-}
-
-void NeoPixel::stopSequence()
-{
+  DEBUG_DEBUG("reset neopixel");
+  Component::reset();
   _sequenceType = NO_SEQUENCE_TYPE;
   _sequenceHue = 0.0;
   _sequenceSaturation = 0.0;
@@ -108,9 +34,77 @@ void NeoPixel::stopSequence()
   _sequenceIndex = 0;
 }
 
+void NeoPixel::setRGBColor(unsigned short pixel, float red, float green, float blue, bool mustShow)
+{
+  uint8_t convertRed = 255 * red;
+  uint8_t convertGre = 255 * green;
+  uint8_t convertBlu = 255 * blue;
+
+  _strip->setPixelColor(pixel, _strip->Color(convertRed, convertGre, convertBlu));
+  if (mustShow)
+    _strip->show();
+}
+
+void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation, float value, bool mustShow)
+{
+  uint16_t convertHue = 65535 * hue;
+  uint8_t convertSat = 255 * saturation;
+  uint8_t convertVal = 255 * value;
+
+  _strip->setPixelColor(pixel, _strip->gamma32(_strip->ColorHSV(convertHue, convertSat, convertVal)));
+  if (mustShow)
+    _strip->show();
+}
+
+void NeoPixel::off() { setNoSequence(0.0, 0.0, 0.0); }
+
+void NeoPixel::setWipeSequence(float hue, float saturation, float value, unsigned int delay, bool reverse, finalCallbackPtr finalCallback)
+{
+  reset();
+  _sequenceType = WIPE_SEQUENCE_TYPE;
+  _sequenceHue = hue;
+  _sequenceSaturation = saturation;
+  _sequenceValue = value;
+  _sequenceDelay = delay;
+  _sequenceReverse = reverse;
+
+  DEBUG_DEBUG("set wipe sequence");
+  _triggerTime = update(millis());
+  _finalCallback = finalCallback;
+}
+
+void NeoPixel::setChaseSequence(float hue, float saturation, float value, unsigned int delay, unsigned short cycles, unsigned char gap, finalCallbackPtr finalCallback)
+{
+  reset();
+  _sequenceType = CHASE_SEQUENCE_TYPE;
+  _sequenceHue = hue;
+  _sequenceSaturation = saturation;
+  _sequenceValue = value;
+  _sequenceDelay = delay;
+  _sequenceCycles = cycles;
+  _sequenceGap = gap;
+
+  DEBUG_DEBUG("set chase sequence");
+  _triggerTime = update(millis());
+  _finalCallback = finalCallback;
+}
+
+void NeoPixel::setNoSequence(float hue, float saturation, float value, float probability)
+{
+  reset();
+  DEBUG_DEBUG("set no sequence");
+  for (uint16_t i = 0; i < _strip->numPixels(); i++)
+  {
+    if (probability >= random(1000) / 1000.0f)
+      setHSVColor(i, hue, saturation, value, false);
+    else
+      setHSVColor(i, 0.0, 0.0, 0.0, false);
+  }
+  _strip->show();
+}
+
 unsigned long NeoPixel::update(unsigned long time)
 {
-  boolean sequenceComplete = false;
   switch (_sequenceType)
   {
   case CHASE_SEQUENCE_TYPE:
@@ -126,8 +120,7 @@ unsigned long NeoPixel::update(unsigned long time)
       _strip->show();
     }
     else
-      sequenceComplete = true;
-    break;
+      return 0;
   case WIPE_SEQUENCE_TYPE:
     if (_sequenceIndex < _strip->numPixels())
     {
@@ -137,18 +130,9 @@ unsigned long NeoPixel::update(unsigned long time)
       setHSVColor(index, _sequenceHue, _sequenceSaturation, _sequenceValue);
     }
     else
-      sequenceComplete = true;
-    break;
+      return 0;
   }
 
-  if (sequenceComplete)
-  {
-    stopSequence();
-    return 0;
-  }
-  else
-  {
-    _sequenceIndex++;
-    return time + _sequenceDelay;
-  }
+  _sequenceIndex++;
+  return time + _sequenceDelay;
 }

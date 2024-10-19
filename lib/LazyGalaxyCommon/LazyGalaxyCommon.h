@@ -33,8 +33,15 @@ class Component
 public:
   unsigned long _triggerTime = 0;
   finalCallbackPtr _finalCallback = nullptr;
-  virtual unsigned long update(unsigned long time) { return time; }
+
+  virtual unsigned long update(unsigned long time) { return 0; }
   virtual void setup() {}
+
+  virtual void reset()
+  {
+    _triggerTime = 0;
+    _finalCallback = nullptr;
+  }
 };
 
 class PinComponent : public Component
