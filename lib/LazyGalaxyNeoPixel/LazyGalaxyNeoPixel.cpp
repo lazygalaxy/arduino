@@ -59,7 +59,8 @@ void NeoPixel::setWipeSequence(float hue, float saturation, float value,
   _sequenceDelay = delay;
   _sequenceReverse = reverse;
 
-  _sequenceTaskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
+  _triggerTime = update(millis());
+  _finalCallback = finalCallback;
 }
 
 void NeoPixel::setChaseSequence(float hue, float saturation, float value,
@@ -76,7 +77,8 @@ void NeoPixel::setChaseSequence(float hue, float saturation, float value,
   _sequenceCycles = cycles;
   _sequenceGap = gap;
 
-  _sequenceTaskId = Timer::getInstance()->schedule(update(millis()), this, finalCallback);
+  _triggerTime = update(millis());
+  _finalCallback = finalCallback;
 }
 
 void NeoPixel::setNoSequence(float hue, float saturation, float value,
@@ -95,10 +97,6 @@ void NeoPixel::setNoSequence(float hue, float saturation, float value,
 
 void NeoPixel::stopSequence()
 {
-  if (_sequenceTaskId != 0)
-    Timer::getInstance()->unschedule(_sequenceTaskId);
-
-  _sequenceTaskId = 0;
   _sequenceType = NO_SEQUENCE_TYPE;
   _sequenceHue = 0.0;
   _sequenceSaturation = 0.0;
@@ -146,7 +144,7 @@ unsigned long NeoPixel::update(unsigned long time)
   if (sequenceComplete)
   {
     stopSequence();
-    return time;
+    return 0;
   }
   else
   {

@@ -47,5 +47,5 @@ void setup()
 void loop()
 {
   System::loop();
-  Timer::update();
+  Timer::loop();
 }

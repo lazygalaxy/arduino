@@ -39,7 +39,6 @@ public:
 private:
   Adafruit_NeoPixel *_strip;
 
-  unsigned long _sequenceTaskId;
   unsigned char _sequenceType;
   float _sequenceHue;
   float _sequenceSaturation;

@@ -19,11 +19,11 @@ private:
   Timer(char size);
   unsigned long scheduleTask(unsigned long triggerTime, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr);
   unsigned long scheduleTask(unsigned long triggerTime, finalCallbackPtr finalCallback);
-  void updateTask(unsigned long time);
+  void updateTasks(unsigned long time);
 
   static Timer *getInstance()
   {
-    static Timer *timerInstance = new Timer(3);
+    static Timer *timerInstance = new Timer(5);
     return timerInstance;
   }
 
@@ -38,7 +38,7 @@ public:
     return getInstance()->scheduleTask(millis() + delay, finalCallback);
   }
 
-  static void update() { getInstance()->updateTask(millis()); }
+  static void loop() { getInstance()->updateTasks(millis()); }
 };
 
 #endif

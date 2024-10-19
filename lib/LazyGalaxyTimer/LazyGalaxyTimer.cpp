@@ -43,7 +43,7 @@ unsigned long Timer::scheduleTask(unsigned long triggerTime, finalCallbackPtr fi
   return 0;
 }
 
-void Timer::updateTask(unsigned long time)
+void Timer::updateTasks(unsigned long time)
 {
   for (int i = 0; i < tasks.size(); i++)
   {
