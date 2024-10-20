@@ -15,21 +15,25 @@ class Button : public PinComponent
 {
 public:
   Button(uint8_t buttonPin, uint8_t ledPin = -1);
-  int getClicks(unsigned int delay = 200);
-  boolean isLongPressed(unsigned int duration = 1000);
+  void reset() override;
 
+  int popClickCounter();
+  boolean popLongPressed();
   bool isOn();
   bool isOff();
   void setOn(bool buttonOn);
 
+  unsigned long update(unsigned long time) override;
+
 private:
-  LED *led = nullptr;
-  unsigned long _pressTime = 0;
-  unsigned long _releaseTime = 0;
-  int _prevValue = HIGH;
-  int _clickCounter = 0;
-  boolean _buttonOn = false;
-  boolean _longPressed = false;
+  LED *led;
+  unsigned long _pressTime;
+  unsigned long _releaseTime;
+  int _prevValue;
+  int _clickCounter;
+  int _tempClickCounter;
+  boolean _buttonOn;
+  boolean _longPressed;
 };
 
 #endif

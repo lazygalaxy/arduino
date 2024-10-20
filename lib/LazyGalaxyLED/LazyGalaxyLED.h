@@ -16,11 +16,12 @@ private:
 
 public:
   LED(uint8_t pin);
+  unsigned long update(unsigned long time) override;
+
   void setLight(bool flag);
   bool isLight();
   void setBlink(bool flag, unsigned int blinkDelay = 500);
   bool isBlink();
-  unsigned long update(unsigned long time) override;
 };
 
 #endif

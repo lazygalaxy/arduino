@@ -18,8 +18,9 @@ class NeoPixel : public PinComponent
 {
 public:
   NeoPixel(char pin, unsigned short pixels);
-  void setup();
-  void reset();
+  void setup() override;
+  void reset() override;
+
   void setRGBColor(unsigned short pixel, float red, float green, float blue,
                    bool mustShow = true);
   void setHSVColor(unsigned short pixel, float hue, float saturation,
@@ -34,6 +35,7 @@ public:
                         finalCallbackPtr finalCallback = nullptr);
   void setNoSequence(float hue, float saturation, float value,
                      float probability = 1.0);
+
   unsigned long update(unsigned long time) override;
 
 private:
