@@ -26,11 +26,21 @@ static const float FREQ_SMOOTH_FACTOR = 0.2;
 bool lightSaberOn = false;
 float hue = 0.0;
 
-// components required
 LED *led = new LED(D4);
-Button *button = new Button(D5);
 MySpeaker *speaker = new MySpeaker(D9, 5);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
+
+void changeHueCallback(unsigned long time)
+{
+  if (lightSaberOn)
+  {
+    hue += 0.005;
+    if (hue > 1.0)
+      hue = 0.0;
+    neopixel->setNoSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL);
+  }
+}
+Button *button = new Button(D5, changeHueCallback);
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -40,19 +50,6 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   int freq_f = freq * FREQ_SMOOTH_FACTOR + freq_f * (1 - FREQ_SMOOTH_FACTOR); // smooth filter
   speaker->playNote(freq_f);
 }
-
-// unsigned long changeHueCallback(unsigned long time)
-// {
-//   if (button->isLongPressed())
-//   {
-//     hue += 0.01;
-//     if (hue > 1.0)
-//       hue = 0.0;
-//     neopixel->setNoSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL);
-//     return time + 100;
-//   }
-//   return 0;
-// }
 
 void setup()
 {
@@ -74,7 +71,6 @@ void loop()
   System::loop();
 
   int buttonClickCounter = button->popClickCounter();
-  boolean buttonLongPressed = button->popLongPressed();
 
   // then implement the light saber logic
   if (!lightSaberOn && buttonClickCounter > 0)
@@ -87,18 +83,15 @@ void loop()
   }
   else if (lightSaberOn)
   {
-    if (buttonLongPressed)
+    switch (buttonClickCounter)
     {
-      // if there is a long press cycle the hue color
-      // Timer::scheduleTask(100, changeHueCallback);
-    }
-    else if (buttonClickCounter == 1)
-    {
+    case 1:
       // if there is 1 click, stop the light saber
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       speaker->playWav("OFF.wav");
-      led->setLight(false);
+      led->startBlink(true);
       lightSaberOn = false;
+      break;
     }
   }
 }

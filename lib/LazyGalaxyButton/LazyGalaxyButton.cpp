@@ -6,10 +6,10 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t pin) : PinComponent(pin)
+Button::Button(uint8_t pin, longPressCallbackPtr longPressCallback) : PinComponent(pin)
 {
   _clickCounter = 0;
-  _longPressed = false;
+  _longPressCallback = longPressCallback;
 }
 
 void Button::setup()
@@ -27,6 +27,7 @@ void Button::reset()
   _releaseTime = 0;
   _prevValue = HIGH;
   _tempClickCounter = 0;
+  _isLongPress = false;
 }
 
 int Button::popClickCounter()
@@ -40,29 +41,9 @@ int Button::popClickCounter()
   return 0;
 }
 
-boolean Button::popLongPressed()
-{
-  if (_longPressed)
-  {
-    _longPressed = false;
-    return true;
-  }
-  return false;
-}
-
 unsigned long Button::update(unsigned long time)
 {
   int value = digitalRead(_pin);
-
-  // this 1000 is the duration within which to pick up click, should be adjustable
-  // long pressed logic
-  //  if (value == LOW)
-  //  {
-  //    unsigned long time = millis();
-  //    _longPressed = (_pressTime != 0 && (time - _pressTime) >= duration);
-  //    return _longPressed;
-  //  }
-  //  return false;
 
   if (value == LOW && _pressTime == 0)
   {
@@ -71,25 +52,34 @@ unsigned long Button::update(unsigned long time)
     _prevValue = value;
     DEBUG_DEBUG("button pressed first time %lu", time);
   }
+  else if (value == LOW && _pressTime != 0 && (time - _pressTime) >= 1000)
+  {
+    DEBUG_DEBUG("button registered log press at %lu", time);
+    _isLongPress = true;
+    if (_longPressCallback != nullptr)
+      _longPressCallback(time);
+  }
   else if (value == HIGH && _prevValue == LOW)
   {
-    _tempClickCounter += 1;
-    _releaseTime = time;
-    _pressTime = 0;
-    _prevValue = value;
-    DEBUG_DEBUG("button pressed %i clicks at %lu", _tempClickCounter, time);
+    if (_isLongPress)
+      return 0;
+    else
+    {
+      _tempClickCounter += 1;
+      _releaseTime = time;
+      _pressTime = 0;
+      _prevValue = value;
+      DEBUG_DEBUG("button pressed %i clicks at %lu", _tempClickCounter, time);
+    }
   }
 
-  if (_releaseTime != 0)
+  // wait for the delay to elapse, before registering the click counter
+  if (_releaseTime != 0 && (time - _releaseTime) >= 200)
   {
-    // wait for the delay to elapse, before registering the click counter
-    if ((time - _releaseTime) >= 200)
-    {
-      _clickCounter = _tempClickCounter;
-      DEBUG_DEBUG("button registered %i clicks at %lu", _clickCounter, time);
-      // temporary we deactivate the component, it will be reste and activated again
-      return 0;
-    }
+    _clickCounter = _tempClickCounter;
+    DEBUG_DEBUG("button registered %i clicks at %lu", _clickCounter, time);
+    // temporary we deactivate the component, it will be reste and activated again
+    return 0;
   }
 
   // we always need to check the button status
