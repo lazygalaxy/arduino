@@ -14,19 +14,17 @@
 class Button : public PinComponent
 {
 public:
-  Button(uint8_t buttonPin, uint8_t ledPin = -1);
+  Button(uint8_t pin);
+  void setup() override;
   void reset() override;
+  unsigned long update(unsigned long time) override;
 
   int popClickCounter();
   boolean popLongPressed();
   bool isOn();
-  bool isOff();
   void setOn(bool buttonOn);
 
-  unsigned long update(unsigned long time) override;
-
 private:
-  LED *led;
   unsigned long _pressTime;
   unsigned long _releaseTime;
   int _prevValue;

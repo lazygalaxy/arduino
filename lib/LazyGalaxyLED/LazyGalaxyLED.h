@@ -12,16 +12,17 @@
 class LED : public PinComponent
 {
 private:
-  unsigned int _blinkDelay = 0;
+  unsigned int _blinkDelay;
 
 public:
   LED(uint8_t pin);
+  void setup() override;
+  void reset() override;
   unsigned long update(unsigned long time) override;
 
   void setLight(bool flag);
   bool isLight();
-  void setBlink(bool flag, unsigned int blinkDelay = 500);
-  bool isBlink();
+  void startBlink(bool flag, unsigned int blinkDelay = 500);
 };
 
 #endif

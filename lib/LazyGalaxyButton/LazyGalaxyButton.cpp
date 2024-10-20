@@ -6,22 +6,23 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t buttonPin, uint8_t ledPin) : PinComponent(buttonPin)
+Button::Button(uint8_t pin) : PinComponent(pin)
 {
-  reset();
   _clickCounter = 0;
   _longPressed = false;
-  pinMode(buttonPin, INPUT_PULLUP);
-  if (ledPin >= 0)
-    led = new LED(ledPin);
-  else
-    led = nullptr;
+}
+
+void Button::setup()
+{
+  pinMode(_pin, INPUT_PULLUP);
 }
 
 void Button::reset()
 {
   DEBUG_DEBUG("reset button");
   Component::reset();
+  // we always need to check the button status
+  _triggerTime = 1;
   _pressTime = 0;
   _releaseTime = 0;
   _prevValue = HIGH;
@@ -52,15 +53,9 @@ boolean Button::popLongPressed()
 
 bool Button::isOn() { return _buttonOn; }
 
-bool Button::isOff() { return !_buttonOn; }
-
 void Button::setOn(bool buttonOn)
 {
   _buttonOn = buttonOn;
-  if (led != nullptr && buttonOn)
-    led->setLight(true);
-  else if (led != nullptr && !buttonOn)
-    led->setLight(false);
 }
 
 unsigned long Button::update(unsigned long time)
@@ -83,9 +78,6 @@ unsigned long Button::update(unsigned long time)
     _releaseTime = 0;
     _prevValue = value;
     DEBUG_DEBUG("button pressed first time %lu", time);
-
-    // we clicked for the first time, activate the component
-    return time + 1;
   }
   else if (value == HIGH && _prevValue == LOW)
   {
@@ -104,10 +96,8 @@ unsigned long Button::update(unsigned long time)
       _clickCounter = _tempClickCounter;
       DEBUG_DEBUG("button registered %i clicks at %lu", _clickCounter, time);
     }
-    else
-      return time + 1;
   }
 
-  // anything else we need to deactivate the component
-  return 0;
+  // we always need to check the button status
+  return 1;
 }

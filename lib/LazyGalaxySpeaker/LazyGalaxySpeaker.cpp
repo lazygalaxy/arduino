@@ -8,10 +8,14 @@
 
 MySpeaker::MySpeaker(uint8_t pin, char volume) : PinComponent(pin)
 {
-  reset();
+  _volume = volume;
+}
+
+void MySpeaker::setup()
+{
   pinMode(_pin, OUTPUT);
   tmrpcm.speakerPin = _pin;
-  tmrpcm.setVolume(volume);
+  tmrpcm.setVolume(_volume);
   tmrpcm.quality(1);
 }
 
@@ -19,10 +23,12 @@ void MySpeaker::reset()
 {
   DEBUG_DEBUG("reset speaker");
   Component::reset();
+  // note
   _melody = nullptr;
-  _noteCallback = nullptr;
   _noteIndex = -1;
+  _noteCallback = nullptr;
   stopNote();
+  // wav
   _isWavPlaing = false;
   tmrpcm.disable();
 }

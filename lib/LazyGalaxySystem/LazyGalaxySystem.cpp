@@ -18,7 +18,11 @@ void System::addComponent(Component *component)
 void System::setupComponents()
 {
   for (int i = 0; i < _components.size(); i++)
-    _components[i]->setup();
+  {
+    Component *component = _components[i];
+    component->setup();
+    component->reset();
+  }
 }
 
 void System::loopComponents()

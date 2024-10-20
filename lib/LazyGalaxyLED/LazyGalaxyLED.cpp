@@ -8,7 +8,17 @@
 
 LED::LED(uint8_t pin) : PinComponent(pin)
 {
+}
+
+void LED::setup()
+{
   pinMode(_pin, OUTPUT);
+}
+
+void LED::reset()
+{
+  Component::reset();
+  _blinkDelay = 0;
   setLight(false);
 }
 
@@ -38,33 +48,20 @@ bool LED::isLight()
     return analogRead(_pin) > 0;
 }
 
-void LED::setBlink(bool flag, unsigned int blinkDelay)
+void LED::startBlink(bool flag, unsigned int blinkDelay)
 {
-  if (flag && !isBlink())
+  if (flag && !isActive())
   {
     // we would like to start the blink
     _blinkDelay = blinkDelay;
     _triggerTime = update(millis());
   }
-  else if (!flag && isBlink())
-  {
-    // we would like to stop the blink
-    _blinkDelay = 0;
-    setLight(false);
-  }
+  else if (!flag && isActive())
+    reset();
 }
-
-bool LED::isBlink() { return _blinkDelay > 0; }
 
 unsigned long LED::update(unsigned long time)
 {
-  if (isBlink())
-  {
-    if (isLight())
-      setLight(false);
-    else
-      setLight(true);
-    return time + _blinkDelay;
-  }
-  return 0;
+  setLight(!isLight());
+  return time + _blinkDelay;
 }

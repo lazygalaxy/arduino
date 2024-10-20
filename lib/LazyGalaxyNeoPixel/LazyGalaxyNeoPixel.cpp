@@ -8,8 +8,15 @@
 
 NeoPixel::NeoPixel(char pin, unsigned short pixels) : PinComponent(pin)
 {
-  reset();
-  _strip = new Adafruit_NeoPixel(pixels, pin, NEO_GRB + NEO_KHZ800);
+  _pixels = pixels;
+}
+
+void NeoPixel::setup()
+{
+  _strip = new Adafruit_NeoPixel(_pixels, _pin, NEO_GRB + NEO_KHZ800);
+  _strip->begin();
+  _strip->show();
+  off();
 }
 
 void NeoPixel::reset()
@@ -25,13 +32,6 @@ void NeoPixel::reset()
   _sequenceCycles = 0;
   _sequenceGap = 0;
   _sequenceIndex = 0;
-}
-
-void NeoPixel::setup()
-{
-  _strip->begin();
-  _strip->show();
-  off();
 }
 
 void NeoPixel::setRGBColor(unsigned short pixel, float red, float green, float blue, bool mustShow)

@@ -15,7 +15,7 @@ unsigned long printHello(unsigned long time)
     DEBUG_INFO("Hello %lu", time);
     return time + 1000;
   }
-  return time;
+  return 0;
 }
 
 void printGoodbye(unsigned long time)
@@ -31,7 +31,7 @@ void printHaveANiceDay(unsigned long time)
 void setup()
 {
   Serial.begin(9600);
-  Debug.setDebugLevel(DBG_DEBUG);
+  Debug.setDebugLevel(DBG_INFO);
 
   // schedule a task to print "Hello" three times in 2 seconds, then print "Goodbye"
   Timer::schedule(2000, printHello, printGoodbye);

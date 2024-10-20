@@ -59,7 +59,7 @@ void setup()
   System::add(speaker);
   System::setup();
 
-  speaker->playMelody(jingleBellsMelody, noteCallback, step2);
+  speaker->playMelody(jingleBellsMelody, noteCallback);
   // Timer::schedule(3000, step2);
 }
 

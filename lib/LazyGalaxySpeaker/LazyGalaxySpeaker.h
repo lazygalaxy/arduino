@@ -123,17 +123,22 @@ class MySpeaker : public PinComponent
 {
 public:
   MySpeaker(uint8_t pin, char volume = 5);
-  void reset();
+  void setup() override;
+  void reset() override;
+  unsigned long update(unsigned long time) override;
+
   void playNote(int note);
   void stopNote();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
   void playWav(const char *filename, finalCallbackPtr finalCallback = nullptr);
-  unsigned long update(unsigned long time) override;
 
 private:
+  // general
+  char _volume;
+
   // note
-  Melody *_melody = nullptr;
-  bool _isNotePlaying = false;
+  Melody *_melody;
+  bool _isNotePlaying;
   int _noteIndex;
   noteCallbackPtr _noteCallback;
 

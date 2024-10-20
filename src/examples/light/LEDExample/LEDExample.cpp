@@ -18,12 +18,12 @@ void lightOff(unsigned long time)
 
 void blinkOn(unsigned long time)
 {
-  led->setBlink(true);
+  led->startBlink(true);
 }
 
 void blinkOff(unsigned long time)
 {
-  led->setBlink(false);
+  led->startBlink(false);
 }
 
 void setup()
@@ -42,7 +42,7 @@ void setup()
   // schedule a task/function to start the blink in 6 seconds
   Timer::schedule(6000, blinkOn);
   // schedule a task/function to stop the blink in 9 seconds
-  Timer::schedule(9000, blinkOff);
+  Timer::schedule(10000, blinkOff);
 }
 
 void loop()

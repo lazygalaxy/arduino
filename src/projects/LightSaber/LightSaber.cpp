@@ -6,6 +6,7 @@
 
 #include <LazyGalaxySystem.h>
 #include <LazyGalaxyButton.h>
+#include <LazyGalaxyLED.h>
 #include <LazyGalaxyNeoPixel.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
@@ -25,7 +26,8 @@ static const float FREQ_SMOOTH_FACTOR = 0.2;
 float hue = 0.0;
 
 // components required
-Button *button = new Button(D5, D4);
+LED *led = new LED(D4);
+Button *button = new Button(D5);
 MySpeaker *speaker = new MySpeaker(D9, 5);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 
@@ -57,10 +59,13 @@ void setup()
   Debug.setDebugLevel(DBG_VERBOSE);
 
   System::add(new MySDCard(D10));
+  System::add(led);
   System::add(button);
   System::add(speaker);
   System::add(neopixel);
   System::setup();
+
+  led->setBlink(true);
 }
 
 void loop()
@@ -71,9 +76,10 @@ void loop()
   boolean buttonLongPressed = button->popLongPressed();
 
   // then implement the light saber logic
-  if (button->isOff() && buttonClickCounter > 0)
+  if (!button->isOn() && buttonClickCounter > 0)
   {
     // turn on the light saber with any button click
+    led->setLight(true);
     button->setOn(true);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     speaker->playWav("ON.wav");

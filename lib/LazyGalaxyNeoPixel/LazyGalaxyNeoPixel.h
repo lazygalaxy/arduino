@@ -20,6 +20,7 @@ public:
   NeoPixel(char pin, unsigned short pixels);
   void setup() override;
   void reset() override;
+  unsigned long update(unsigned long time) override;
 
   void setRGBColor(unsigned short pixel, float red, float green, float blue,
                    bool mustShow = true);
@@ -36,10 +37,9 @@ public:
   void setNoSequence(float hue, float saturation, float value,
                      float probability = 1.0);
 
-  unsigned long update(unsigned long time) override;
-
 private:
   Adafruit_NeoPixel *_strip;
+  unsigned short _pixels;
   unsigned char _sequenceType;
   float _sequenceHue;
   float _sequenceSaturation;
