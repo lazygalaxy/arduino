@@ -30,7 +30,33 @@ LED *led = new LED(D4);
 MySpeaker *speaker = new MySpeaker(D9, 5);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 
-void changeHueCallback(unsigned long time)
+void clicksCallback(unsigned long time, int clicks)
+{
+  // then implement the light saber logic
+  if (!lightSaberOn && clicks > 0)
+  {
+    // turn on the light saber with any button click
+    lightSaberOn = true;
+    led->setLight(true);
+    neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
+    speaker->playWav("ON.wav");
+  }
+  else if (lightSaberOn)
+  {
+    switch (clicks)
+    {
+    case 1:
+      // if there is 1 click, stop the light saber
+      neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
+      speaker->playWav("OFF.wav");
+      led->startBlink(true);
+      lightSaberOn = false;
+      break;
+    }
+  }
+}
+
+void longPressCallback(unsigned long time)
 {
   if (lightSaberOn)
   {
@@ -40,7 +66,7 @@ void changeHueCallback(unsigned long time)
     neopixel->setNoSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL);
   }
 }
-Button *button = new Button(D5, changeHueCallback);
+Button *button = new Button(D5, clicksCallback, longPressCallback);
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -69,29 +95,4 @@ void setup()
 void loop()
 {
   System::loop();
-
-  int buttonClickCounter = button->popClickCounter();
-
-  // then implement the light saber logic
-  if (!lightSaberOn && buttonClickCounter > 0)
-  {
-    // turn on the light saber with any button click
-    lightSaberOn = true;
-    led->setLight(true);
-    neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
-    speaker->playWav("ON.wav");
-  }
-  else if (lightSaberOn)
-  {
-    switch (buttonClickCounter)
-    {
-    case 1:
-      // if there is 1 click, stop the light saber
-      neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
-      speaker->playWav("OFF.wav");
-      led->startBlink(true);
-      lightSaberOn = false;
-      break;
-    }
-  }
 }

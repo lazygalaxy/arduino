@@ -6,9 +6,9 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t pin, longPressCallbackPtr longPressCallback) : PinComponent(pin)
+Button::Button(uint8_t pin, clicksCallbackPtr clicksCallback, longPressCallbackPtr longPressCallback) : PinComponent(pin)
 {
-  _clickCounter = 0;
+  _clicksCallback = clicksCallback;
   _longPressCallback = longPressCallback;
 }
 
@@ -26,19 +26,8 @@ void Button::reset()
   _pressTime = 0;
   _releaseTime = 0;
   _prevValue = HIGH;
-  _tempClickCounter = 0;
+  _clicks = 0;
   _isLongPress = false;
-}
-
-int Button::popClickCounter()
-{
-  if (_clickCounter > 0)
-  {
-    int temp = _clickCounter;
-    _clickCounter = 0;
-    return temp;
-  }
-  return 0;
 }
 
 unsigned long Button::update(unsigned long time)
@@ -65,19 +54,20 @@ unsigned long Button::update(unsigned long time)
       return 0;
     else
     {
-      _tempClickCounter += 1;
+      _clicks += 1;
       _releaseTime = time;
       _pressTime = 0;
       _prevValue = value;
-      DEBUG_DEBUG("button pressed %i clicks at %lu", _tempClickCounter, time);
+      DEBUG_DEBUG("button pressed %i clicks at %lu", _clicks, time);
     }
   }
 
   // wait for the delay to elapse, before registering the click counter
   if (_releaseTime != 0 && (time - _releaseTime) >= 200)
   {
-    _clickCounter = _tempClickCounter;
-    DEBUG_DEBUG("button registered %i clicks at %lu", _clickCounter, time);
+    DEBUG_DEBUG("button registered %i clicks at %lu", _clicks, time);
+    if (_clicksCallback != nullptr)
+      _clicksCallback(time, _clicks);
     // temporary we deactivate the component, it will be reste and activated again
     return 0;
   }

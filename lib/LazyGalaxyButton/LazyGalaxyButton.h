@@ -11,25 +11,24 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyTimer.h>
 
+typedef void (*clicksCallbackPtr)(unsigned long time, int clicks);
 typedef void (*longPressCallbackPtr)(unsigned long time);
 
 class Button : public PinComponent
 {
 public:
-  Button(uint8_t pin, longPressCallbackPtr longPressCallback = nullptr);
+  Button(uint8_t pin, clicksCallbackPtr clicksCallback = nullptr, longPressCallbackPtr longPressCallback = nullptr);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
-
-  int popClickCounter();
 
 private:
   unsigned long _pressTime;
   unsigned long _releaseTime;
   int _prevValue;
-  int _clickCounter;
-  int _tempClickCounter;
+  int _clicks;
   bool _isLongPress;
+  clicksCallbackPtr _clicksCallback;
   longPressCallbackPtr _longPressCallback;
 };
 
