@@ -8,7 +8,6 @@
 #define LAZYGALAXYBUTTON_H
 
 #include <LazyGalaxyCommon.h>
-#include <LazyGalaxyLED.h>
 #include <LazyGalaxyTimer.h>
 
 typedef void (*clicksCallbackPtr)(unsigned long time, int clicks);

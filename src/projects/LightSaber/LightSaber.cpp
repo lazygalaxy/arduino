@@ -6,8 +6,8 @@
 
 #include <LazyGalaxySystem.h>
 #include <LazyGalaxyButton.h>
-#include <LazyGalaxyLED.h>
-#include <LazyGalaxyNeoPixel.h>
+// #include <LazyGalaxyLED.h>
+// #include <LazyGalaxyNeoPixel.h>
 #include <LazyGalaxySDCard.h>
 #include <LazyGalaxySpeaker.h>
 
@@ -26,9 +26,9 @@ static const float FREQ_SMOOTH_FACTOR = 0.2;
 bool lightSaberOn = false;
 float hue = 0.0;
 
-LED *led = new LED(D4);
+// LED *led = new LED(D4);
 MySpeaker *speaker = new MySpeaker(D9, 5);
-NeoPixel *neopixel = new NeoPixel(D6, 33);
+// NeoPixel *neopixel = new NeoPixel(D6, 33);
 
 void clicksCallback(unsigned long time, int clicks)
 {
@@ -37,9 +37,9 @@ void clicksCallback(unsigned long time, int clicks)
   {
     // turn on the light saber with any button click
     lightSaberOn = true;
-    led->setLight(true);
-    neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     speaker->playWav("ON.wav");
+    //  led->setLight(true);
+    //  neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
   }
   else if (lightSaberOn)
   {
@@ -47,9 +47,9 @@ void clicksCallback(unsigned long time, int clicks)
     {
     case 1:
       // if there is 1 click, stop the light saber
-      neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       speaker->playWav("OFF.wav");
-      led->startBlink(true);
+      // neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
+      // led->startBlink(true);
       lightSaberOn = false;
       break;
     }
@@ -60,10 +60,10 @@ void longPressCallback(unsigned long time)
 {
   if (lightSaberOn)
   {
-    hue += 0.005;
+    hue += 0.01;
     if (hue > 1.0)
       hue = 0.0;
-    neopixel->setNoSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL);
+    // neopixel->setNoSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL);
   }
 }
 Button *button = new Button(D5, clicksCallback, longPressCallback);
@@ -83,13 +83,13 @@ void setup()
   Debug.setDebugLevel(DBG_DEBUG);
 
   System::add(new MySDCard(D10));
-  System::add(led);
+  //  System::add(led);
   System::add(button);
   System::add(speaker);
-  System::add(neopixel);
+  //  System::add(neopixel);
   System::setup();
 
-  led->startBlink(true);
+  // led->startBlink(true);
 }
 
 void loop()
