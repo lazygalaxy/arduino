@@ -28,11 +28,9 @@ unsigned long Timer::scheduleTask(unsigned long triggerTime, finalCallbackPtr fi
 
 void Timer::updateTasks(unsigned long time)
 {
-  int i = 0;
-  for (; i < tasks.size(); i++)
+  for (int i = 0; i < tasks.size(); i++)
   {
     TimerTask *task = tasks.get(i);
-    DEBUG_VERBOSE("active task %lu and trigger %lu at %lu", task->_id, task->_triggerTime, time);
     if (task->_triggerTime <= time)
     {
       if (task->_updateCallback != nullptr)

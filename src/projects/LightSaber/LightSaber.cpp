@@ -23,6 +23,7 @@ static const float FREQ_SMOOTH_FACTOR = 0.2;
 
 // modifiable vlaues
 // the hue of all LED lights, this is what actually give the colour to the LED lights
+bool lightSaberOn = false;
 float hue = 0.0;
 
 // components required
@@ -56,7 +57,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 void setup()
 {
   Serial.begin(9600);
-  Debug.setDebugLevel(DBG_VERBOSE);
+  Debug.setDebugLevel(DBG_DEBUG);
 
   System::add(new MySDCard(D10));
   System::add(led);
@@ -65,7 +66,7 @@ void setup()
   System::add(neopixel);
   System::setup();
 
-  led->setBlink(true);
+  led->startBlink(true);
 }
 
 void loop()
@@ -76,15 +77,15 @@ void loop()
   boolean buttonLongPressed = button->popLongPressed();
 
   // then implement the light saber logic
-  if (!button->isOn() && buttonClickCounter > 0)
+  if (!lightSaberOn && buttonClickCounter > 0)
   {
     // turn on the light saber with any button click
+    lightSaberOn = true;
     led->setLight(true);
-    button->setOn(true);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     speaker->playWav("ON.wav");
   }
-  else if (button->isOn())
+  else if (lightSaberOn)
   {
     if (buttonLongPressed)
     {
@@ -96,7 +97,8 @@ void loop()
       // if there is 1 click, stop the light saber
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       speaker->playWav("OFF.wav");
-      button->setOn(false);
+      led->setLight(false);
+      lightSaberOn = false;
     }
   }
 }

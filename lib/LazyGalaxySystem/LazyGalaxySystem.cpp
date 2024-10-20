@@ -33,7 +33,6 @@ void System::loopComponents()
     Component *component = _components[i];
     if (component->isActive() && time >= component->_triggerTime)
     {
-      DEBUG_VERBOSE("active component with trigger %lu at %lu", component->_triggerTime, time);
       component->_triggerTime = component->update(time);
       if (!component->isActive())
       {

@@ -21,8 +21,6 @@ public:
 
   int popClickCounter();
   boolean popLongPressed();
-  bool isOn();
-  void setOn(bool buttonOn);
 
 private:
   unsigned long _pressTime;
@@ -30,7 +28,6 @@ private:
   int _prevValue;
   int _clickCounter;
   int _tempClickCounter;
-  boolean _buttonOn;
   boolean _longPressed;
 };
 

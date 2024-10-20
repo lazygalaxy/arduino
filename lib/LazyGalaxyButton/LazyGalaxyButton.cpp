@@ -27,7 +27,6 @@ void Button::reset()
   _releaseTime = 0;
   _prevValue = HIGH;
   _tempClickCounter = 0;
-  _buttonOn = false;
 }
 
 int Button::popClickCounter()
@@ -49,13 +48,6 @@ boolean Button::popLongPressed()
     return true;
   }
   return false;
-}
-
-bool Button::isOn() { return _buttonOn; }
-
-void Button::setOn(bool buttonOn)
-{
-  _buttonOn = buttonOn;
 }
 
 unsigned long Button::update(unsigned long time)
@@ -95,6 +87,8 @@ unsigned long Button::update(unsigned long time)
     {
       _clickCounter = _tempClickCounter;
       DEBUG_DEBUG("button registered %i clicks at %lu", _clickCounter, time);
+      // temporary we deactivate the component, it will be reste and activated again
+      return 0;
     }
   }
 

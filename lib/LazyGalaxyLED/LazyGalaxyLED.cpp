@@ -13,17 +13,19 @@ LED::LED(uint8_t pin) : PinComponent(pin)
 void LED::setup()
 {
   pinMode(_pin, OUTPUT);
+  setLight(false);
 }
 
 void LED::reset()
 {
   Component::reset();
   _blinkDelay = 0;
-  setLight(false);
 }
 
-void LED::setLight(bool flag)
+void LED::setLight(bool flag, bool considerDeActivation)
 {
+  if (considerDeActivation && isActive())
+    reset();
   if (flag)
   {
     if (isDigital())
@@ -62,6 +64,6 @@ void LED::startBlink(bool flag, unsigned int blinkDelay)
 
 unsigned long LED::update(unsigned long time)
 {
-  setLight(!isLight());
+  setLight(!isLight(), false);
   return time + _blinkDelay;
 }

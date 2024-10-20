@@ -20,7 +20,7 @@ public:
   void reset() override;
   unsigned long update(unsigned long time) override;
 
-  void setLight(bool flag);
+  void setLight(bool flag, bool considerDeActivation = true);
   bool isLight();
   void startBlink(bool flag, unsigned int blinkDelay = 500);
 };
