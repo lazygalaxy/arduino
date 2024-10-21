@@ -14,9 +14,9 @@ MySpeaker::MySpeaker(uint8_t pin, char volume) : PinComponent(pin)
 void MySpeaker::setup()
 {
   pinMode(_pin, OUTPUT);
-  tmrpcm.speakerPin = _pin;
-  tmrpcm.setVolume(_volume);
-  tmrpcm.quality(1);
+  // tmrpcm.speakerPin = _pin;
+  // tmrpcm.setVolume(_volume);
+  // tmrpcm.quality(1);
 }
 
 void MySpeaker::reset()
@@ -30,13 +30,13 @@ void MySpeaker::reset()
   stopNote();
   // wav
   _isWavPlaing = false;
-  tmrpcm.disable();
+  // tmrpcm.disable();
 }
 
 void MySpeaker::playNote(int note)
 {
   _isNotePlaying = true;
-  toneAC(note);
+  toneAC(note, _volume);
 }
 
 void MySpeaker::stopNote()
@@ -62,7 +62,7 @@ void MySpeaker::playWav(const char *filename, finalCallbackPtr finalCallback)
   reset();
 
   DEBUG_INFO("play wav %s", filename);
-  tmrpcm.play(filename);
+  // tmrpcm.play(filename);
   _isWavPlaing = true;
 
   _triggerTime = update(millis());
@@ -74,8 +74,8 @@ unsigned long MySpeaker::update(unsigned long time)
   // isWavPlayed indicates we need to play a wav file
   if (_isWavPlaing)
   {
-    if (tmrpcm.isPlaying())
-      return time + 50;
+    // if (tmrpcm.isPlaying())
+    //   return time + 50;
   }
   // a positive index indicates we have a melody to play
   else if (_noteIndex >= 0)

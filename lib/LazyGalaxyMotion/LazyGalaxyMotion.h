@@ -17,7 +17,9 @@ class MyMotion : public PinComponent
 public:
   MyMotion(unsigned long updateTime = 50, motionCallbackPtr motionCallback = nullptr);
   void setup() override;
+  void reset() override;
   unsigned long update(unsigned long time) override;
+
   int16_t getAx();
   int16_t getAy();
   int16_t getAz();

@@ -8,7 +8,7 @@
 #define LAZYGALAXYSPEAKER_H
 
 #include <LazyGalaxyCommon.h>
-#include <TMRpcm.h>
+// #include <TMRpcm.h>
 #include <toneAC.h>
 
 // Tones for easy reference
@@ -144,7 +144,7 @@ private:
 
   // wav
   bool _isWavPlaing = false;
-  TMRpcm tmrpcm;
+  // TMRpcm tmrpcm;
 };
 
 #endif
