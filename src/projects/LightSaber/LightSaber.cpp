@@ -14,7 +14,7 @@
 
 // fixed values
 // the delay with which each succesive LED light is turned on and off
-static const unsigned int NEOPIXEL_DELAY_MILLIS = 20;
+static const unsigned int NEOPIXEL_DELAY_MILLIS = 10;
 // the saturation of all LED lights
 static const float NEOPIXEL_SAT = 1.0;
 // the value of all LED lights
@@ -52,7 +52,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
     freq_prev = freq_new;
   }
 }
-MyMotion *motion = new MyMotion(25, motionCallback);
+MyMotion *motion = new MyMotion(10, motionCallback);
 
 void clicksCallback(unsigned long time, int clicks)
 {
@@ -64,6 +64,7 @@ void clicksCallback(unsigned long time, int clicks)
     // speaker->playWav("ON.wav");
     led->setLight(true);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
+    speaker->playNote(freq_prev);
   }
   else if (lightSaberOn)
   {

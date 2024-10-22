@@ -43,9 +43,9 @@ unsigned long MyMotion::update(unsigned long time)
   int accelZ = abs(_az / 100);
 
   // vector sum
-  _accel = sq((long)accelX) + sq((long)accelY) + sq((long)accelZ);
+  unsigned long _accel = sq((long)accelX) + sq((long)accelY) + sq((long)accelZ);
   _accel = sqrt(_accel);
-  _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
+  unsigned long _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
   _gyro = sqrt((long)_gyro);
 
   if (_motionCallback != nullptr)
@@ -53,13 +53,3 @@ unsigned long MyMotion::update(unsigned long time)
 
   return time + _updateTime;
 }
-
-int16_t MyMotion::getAx() { return _ax; }
-int16_t MyMotion::getAy() { return _ay; }
-int16_t MyMotion::getAz() { return _az; }
-int16_t MyMotion::getGx() { return _gx; }
-int16_t MyMotion::getGy() { return _gy; }
-int16_t MyMotion::getGz() { return _gz; }
-
-unsigned long MyMotion::getAccel() { return _accel; }
-unsigned long MyMotion::getGyro() { return _gyro; }
