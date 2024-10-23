@@ -15,10 +15,13 @@ typedef void (*motionCallbackPtr)(unsigned long time, unsigned long accel, unsig
 class MyMotion : public PinComponent
 {
 public:
-  MyMotion(unsigned long updateTime = 50, motionCallbackPtr motionCallback = nullptr);
+  MyMotion(unsigned long updateTime = 50);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
+
+  void startCallback(motionCallbackPtr motionCallback);
+  void stopCallback();
 
 private:
   MPU6050 _accelgyro;

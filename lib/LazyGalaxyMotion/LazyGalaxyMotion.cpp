@@ -6,10 +6,9 @@
 
 #include <LazyGalaxyMotion.h>
 
-MyMotion::MyMotion(unsigned long updateTime, motionCallbackPtr motionCallback) : PinComponent(255)
+MyMotion::MyMotion(unsigned long updateTime) : PinComponent(255)
 {
   _updateTime = updateTime;
-  _motionCallback = motionCallback;
 }
 
 void MyMotion::setup()
@@ -27,7 +26,18 @@ void MyMotion::reset()
 {
   DEBUG_DEBUG("reset motion");
   Component::reset();
+  _motionCallback = nullptr;
+}
+
+void MyMotion::startCallback(motionCallbackPtr motionCallback)
+{
+  _motionCallback = motionCallback;
   _triggerTime = update(millis());
+}
+
+void MyMotion::stopCallback()
+{
+  reset();
 }
 
 unsigned long MyMotion::update(unsigned long time)

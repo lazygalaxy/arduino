@@ -6,28 +6,48 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t pin, clicksCallbackPtr clicksCallback, longPressCallbackPtr longPressCallback) : PinComponent(pin)
+Button::Button(uint8_t pin) : PinComponent(pin)
 {
-  _clicksCallback = clicksCallback;
-  _longPressCallback = longPressCallback;
 }
 
 void Button::setup()
 {
   pinMode(_pin, INPUT_PULLUP);
+  _clicksCallback = nullptr;
+  _longPressCallback = nullptr;
 }
 
 void Button::reset()
 {
   DEBUG_DEBUG("reset button");
   Component::reset();
-  // we always need to check the button status
+  // we are basically always active for buttons
   _triggerTime = 1;
   _pressTime = 0;
   _releaseTime = 0;
   _prevValue = HIGH;
   _clicks = 0;
   _isLongPress = false;
+}
+
+void Button::startClicksCallback(clicksCallbackPtr clicksCallback)
+{
+  _clicksCallback = clicksCallback;
+}
+
+void Button::stopClicksCallback()
+{
+  _clicksCallback = nullptr;
+}
+
+void Button::startLongPressCallback(longPressCallbackPtr longPressCallback)
+{
+  _longPressCallback = longPressCallback;
+}
+
+void Button::stopLongPressCallback()
+{
+  _longPressCallback = nullptr;
 }
 
 unsigned long Button::update(unsigned long time)
@@ -68,10 +88,10 @@ unsigned long Button::update(unsigned long time)
     DEBUG_DEBUG("button registered %i clicks at %lu", _clicks, time);
     if (_clicksCallback != nullptr)
       _clicksCallback(time, _clicks);
-    // temporary we deactivate the component, it will be reste and activated again
+    // temporary we deactivate the component, it will be reset and activated again
     return 0;
   }
 
-  // we always need to check the button status
+  // we always return as as we keep the state of the button
   return 1;
 }
