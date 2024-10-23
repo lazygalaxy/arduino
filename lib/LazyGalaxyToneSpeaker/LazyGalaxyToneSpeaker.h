@@ -1,14 +1,13 @@
 /*
-   LazyGalaxySpeaker.h - Library for Piezo Buzzer speaker.
+   LazyGalaxyTone.h - Library for playing Tones.
    Created by LazyGalaxy - Evangelos Papakonstantis, August 23, 2018.
    Released into the public domain.
  */
 
-#ifndef LAZYGALAXYSPEAKER_H
-#define LAZYGALAXYSPEAKER_H
+#ifndef LAZYGALAXYTONESPEAKER_H
+#define LAZYGALAXYTONESPEAKER_H
 
 #include <LazyGalaxyCommon.h>
-// #include <TMRpcm.h>
 #include <toneAC.h>
 
 // Tones for easy reference
@@ -119,18 +118,17 @@ struct Melody
   int tempo;
 };
 
-class MySpeaker : public PinComponent
+class MyToneSpeaker : public PinComponent
 {
 public:
-  MySpeaker(uint8_t pin, char volume = 5);
+  MyToneSpeaker(uint8_t pin, char volume = 5);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
 
-  void playNote(int note);
-  void stopNote();
+  void playTone(int tone);
+  void stopTone();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
-  void playWav(const char *filename, finalCallbackPtr finalCallback = nullptr);
 
 private:
   // general
@@ -138,13 +136,9 @@ private:
 
   // note
   Melody *_melody;
-  bool _isNotePlaying;
+  bool _isTonePlaying;
   int _noteIndex;
   noteCallbackPtr _noteCallback;
-
-  // wav
-  bool _isWavPlaing = false;
-  // TMRpcm tmrpcm;
 };
 
 #endif

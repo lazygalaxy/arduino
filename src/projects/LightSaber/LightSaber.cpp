@@ -10,7 +10,7 @@
 #include <LazyGalaxyNeoPixel.h>
 #include <LazyGalaxyMotion.h>
 // #include <LazyGalaxySDCard.h>
-#include <LazyGalaxySpeaker.h>
+#include <LazyGalaxyToneSpeaker.h>
 
 // fixed values
 // the delay with which each succesive LED light is turned on and off
@@ -30,7 +30,7 @@ int freq_prev = 20;
 // all the lightsaber components
 Button *button = new Button(D5);
 LED *led = new LED(D4);
-MySpeaker *speaker = new MySpeaker(D9, 10);
+MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 10);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(10);
 
@@ -41,7 +41,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   freq = constrain(freq, 18, 300);
   int freq_new = freq * FREQ_SMOOTH_FACTOR + freq_prev * (1 - FREQ_SMOOTH_FACTOR); // smooth filter
   if (freq_new != freq_prev)
-    speaker->playNote(freq_new);
+    toneSpeaker->playTone(freq_new);
   if (accel >= 320)
     DEBUG_DEBUG("hard hit at %lu with %i", time, accel);
   else if (accel >= 150)
@@ -71,8 +71,7 @@ void clicksCallback(unsigned long time, int clicks)
     led->setLight(true);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
-    // speaker->playWav("ON.wav");
-    speaker->playNote(freq_prev);
+    toneSpeaker->playTone(freq_prev);
     button->startLongPressCallback(longPressCallback);
   }
   else if (lightSaberOn)
@@ -80,9 +79,8 @@ void clicksCallback(unsigned long time, int clicks)
     {
     case 1:
       // if there is 1 click, stop the light saber
-      // speaker->playWav("OFF.wav");
       button->stopLongPressCallback();
-      speaker->reset();
+      toneSpeaker->reset();
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink(true);
@@ -100,7 +98,7 @@ void setup()
   // System::add(new MySDCard(D10));
   System::add(led);
   System::add(button);
-  System::add(speaker);
+  System::add(toneSpeaker);
   System::add(motion);
   System::add(neopixel);
   System::setup();
