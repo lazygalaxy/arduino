@@ -34,7 +34,9 @@ void MyAudioPlayer::reset()
 
 void MyAudioPlayer::play(int index)
 {
+  DEBUG_DEBUG("play audio 1");
   _player.play(index);
+  DEBUG_DEBUG("play audio 2");
 }
 
 void MyAudioPlayer::stop()

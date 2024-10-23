@@ -70,7 +70,7 @@ void clicksCallback(unsigned long time, int clicks)
     // turn on the light saber with any button click
     lightSaberOn = true;
     led->setLight(true);
-    // audioPlayer->play(1);
+    audioPlayer->play(1);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
     toneSpeaker->playTone(freq_prev);
@@ -98,7 +98,6 @@ void setup()
   Debug.setDebugLevel(DBG_DEBUG);
 
   // System setup
-  // System::add(new MySDCard(D10));
   System::add(led);
   System::add(button);
   System::add(toneSpeaker);
@@ -109,7 +108,7 @@ void setup()
 
   led->startBlink(true);
   button->startClicksCallback(clicksCallback);
-  // audioPlayer->play(1);
+  audioPlayer->play(1);
 }
 
 void loop()
