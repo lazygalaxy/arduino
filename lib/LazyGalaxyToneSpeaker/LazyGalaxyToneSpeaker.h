@@ -1,5 +1,5 @@
 /*
-   LazyGalaxyTone.h - Library for playing Tones.
+   LazyGalaxyToneSpeaker.h - Library for playing tones on a speaker.
    Created by LazyGalaxy - Evangelos Papakonstantis, August 23, 2018.
    Released into the public domain.
  */

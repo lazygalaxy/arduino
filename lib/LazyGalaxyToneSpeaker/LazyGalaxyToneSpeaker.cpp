@@ -1,5 +1,5 @@
 /*
-   LazyGalaxySpeaker.cpp - Library for Piezo Buzzer speaker.
+   LazyGalaxyToneSpeaker.cpp - Library for playing tones on a speaker.
    Created by LazyGalaxy - Evangelos Papakonstantis, August 23, 2018.
    Released into the public domain.
  */
@@ -18,7 +18,7 @@ void MyToneSpeaker::setup()
 
 void MyToneSpeaker::reset()
 {
-  DEBUG_DEBUG("reset speaker");
+  DEBUG_DEBUG("reset tone speaker");
   Component::reset();
   // note
   _melody = nullptr;

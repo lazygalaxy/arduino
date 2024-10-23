@@ -9,7 +9,7 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyNeoPixel.h>
 #include <LazyGalaxyMotion.h>
-// #include <LazyGalaxySDCard.h>
+#include <LazyGalaxyAudioPlayer.h>
 #include <LazyGalaxyToneSpeaker.h>
 
 // fixed values
@@ -31,6 +31,7 @@ int freq_prev = 20;
 Button *button = new Button(D5);
 LED *led = new LED(D4);
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 10);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(10);
 
@@ -69,6 +70,7 @@ void clicksCallback(unsigned long time, int clicks)
     // turn on the light saber with any button click
     lightSaberOn = true;
     led->setLight(true);
+    // audioPlayer->play(1);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
     toneSpeaker->playTone(freq_prev);
@@ -84,6 +86,7 @@ void clicksCallback(unsigned long time, int clicks)
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink(true);
+      audioPlayer->stop();
       lightSaberOn = false;
       break;
     }
@@ -91,7 +94,7 @@ void clicksCallback(unsigned long time, int clicks)
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Debug.setDebugLevel(DBG_DEBUG);
 
   // System setup
@@ -99,12 +102,14 @@ void setup()
   System::add(led);
   System::add(button);
   System::add(toneSpeaker);
+  System::add(audioPlayer);
   System::add(motion);
   System::add(neopixel);
   System::setup();
 
   led->startBlink(true);
   button->startClicksCallback(clicksCallback);
+  // audioPlayer->play(1);
 }
 
 void loop()
