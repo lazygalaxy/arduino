@@ -13,44 +13,28 @@ MyAudioPlayer::MyAudioPlayer(uint8_t volume) : PinComponent(255)
 
 void MyAudioPlayer::setup()
 {
-  SoftwareSerial secondarySerial(10, 11); // RX, TX
-  _player = new DfMp3(secondarySerial);
-
-  _player->begin();
-
-  uint16_t version = _player->getSoftwareVersion();
-  Serial.print("version ");
-  Serial.println(version);
-
-  _player->setVolume(_volume);
-  uint16_t volume = _player->getVolume();
-  Serial.print("volume ");
-  Serial.println(volume);
-
-  uint16_t count = _player->getTotalTrackCount(DfMp3_PlaySource_Sd);
-  Serial.print("files ");
-  Serial.println(count);
-
-  Serial.println("starting...");
+  SoftwareSerial mySerial(10, 11); // RX, TX
+  _player.begin(mySerial, true);
+  _player.volume(_volume);
 }
 
 void MyAudioPlayer::reset()
 {
-  DEBUG_DEBUG("reset audio player");
+  Serial.println("reset audio player");
   Component::reset();
-  _player->reset();
+  _player.reset();
 }
 
 void MyAudioPlayer::play(uint16_t index)
 {
-  DEBUG_DEBUG("play audio 1");
-  _player->playMp3FolderTrack(index);
-  DEBUG_DEBUG("play audio 2");
+  Serial.println("play audio 1");
+  _player.playFromMP3Folder(index);
+  Serial.println("play audio 2");
 }
 
 void MyAudioPlayer::stop()
 {
-  _player->stop();
+  _player.stop();
 }
 
 unsigned long MyAudioPlayer::update(unsigned long time)
