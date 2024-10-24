@@ -6,14 +6,16 @@
 
 #include <LazyGalaxyAudioPlayer.h>
 
-MyAudioPlayer::MyAudioPlayer(uint8_t volume) : PinComponent(255)
+MyAudioPlayer::MyAudioPlayer(uint8_t rxPin, uint8_t txPin, uint8_t volume) : PinComponent(255)
 {
+  _rxPin = rxPin;
+  _txPin = txPin;
   _volume = volume;
 }
 
 void MyAudioPlayer::setup()
 {
-  _mySerial = new SoftwareSerial(10, 11); // RX, TX
+  _mySerial = new SoftwareSerial(_rxPin, _txPin); // RX, TX
   _mySerial->begin(9600);
 
   _player.begin(*_mySerial);

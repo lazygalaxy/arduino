@@ -14,7 +14,7 @@
 class MyAudioPlayer : public PinComponent
 {
 public:
-  MyAudioPlayer(uint8_t volume = 15);
+  MyAudioPlayer(uint8_t rxPin = D10, uint8_t txPin = D11, uint8_t volume = 15);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
@@ -25,6 +25,8 @@ public:
   void stop();
 
 private:
+  uint8_t _rxPin;
+  uint8_t _txPin;
   uint8_t _volume;
   SoftwareSerial *_mySerial; // RX, TX
   DFPlayerMini_Fast _player;

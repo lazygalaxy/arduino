@@ -1,28 +1,28 @@
 /*
-   LazyGalaxySystem.h - The system where are components are registered and managed
+   LazyGalaxyCircuit.h - The circuit where are components are registered and managed
    Created by LazyGalaxy - Evangelos Papakonstantis, October 18, 2024.
    Released into the public domain.
  */
 
-#ifndef LAZYGALAXYSYSTEM_H
-#define LAZYGALAXYSYSTEM_H
+#ifndef LAZYGALAXYCIRCUIT_H
+#define LAZYGALAXYCIRCUIT_H
 
 #include <LazyGalaxyCommon.h>
 #include <LinkedList.h>
 
-class System
+class Circuit
 {
 private:
   LinkedList<Component *> _components = LinkedList<Component *>();
 
-  System();
+  Circuit();
   void addComponent(Component *component);
   void setupComponents();
   void loopComponents();
 
-  static System *getInstance()
+  static Circuit *getInstance()
   {
-    static System *systemInstance = new System();
+    static Circuit *systemInstance = new Circuit();
     return systemInstance;
   }
 

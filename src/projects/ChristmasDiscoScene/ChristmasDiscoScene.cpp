@@ -1,10 +1,10 @@
 /*
-   ChristmasPartyScene.cpp - Roger Christmas scene implementation
+   ChristmasPartyScene.cpp - Roger's Christmas scene implementation
    Created by LazyGalaxy - Evangelos Papakonstantis, October 24, 2024.
    Released into the public domain.
 */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyTimer.h>
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyAudioPlayer.h>
@@ -14,7 +14,7 @@ static const uint8_t SPEAKER_VOLUME = 10;
 // how long each scene lasts in milliseconds
 static const unsigned int SCENE_DURATION_MILLIS = 10000;
 // how long does the disco light blink
-static const unsigned int DISCO_BLINK_MILLIS = 500;
+static const unsigned int DISCO_BLINK_MILLIS = 400;
 
 // keep track of the Christmas vs Disco Scenes
 bool isChristmasScene = true;
@@ -27,7 +27,7 @@ uint8_t discoTrackIndex = 0;
 // all scene components
 LED *chrismasLED = new LED(D2);
 LED *discoLED = new LED(D3);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(SPEAKER_VOLUME);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, SPEAKER_VOLUME);
 
 unsigned long playScene(unsigned long time)
 {
@@ -59,21 +59,23 @@ void setup()
 {
   Serial.begin(115200);
 
-  // System setup
-  System::add(chrismasLED);
-  System::add(discoLED);
-  System::add(audioPlayer);
-  System::setup();
+  // Circuit setup
+  Circuit::add(chrismasLED);
+  Circuit::add(discoLED);
+  Circuit::add(audioPlayer);
+  Circuit::setup();
 
+  // get the total number of tracks now that we have setup the audio player
   totalChristmasTracks = audioPlayer->getNumTracks(1);
   totalDiscoTracks = audioPlayer->getNumTracks(2);
 
-  // schedule the timer immediatly to play a scene
+  // schedule the timer immediatly to play teh first scene
   Timer::schedule(0, playScene);
 }
 
 void loop()
 {
-  System::loop();
+  // loop through the circuit components and the timers
+  Circuit::loop();
   Timer::loop();
 }

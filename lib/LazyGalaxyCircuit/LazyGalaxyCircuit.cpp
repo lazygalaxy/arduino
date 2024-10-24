@@ -1,21 +1,21 @@
 /*
-   LazyGalaxySystem.h - The system where are components are registered and managed
+   LazyGalaxyCircuit.h - The system where are components are registered and managed
    Created by LazyGalaxy - Evangelos Papakonstantis, October 18, 2024.
    Released into the public domain.
  */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 
-System::System()
+Circuit::Circuit()
 {
 }
 
-void System::addComponent(Component *component)
+void Circuit::addComponent(Component *component)
 {
   _components.add(component);
 }
 
-void System::setupComponents()
+void Circuit::setupComponents()
 {
   for (int i = 0; i < _components.size(); i++)
   {
@@ -25,7 +25,7 @@ void System::setupComponents()
   }
 }
 
-void System::loopComponents()
+void Circuit::loopComponents()
 {
   unsigned long time = millis();
   for (int i = 0; i < _components.size(); i++)
