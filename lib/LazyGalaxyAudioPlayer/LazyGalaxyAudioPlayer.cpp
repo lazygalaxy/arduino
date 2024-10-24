@@ -29,9 +29,14 @@ void MyAudioPlayer::reset()
   Component::reset();
 }
 
-void MyAudioPlayer::play(uint16_t index)
+void MyAudioPlayer::play(uint8_t folderNum, uint8_t trackNum)
 {
-  _player.play(index);
+  _player.playFolder(folderNum, trackNum);
+}
+
+int16_t MyAudioPlayer::getNumTracks(uint8_t folderNum)
+{
+  return _player.numTracksInFolder(folderNum);
 }
 
 void MyAudioPlayer::stop()

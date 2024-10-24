@@ -19,7 +19,9 @@ public:
   void reset() override;
   unsigned long update(unsigned long time) override;
 
-  void play(uint16_t index);
+  void play(uint8_t folderNum, uint8_t trackNum);
+  int16_t getNumTracks(uint8_t folderNum);
+
   void stop();
 
 private:
