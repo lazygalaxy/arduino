@@ -17,14 +17,13 @@ void MyMotion::setup()
   _accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
   _accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
   if (_accelgyro.testConnection())
-    DEBUG_INFO("MPU6050 OK");
+    Serial.println("MPU6050 OK");
   else
-    DEBUG_ERROR("MPU6050 fail");
+    Serial.println("MPU6050 fail");
 }
 
 void MyMotion::reset()
 {
-  DEBUG_DEBUG("reset motion");
   Component::reset();
   _motionCallback = nullptr;
 }

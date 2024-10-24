@@ -18,7 +18,6 @@ void MyToneSpeaker::setup()
 
 void MyToneSpeaker::reset()
 {
-  DEBUG_DEBUG("reset tone speaker");
   Component::reset();
   // note
   _melody = nullptr;

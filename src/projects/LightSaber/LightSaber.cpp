@@ -44,19 +44,13 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   if (freq_new != freq_prev)
     toneSpeaker->playTone(freq_new);
   if (accel >= 320)
-  {
-    DEBUG_DEBUG("hard hit at %lu with %i", time, accel);
     audioPlayer->play(2);
-  }
   else if (accel >= 150)
-  {
-    DEBUG_DEBUG("soft hit at %lu with %i", time, accel);
     audioPlayer->play(3);
-  }
-  if (gyro >= 300)
-    DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
-  else if (gyro >= 150)
-    DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
+  // if (gyro >= 300)
+  //   DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
+  // else if (gyro >= 150)
+  //   DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
   freq_prev = freq_new;
 }
 
@@ -101,7 +95,6 @@ void clicksCallback(unsigned long time, int clicks)
 void setup()
 {
   Serial.begin(115200);
-  Debug.setDebugLevel(DBG_DEBUG);
 
   // System setup
   System::add(led);

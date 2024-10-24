@@ -21,7 +21,6 @@ void NeoPixel::setup()
 
 void NeoPixel::reset()
 {
-  DEBUG_DEBUG("reset neopixel");
   Component::reset();
   _sequenceType = NO_SEQUENCE_TYPE;
   _sequenceHue = 0.0;
@@ -68,7 +67,6 @@ void NeoPixel::setWipeSequence(float hue, float saturation, float value, unsigne
   _sequenceDelay = delay;
   _sequenceReverse = reverse;
 
-  DEBUG_DEBUG("set wipe sequence");
   _triggerTime = update(millis());
   _finalCallback = finalCallback;
 }
@@ -84,7 +82,6 @@ void NeoPixel::setChaseSequence(float hue, float saturation, float value, unsign
   _sequenceCycles = cycles;
   _sequenceGap = gap;
 
-  DEBUG_DEBUG("set chase sequence");
   _triggerTime = update(millis());
   _finalCallback = finalCallback;
 }
@@ -92,7 +89,6 @@ void NeoPixel::setChaseSequence(float hue, float saturation, float value, unsign
 void NeoPixel::setNoSequence(float hue, float saturation, float value, float probability)
 {
   reset();
-  DEBUG_DEBUG("set no sequence");
   for (uint16_t i = 0; i < _strip->numPixels(); i++)
   {
     if (probability >= random(1000) / 1000.0f)

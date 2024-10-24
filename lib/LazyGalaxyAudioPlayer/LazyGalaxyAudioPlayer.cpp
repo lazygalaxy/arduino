@@ -16,24 +16,20 @@ void MyAudioPlayer::setup()
   _mySerial = new SoftwareSerial(10, 11); // RX, TX
   _mySerial->begin(9600);
 
-  Serial.println(F("DFRobot DFPlayer Mini Demo"));
   _player.begin(*_mySerial, /*isACK = */ true, /*doReset = */ true);
-  Serial.println(F("DFPlayer Mini online."));
+  Serial.println(F("DFPlayer OK"));
 
   _player.volume(_volume); // Set volume value. From 0 to 30
 }
 
 void MyAudioPlayer::reset()
 {
-  Serial.println("reset audio player");
   Component::reset();
 }
 
 void MyAudioPlayer::play(uint16_t index)
 {
-  Serial.println("play audio 1");
   _player.play(index);
-  Serial.println("play audio 2");
 }
 
 void MyAudioPlayer::stop()

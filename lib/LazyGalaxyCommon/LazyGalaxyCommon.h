@@ -8,7 +8,6 @@
 #define LAZYGALAXYCOMMON_H
 
 #include <Arduino.h>
-#include <Arduino_DebugUtils.h>
 
 static const uint8_t D0 = 0;
 static const uint8_t D1 = 1;

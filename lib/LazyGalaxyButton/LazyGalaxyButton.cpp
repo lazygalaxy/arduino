@@ -19,7 +19,6 @@ void Button::setup()
 
 void Button::reset()
 {
-  DEBUG_DEBUG("reset button");
   Component::reset();
   // we are basically always active for buttons
   _triggerTime = 1;
@@ -59,11 +58,9 @@ unsigned long Button::update(unsigned long time)
     _pressTime = time;
     _releaseTime = 0;
     _prevValue = value;
-    DEBUG_DEBUG("button pressed first time %lu", time);
   }
   else if (value == LOW && _pressTime != 0 && (time - _pressTime) >= 1000)
   {
-    DEBUG_DEBUG("button registered log press at %lu", time);
     _isLongPress = true;
     if (_longPressCallback != nullptr)
       _longPressCallback(time);
@@ -78,14 +75,12 @@ unsigned long Button::update(unsigned long time)
       _releaseTime = time;
       _pressTime = 0;
       _prevValue = value;
-      DEBUG_DEBUG("button pressed %i clicks at %lu", _clicks, time);
     }
   }
 
   // wait for the delay to elapse, before registering the click counter
   if (_releaseTime != 0 && (time - _releaseTime) >= 200)
   {
-    DEBUG_DEBUG("button registered %i clicks at %lu", _clicks, time);
     if (_clicksCallback != nullptr)
       _clicksCallback(time, _clicks);
     // temporary we deactivate the component, it will be reset and activated again
