@@ -29,7 +29,7 @@ bool lightSaberOn = false;
 float hue = 0.0;
 int freq_prev = 20;
 
-// all the lightsaber components
+// all lightsaber components
 Button *button = new Button(D5);
 LED *led = new LED(D4);
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
@@ -49,7 +49,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
     audioPlayer->play(2);
   else if (accel >= 150)
     audioPlayer->play(3);
-  // if (gyro >= 300)
+  // else if (gyro >= 300)
   //   DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
   // else if (gyro >= 150)
   //   DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
