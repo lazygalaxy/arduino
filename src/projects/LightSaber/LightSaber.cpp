@@ -71,6 +71,7 @@ void clicksCallback(unsigned long time, int clicks)
   {
     // turn on the light saber with any button click
     lightSaberOn = true;
+    led->stopBlink();
     led->setLight(true);
     audioPlayer->play(1);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
@@ -87,7 +88,7 @@ void clicksCallback(unsigned long time, int clicks)
       toneSpeaker->stopTone();
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
-      led->startBlink(true);
+      led->startBlink();
       audioPlayer->play(2);
       lightSaberOn = false;
       break;
@@ -107,7 +108,7 @@ void setup()
   System::add(neopixel);
   System::setup();
 
-  led->startBlink(true);
+  led->startBlink();
   button->startClicksCallback(clicksCallback);
   audioPlayer->play(2);
 }

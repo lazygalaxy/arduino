@@ -22,7 +22,8 @@ public:
 
   void setLight(bool flag, bool considerDeActivation = true);
   bool isLight();
-  void startBlink(bool flag, unsigned int blinkDelay = 500);
+  void startBlink(unsigned int blinkDelay = 500);
+  void stopBlink();
 };
 
 #endif

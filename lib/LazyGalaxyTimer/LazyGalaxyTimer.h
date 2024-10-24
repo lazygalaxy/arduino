@@ -28,7 +28,7 @@ private:
   }
 
 public:
-  static long schedule(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback)
+  static long schedule(unsigned int delay, updateCallbackPtr updateCallback, finalCallbackPtr finalCallback = nullptr)
   {
     return getInstance()->scheduleTask(millis() + delay, updateCallback, finalCallback);
   }

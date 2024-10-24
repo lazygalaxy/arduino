@@ -50,15 +50,19 @@ bool LED::isLight()
     return analogRead(_pin) > 0;
 }
 
-void LED::startBlink(bool flag, unsigned int blinkDelay)
+void LED::startBlink(unsigned int blinkDelay)
 {
-  if (flag && !isActive())
+  if (!isActive())
   {
     // we would like to start the blink
     _blinkDelay = blinkDelay;
     _triggerTime = update(millis());
   }
-  else if (!flag && isActive())
+}
+
+void LED::stopBlink()
+{
+  if (isActive())
     reset();
 }
 
