@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyToneSpeaker.h>
 
-MyToneSpeaker::MyToneSpeaker(uint8_t pin, char volume) : PinComponent(pin)
+MyToneSpeaker::MyToneSpeaker(uint8_t pin, uint8_t volume) : PinComponent(pin)
 {
   _volume = volume;
 }

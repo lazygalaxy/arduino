@@ -121,7 +121,7 @@ struct Melody
 class MyToneSpeaker : public PinComponent
 {
 public:
-  MyToneSpeaker(uint8_t pin, char volume = 5);
+  MyToneSpeaker(uint8_t pin, uint8_t volume = 5);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
@@ -132,7 +132,7 @@ public:
 
 private:
   // general
-  char _volume;
+  uint8_t _volume;
 
   // note
   Melody *_melody;

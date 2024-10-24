@@ -21,6 +21,8 @@ static const float NEOPIXEL_SAT = 1.0;
 static const float NEOPIXEL_VAL = 0.5;
 // the smooth factor used on the freq of tones played
 static const float FREQ_SMOOTH_FACTOR = 0.2;
+// the speaker volume from 0..10
+static const uint8_t SPEAKER_VOLUME = 5;
 
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
@@ -30,8 +32,8 @@ int freq_prev = 20;
 // all the lightsaber components
 Button *button = new Button(D5);
 LED *led = new LED(D4);
-MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 10);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
+MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(SPEAKER_VOLUME * 3);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(10);
 
