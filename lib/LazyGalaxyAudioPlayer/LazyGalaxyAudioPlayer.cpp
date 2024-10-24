@@ -28,7 +28,7 @@ void MyAudioPlayer::reset()
 void MyAudioPlayer::play(uint16_t index)
 {
   Serial.println("play audio 1");
-  _player.playFromMP3Folder(index);
+  _player.loop(index);
   Serial.println("play audio 2");
 }
 

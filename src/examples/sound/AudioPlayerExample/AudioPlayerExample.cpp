@@ -4,33 +4,44 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxySystem.h>
-#include <LazyGalaxyTimer.h>
+// #include <LazyGalaxySystem.h>
+//   #include <LazyGalaxyTimer.h>
 #include <LazyGalaxyAudioPlayer.h>
 
-MyAudioPlayer *audioPLayer = new MyAudioPlayer();
+#if !defined(UBRR1H)
+#include <SoftwareSerial.h>
+SoftwareSerial mySerial(10, 11); // RX, TX
+#endif
 
-void playOffWav(unsigned long time)
-{
-    audioPLayer->play(1);
-}
+DFPlayerMini_Fast myMP3;
 
 void setup()
 {
     Serial.begin(115200);
-    Debug.setDebugLevel(DBG_VERBOSE);
 
-    System::add(audioPLayer);
+    Serial.println("begin");
+#if !defined(UBRR1H)
+    mySerial.begin(9600);
+    myMP3.begin(mySerial, true);
+#else
+    Serial1.begin(9600);
+    myMP3.begin(Serial1, true);
+#endif
+    Serial.println("begin end");
 
-    System::setup();
+    Serial.println("reset");
+    myMP3.reset();
+    Serial.println("Setting volume to max");
+    myMP3.volume(20);
+    Serial.println("reset end");
 
-    audioPLayer->play(1);
-    // schedule a task/function callback to play in the future
-    Timer::schedule(500, playOffWav);
+    Serial.println("play");
+    Serial.println("Looping track 1");
+    myMP3.play(1);
+    Serial.println("play end");
 }
 
 void loop()
 {
-    System::loop();
-    Timer::loop();
+    // do nothing
 }
