@@ -47,8 +47,8 @@ void MyToneSpeaker::playMelody(Melody *melody, noteCallbackPtr noteCallback, fin
   _noteCallback = noteCallback;
   _noteIndex = 0;
 
-  _triggerTime = update(millis());
   _finalCallback = finalCallback;
+  _triggerTime = update(millis());
 }
 
 unsigned long MyToneSpeaker::update(unsigned long time)

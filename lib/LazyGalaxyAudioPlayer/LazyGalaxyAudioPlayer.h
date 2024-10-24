@@ -8,7 +8,7 @@
 #define LAZYGALAXYAUDIOPLAYER_H
 
 #include <LazyGalaxyCommon.h>
-#include <DFPlayerMini_Fast.h>
+#include <DFRobotDFPlayerMini.h>
 #include <SoftwareSerial.h>
 
 class MyAudioPlayer : public PinComponent
@@ -24,7 +24,8 @@ public:
 
 private:
   uint8_t _volume;
-  DFPlayerMini_Fast _player;
+  SoftwareSerial *_mySerial; // RX, TX
+  DFRobotDFPlayerMini _player;
 };
 
 #endif

@@ -5,11 +5,11 @@
 */
 
 #include <LazyGalaxySystem.h>
-#include <LazyGalaxyTimer.h>
-#include <LazyGalaxySDCard.h>
-#include <LazyGalaxySpeaker.h>
+#include <LazyGalaxyToneSpeaker.h>
+#include <LazyGalaxyAudioPlayer.h>
 
-MySpeaker *speaker = new MySpeaker(D9, 5);
+MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 5);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -32,22 +32,16 @@ void noteCallback(unsigned long time, int note)
   DEBUG_DEBUG("note play %i %u", note, time);
 }
 
-void step4(unsigned long time)
-{
-  DEBUG_INFO("step4");
-  speaker->playWav("OFF.wav");
-}
-
 void step3(unsigned long time)
 {
   DEBUG_INFO("step3");
-  speaker->playMelody(santaClausMelody, noteCallback, step4);
+  audioPlayer->play(1);
 }
 
 void step2(unsigned long time)
 {
   DEBUG_INFO("step2");
-  speaker->playWav("ON.wav", step3);
+  toneSpeaker->playMelody(santaClausMelody, noteCallback, step3);
 }
 
 void setup()
@@ -55,16 +49,14 @@ void setup()
   Serial.begin(9600);
   Debug.setDebugLevel(DBG_VERBOSE);
 
-  System::add(new MySDCard(D10));
-  System::add(speaker);
+  System::add(toneSpeaker);
+  System::add(audioPlayer);
   System::setup();
 
-  speaker->playMelody(jingleBellsMelody, noteCallback);
-  // Timer::schedule(3000, step2);
+  toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
 }
 
 void loop()
 {
   System::loop();
-  Timer::loop();
 }

@@ -44,13 +44,19 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   if (freq_new != freq_prev)
     toneSpeaker->playTone(freq_new);
   if (accel >= 320)
+  {
     DEBUG_DEBUG("hard hit at %lu with %i", time, accel);
+    audioPlayer->play(2);
+  }
   else if (accel >= 150)
+  {
     DEBUG_DEBUG("soft hit at %lu with %i", time, accel);
+    audioPlayer->play(3);
+  }
   if (gyro >= 300)
-    DEBUG_DEBUG("hard swing at %lu with %i", time, gyro);
+    DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
   else if (gyro >= 150)
-    DEBUG_DEBUG("soft swing at %lu with %i", time, gyro);
+    DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
   freq_prev = freq_new;
 }
 
@@ -82,11 +88,11 @@ void clicksCallback(unsigned long time, int clicks)
     case 1:
       // if there is 1 click, stop the light saber
       button->stopLongPressCallback();
-      toneSpeaker->reset();
+      toneSpeaker->stopTone();
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink(true);
-      audioPlayer->stop();
+      audioPlayer->play(2);
       lightSaberOn = false;
       break;
     }
@@ -108,7 +114,7 @@ void setup()
 
   led->startBlink(true);
   button->startClicksCallback(clicksCallback);
-  audioPlayer->play(1);
+  audioPlayer->play(2);
 }
 
 void loop()
