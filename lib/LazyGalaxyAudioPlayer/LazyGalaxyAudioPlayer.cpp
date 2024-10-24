@@ -16,7 +16,7 @@ void MyAudioPlayer::setup()
   _mySerial = new SoftwareSerial(10, 11); // RX, TX
   _mySerial->begin(9600);
 
-  _player.begin(*_mySerial, /*isACK = */ true, /*doReset = */ true);
+  _player.begin(*_mySerial);
   Serial.println(F("DFPlayer OK"));
 
   _player.volume(_volume); // Set volume value. From 0 to 30

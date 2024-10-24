@@ -8,11 +8,10 @@
 #include <LazyGalaxyTimer.h>
 #include <LazyGalaxyAudioPlayer.h>
 
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(20);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
 
 void step2(unsigned long time)
 {
-    DEBUG_INFO("step2");
     audioPlayer->play(2); // Play the second audio
 }
 
