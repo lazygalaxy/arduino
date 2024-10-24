@@ -4,7 +4,7 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyButton.h>
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyNeoPixel.h>
@@ -22,7 +22,7 @@ static const float NEOPIXEL_VAL = 0.5;
 // the smooth factor used on the freq of tones played
 static const float FREQ_SMOOTH_FACTOR = 0.2;
 // the speaker volume from 0..10
-static const uint8_t SPEAKER_VOLUME = 5;
+static const uint8_t SPEAKER_VOLUME = 10;
 
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
@@ -33,7 +33,7 @@ int freq_prev = 20;
 Button *button = new Button(D5);
 LED *led = new LED(D4);
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(SPEAKER_VOLUME * 3);
+// MyAudioPlayer *audioPlayer = new MyAudioPlayer(SPEAKER_VOLUME * 3);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(10);
 
@@ -45,14 +45,14 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   int freq_new = freq * FREQ_SMOOTH_FACTOR + freq_prev * (1 - FREQ_SMOOTH_FACTOR); // smooth filter
   if (freq_new != freq_prev)
     toneSpeaker->playTone(freq_new);
-  if (accel >= 320)
-    audioPlayer->play(2);
-  else if (accel >= 150)
-    audioPlayer->play(3);
-  // else if (gyro >= 300)
-  //   DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
-  // else if (gyro >= 150)
-  //   DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
+  // if (accel >= 320)
+  //   audioPlayer->play(2, 1);
+  // else if (accel >= 150)
+  //   audioPlayer->play(3, 1);
+  //  else if (gyro >= 300)
+  //    DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
+  //  else if (gyro >= 150)
+  //    DEBUG_VERBOSE("soft swing at %lu with %i", time, gyro);
   freq_prev = freq_new;
 }
 
@@ -73,7 +73,7 @@ void clicksCallback(unsigned long time, int clicks)
     lightSaberOn = true;
     led->stopBlink();
     led->setLight(true);
-    audioPlayer->play(1);
+    // audioPlayer->play(1, 1);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
     toneSpeaker->playTone(freq_prev);
@@ -89,7 +89,7 @@ void clicksCallback(unsigned long time, int clicks)
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink();
-      audioPlayer->play(2);
+      // audioPlayer->play(1, 2);
       lightSaberOn = false;
       break;
     }
@@ -100,20 +100,20 @@ void setup()
   Serial.begin(115200);
 
   // System setup
-  System::add(led);
-  System::add(button);
-  System::add(toneSpeaker);
-  System::add(audioPlayer);
-  System::add(motion);
-  System::add(neopixel);
-  System::setup();
+  Circuit::add(led);
+  Circuit::add(button);
+  Circuit::add(toneSpeaker);
+  // Circuit::add(audioPlayer);
+  Circuit::add(motion);
+  Circuit::add(neopixel);
+  Circuit::setup();
 
   led->startBlink();
   button->startClicksCallback(clicksCallback);
-  audioPlayer->play(2);
+  // audioPlayer->play(1, 3);
 }
 
 void loop()
 {
-  System::loop();
+  Circuit::loop();
 }

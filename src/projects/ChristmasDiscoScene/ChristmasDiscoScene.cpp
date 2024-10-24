@@ -10,9 +10,9 @@
 #include <LazyGalaxyAudioPlayer.h>
 
 // the speaker volume from 0 to 30
-static const uint8_t SPEAKER_VOLUME = 10;
+static const uint8_t SPEAKER_VOLUME = 25;
 // how long each scene lasts in milliseconds
-static const unsigned int SCENE_DURATION_MILLIS = 10000;
+static const unsigned int SCENE_DURATION_MILLIS = 30000;
 // how long does the disco light blink
 static const unsigned int DISCO_BLINK_MILLIS = 400;
 
