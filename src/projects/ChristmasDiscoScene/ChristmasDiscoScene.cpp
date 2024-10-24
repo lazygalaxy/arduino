@@ -10,7 +10,7 @@
 #include <LazyGalaxyAudioPlayer.h>
 
 // the speaker volume from 0 to 30
-static const uint8_t SPEAKER_VOLUME = 15;
+static const uint8_t SPEAKER_VOLUME = 10;
 // how long each scene lasts in milliseconds
 static const unsigned int SCENE_DURATION_MILLIS = 10000;
 // how long does the disco light blink
@@ -35,6 +35,7 @@ unsigned long playScene(unsigned long time)
   {
     // our christmas scene logic
     discoLED->stopBlink();
+    discoLED->setLight(false);
     chrismasLED->setLight(true);
     christmasTrackIndex = ++christmasTrackIndex > totalChristmasTracks ? 1 : christmasTrackIndex;
     audioPlayer->play(1, christmasTrackIndex);
