@@ -6,13 +6,14 @@
 
 #include <LazyGalaxyMotion.h>
 
-MyMotion::MyMotion(unsigned long updateTime) : PinComponent(255)
+MyMotion::MyMotion(unsigned long updateTime) : Component()
 {
   _updateTime = updateTime;
 }
 
 void MyMotion::setup()
 {
+  Wire.begin();
   _accelgyro.initialize();
   _accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
   _accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
@@ -24,6 +25,7 @@ void MyMotion::setup()
 
 void MyMotion::reset()
 {
+  Serial.println("reset motion");
   Component::reset();
   _motionCallback = nullptr;
 }

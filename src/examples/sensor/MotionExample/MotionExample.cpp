@@ -4,20 +4,27 @@
    Released into the public domain.
  */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyMotion.h>
+
+MyMotion *motion = new MyMotion(1000); // A4 //A5
+
+void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
+{
+  Serial.print(accel);
+  Serial.print(" ");
+  Serial.println(gyro);
+}
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_DEBUG);
+  Circuit::add(motion);
+  Circuit::setup();
 
-  System::add(new MyMotion());
-  System::setup();
+  motion->startCallback(motionCallback);
 }
 
 void loop()
 {
-  // update all LazyGalaxy tasks
-  System::loop();
+  Circuit::loop();
 }

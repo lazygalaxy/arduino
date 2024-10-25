@@ -11,10 +11,10 @@
 #include <DFPlayerMini_Fast.h>
 #include <SoftwareSerial.h>
 
-class MyAudioPlayer : public PinComponent
+class MyAudioPlayer : public Component
 {
 public:
-  MyAudioPlayer(uint8_t rxPin = D10, uint8_t txPin = D11, uint8_t volume = 15);
+  MyAudioPlayer(uint8_t rxPin, uint8_t txPin, uint8_t volume = 15);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;

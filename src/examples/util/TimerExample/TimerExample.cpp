@@ -12,7 +12,7 @@ unsigned long printHello(unsigned long time)
 {
   if (++counter <= 3)
   {
-    DEBUG_INFO("Hello %lu", time);
+    Serial.println("Hello");
     return time + 1000;
   }
   return 0;
@@ -20,18 +20,17 @@ unsigned long printHello(unsigned long time)
 
 void printGoodbye(unsigned long time)
 {
-  DEBUG_INFO("Goodbye %lu", time);
+  Serial.println("Goodbye");
 }
 
 void printHaveANiceDay(unsigned long time)
 {
-  DEBUG_INFO("Have a nide day %lu", time);
+  Serial.println("Have a nide day");
 }
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_INFO);
+  Serial.begin(115200);
 
   // schedule a task to print "Hello" three times in 2 seconds, then print "Goodbye"
   Timer::schedule(2000, printHello, printGoodbye);

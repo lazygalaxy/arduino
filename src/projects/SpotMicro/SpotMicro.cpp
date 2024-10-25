@@ -16,8 +16,6 @@ ServoGroup rightBackLeg(3, (uint8_t[]){D8, D9, D10}, rest);
 
 void setup()
 {
-   Serial.begin(9600);
-
    // rightFrontLeg.setup();
    // leftFrontLeg.setup();
    rightBackLeg.setup();

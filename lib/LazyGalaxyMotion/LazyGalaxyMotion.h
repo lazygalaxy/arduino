@@ -8,11 +8,11 @@
 #define LAZYGALAXYMOTION_H
 
 #include <LazyGalaxyCommon.h>
-#include "MPU6050.h"
+#include <MPU6050.h>
 
 typedef void (*motionCallbackPtr)(unsigned long time, unsigned long accel, unsigned long gyro);
 
-class MyMotion : public PinComponent
+class MyMotion : public Component
 {
 public:
   MyMotion(unsigned long updateTime = 50);

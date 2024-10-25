@@ -4,29 +4,28 @@
    Released into the public domain.
  */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyTimer.h>
 #include <LazyGalaxyAudioPlayer.h>
 
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, 15);
 
 void step2(unsigned long time)
 {
-    audioPlayer->play(2); // Play the second audio
+    audioPlayer->play(1, 2); // Play the second audio
 }
 
 void setup()
 {
-    Serial.begin(115200);
-    System::add(audioPlayer);
-    System::setup();
+    Circuit::add(audioPlayer);
+    Circuit::setup();
 
-    audioPlayer->play(1); // Play the first audio
+    audioPlayer->play(1, 1); // Play the first audio
     Timer::schedule(500, step2);
 }
 
 void loop()
 {
-    System::loop();
+    Circuit::loop();
     Timer::loop();
 }

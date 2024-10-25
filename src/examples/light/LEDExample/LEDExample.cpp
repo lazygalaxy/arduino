@@ -4,7 +4,7 @@
    Released into the public domain.
  */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyTimer.h>
 #include <LazyGalaxyLED.h>
 
@@ -18,21 +18,18 @@ void lightOff(unsigned long time)
 
 void blinkOn(unsigned long time)
 {
-  led->startBlink(true);
+  led->startBlink();
 }
 
 void blinkOff(unsigned long time)
 {
-  led->startBlink(false);
+  led->stopBlink();
 }
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_DEBUG);
-
-  System::add(led);
-  System::setup();
+  Circuit::add(led);
+  Circuit::setup();
 
   // light LED on startup
   led->setLight(true);
@@ -47,6 +44,6 @@ void setup()
 
 void loop()
 {
-  System::loop();
+  Circuit::loop();
   Timer::loop();
 }

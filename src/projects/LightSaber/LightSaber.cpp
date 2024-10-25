@@ -33,9 +33,9 @@ int freq_prev = 20;
 Button *button = new Button(D5);
 LED *led = new LED(D4);
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
-// MyAudioPlayer *audioPlayer = new MyAudioPlayer(SPEAKER_VOLUME * 3);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, SPEAKER_VOLUME * 3);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
-MyMotion *motion = new MyMotion(10);
+MyMotion *motion = new MyMotion(10); // A4 //A5
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -45,10 +45,10 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   int freq_new = freq * FREQ_SMOOTH_FACTOR + freq_prev * (1 - FREQ_SMOOTH_FACTOR); // smooth filter
   if (freq_new != freq_prev)
     toneSpeaker->playTone(freq_new);
-  // if (accel >= 320)
-  //   audioPlayer->play(2, 1);
-  // else if (accel >= 150)
-  //   audioPlayer->play(3, 1);
+  if (accel >= 320)
+    audioPlayer->play(2, 1);
+  else if (accel >= 150)
+    audioPlayer->play(3, 1);
   //  else if (gyro >= 300)
   //    DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
   //  else if (gyro >= 150)
@@ -73,7 +73,7 @@ void clicksCallback(unsigned long time, int clicks)
     lightSaberOn = true;
     led->stopBlink();
     led->setLight(true);
-    // audioPlayer->play(1, 1);
+    audioPlayer->play(1, 1);
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
     toneSpeaker->playTone(freq_prev);
@@ -89,7 +89,7 @@ void clicksCallback(unsigned long time, int clicks)
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink();
-      // audioPlayer->play(1, 2);
+      audioPlayer->play(1, 2);
       lightSaberOn = false;
       break;
     }
@@ -97,20 +97,18 @@ void clicksCallback(unsigned long time, int clicks)
 
 void setup()
 {
-  Serial.begin(115200);
-
   // System setup
   Circuit::add(led);
   Circuit::add(button);
   Circuit::add(toneSpeaker);
-  // Circuit::add(audioPlayer);
+  Circuit::add(audioPlayer);
   Circuit::add(motion);
   Circuit::add(neopixel);
   Circuit::setup();
 
   led->startBlink();
   button->startClicksCallback(clicksCallback);
-  // audioPlayer->play(1, 3);
+  audioPlayer->play(1, 3);
 }
 
 void loop()

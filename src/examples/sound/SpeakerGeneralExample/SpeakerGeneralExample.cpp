@@ -4,12 +4,12 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyAudioPlayer.h>
 
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 5);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(15);
+MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, 15);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -29,34 +29,32 @@ Melody *jingleBellsMelody =
 
 void noteCallback(unsigned long time, int note)
 {
-  DEBUG_DEBUG("note play %i %u", note, time);
+  Serial.print("note play ");
+  Serial.println(note);
 }
 
 void step3(unsigned long time)
 {
-  DEBUG_INFO("step3");
-  audioPlayer->play(1);
+  Serial.println("step3");
+  audioPlayer->play(1, 1);
 }
 
 void step2(unsigned long time)
 {
-  DEBUG_INFO("step2");
+  Serial.println("step2");
   toneSpeaker->playMelody(santaClausMelody, noteCallback, step3);
 }
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_VERBOSE);
-
-  System::add(toneSpeaker);
-  System::add(audioPlayer);
-  System::setup();
+  Circuit::add(toneSpeaker);
+  Circuit::add(audioPlayer);
+  Circuit::setup();
 
   toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
 }
 
 void loop()
 {
-  System::loop();
+  Circuit::loop();
 }

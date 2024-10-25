@@ -4,22 +4,27 @@
    Released into the public domain.
 */
 
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyButton.h>
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyNeoPixel.h>
-#include <LazyGalaxySpeaker.h>
+#include <LazyGalaxyToneSpeaker.h>
 
 static const unsigned int DELAY = 50;
 static const float SAT = 1.0;
 static const float VAL = 0.4;
 
-Button *button1 = new Button(D2, D3);
-Button *button2 = new Button(D4, D5);
-Button *button3 = new Button(D6, D7);
-Button *button4 = new Button(D8, D9);
+Button *button1 = new Button(D2);
+LED *led1 = new LED(D3);
+Button *button2 = new Button(D4);
+LED *led2 = new LED(D5);
+Button *button3 = new Button(D6);
+LED *led3 = new LED(D7);
+Button *button4 = new Button(D8);
+LED *led4 = new LED(D9);
+
 NeoPixel *strip = new NeoPixel(D11, 123);
-MySpeaker *speaker = new MySpeaker(D12, 5);
+MyToneSpeaker *speaker = new MyToneSpeaker(D12, 5);
 
 boolean reverse = false;
 
@@ -55,85 +60,86 @@ void noteCallback(unsigned long time, int note)
 void finalCallback(unsigned long time)
 {
   strip->off();
-  button1->setOn(true);
-  button2->setOn(true);
-  button3->setOn(true);
-  button4->setOn(true);
+  led1->setLight(true);
+  led2->setLight(true);
+  led3->setLight(true);
+  led4->setLight(true);
 }
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_DEBUG);
-
   pinMode(D10, OUTPUT);
   digitalWrite(D10, LOW);
 
-  System::add(strip);
-  System::add(button1);
-  System::add(button2);
-  System::add(button3);
-  System::add(button4);
-  System::add(speaker);
-  System::setup();
+  Circuit::add(strip);
+  Circuit::add(button1);
+  Circuit::add(led1);
+  Circuit::add(button2);
+  Circuit::add(led2);
+  Circuit::add(button3);
+  Circuit::add(led3);
+  Circuit::add(button4);
+  Circuit::add(led4);
+  Circuit::add(speaker);
+  Circuit::setup();
 
   finalCallback(0);
 }
 
 void loop()
 {
-  System::loop();
+  Circuit::loop();
 
-  if (!speaker->isActive() && button1->getClicks() > 0)
-  {
-    strip->off();
-    button1->setOn(true);
-    button2->setOn(false);
-    button3->setOn(false);
-    button4->setOn(false);
-    speaker->playMelody(merryChristmasMelody, noteCallback, finalCallback);
-  }
+  // if (!speaker->isActive() && button1->getClicks() > 0)
+  // {
+  //   strip->off();
+  //   button1->setOn(true);
+  //   button2->setOn(false);
+  //   button3->setOn(false);
+  //   button4->setOn(false);
+  //   speaker->playMelody(merryChristmasMelody, noteCallback, finalCallback);
+  // }
 
-  if (!speaker->isActive() && button2->getClicks() > 0)
-  {
-    strip->off();
-    button1->setOn(false);
-    button2->setOn(true);
-    button3->setOn(false);
-    button4->setOn(false);
-    speaker->playMelody(jingleBellsMelody, noteCallback, finalCallback);
-  }
+  // if (!speaker->isActive() && button2->getClicks() > 0)
+  // {
+  //   strip->off();
+  //   button1->setOn(false);
+  //   button2->setOn(true);
+  //   button3->setOn(false);
+  //   button4->setOn(false);
+  //   speaker->playMelody(jingleBellsMelody, noteCallback, finalCallback);
+  // }
 
-  if (!speaker->isActive() && button3->getClicks() > 0)
-  {
-    strip->off();
-    button1->setOn(false);
-    button2->setOn(false);
-    button3->setOn(true);
-    button4->setOn(false);
-    speaker->playMelody(santaClausMelody, noteCallback, finalCallback);
-  }
+  // if (!speaker->isActive() && button3->getClicks() > 0)
+  // {
+  //   strip->off();
+  //   button1->setOn(false);
+  //   button2->setOn(false);
+  //   button3->setOn(true);
+  //   button4->setOn(false);
+  //   speaker->playMelody(santaClausMelody, noteCallback, finalCallback);
+  // }
 
-  if (!speaker->isActive() && button4->getClicks() > 0)
-  {
-    strip->off();
-    button1->setOn(false);
-    button2->setOn(false);
-    button3->setOn(false);
-    button4->setOn(true);
-    speaker->reset();
+  // if (!speaker->isActive() && button4->getClicks() > 0)
+  // {
+  //   strip->off();
+  //   button1->setOn(false);
+  //   button2->setOn(false);
+  //   button3->setOn(false);
+  //   button4->setOn(true);
+  //   speaker->reset();
 
-    float prob = random(100) / 100.0f;
-    float hue = random(100) / 100.0f;
+  //   float prob = random(100) / 100.0f;
+  //   float hue = random(100) / 100.0f;
 
-    if (0.5 >= prob)
-    {
-      strip->setChaseSequence(hue, SAT, VAL, DELAY, 100, 3, finalCallback);
-    }
-    else
-    {
-      strip->setWipeSequence(hue, SAT, VAL, DELAY, reverse, finalCallback);
-      reverse = !reverse;
-    }
-  }
+  //   if (0.5 >= prob)
+  //   {
+  //     strip->setChaseSequence(hue, SAT, VAL, DELAY, 100, 3, finalCallback);
+  //   }
+  //   else
+  //   {
+  //     strip->setWipeSequence(hue, SAT, VAL, DELAY, reverse, finalCallback);
+  //     reverse = !reverse;
+  //   }
+  // }
 }

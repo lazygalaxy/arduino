@@ -57,8 +57,6 @@ unsigned long playScene(unsigned long time)
 
 void setup()
 {
-  Serial.begin(115200);
-
   // Circuit setup
   Circuit::add(chrismasLED);
   Circuit::add(discoLED);

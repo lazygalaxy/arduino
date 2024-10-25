@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyAudioPlayer.h>
 
-MyAudioPlayer::MyAudioPlayer(uint8_t rxPin, uint8_t txPin, uint8_t volume) : PinComponent(255)
+MyAudioPlayer::MyAudioPlayer(uint8_t rxPin, uint8_t txPin, uint8_t volume) : Component()
 {
   _rxPin = rxPin;
   _txPin = txPin;
@@ -18,12 +18,13 @@ void MyAudioPlayer::setup()
   _mySerial = new SoftwareSerial(_rxPin, _txPin); // RX, TX
   _mySerial->begin(9600);
 
-  _player.begin(*_mySerial);
+  _player.begin(*_mySerial, false, 1000);
+  // set the volume twice, seems like a bug in the lib
+  _player.volume(_volume);
+  _player.volume(_volume);
   Serial.println(F("DFPlayer OK"));
-
   Serial.print("DFPlayer volume is ");
   Serial.println(_volume);
-  _player.volume(_volume);
 }
 
 void MyAudioPlayer::reset()

@@ -5,7 +5,7 @@
 */
 
 #include <LazyGalaxyTimer.h>
-#include <LazyGalaxySystem.h>
+#include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyNeoPixel.h>
 
 static const unsigned int DELAY = 50;
@@ -16,7 +16,7 @@ void allOff(unsigned long time) { strip->off(); }
 
 void wipeSequenceReverse(unsigned long time)
 {
-  DEBUG_DEBUG("wipeSequenceReverse");
+  Serial.println("wipeSequenceReverse");
   strip->setWipeSequence(0.66, 1.0, 0.5, DELAY, true, allOff);
 }
 void wipeSequence(unsigned long time)
@@ -34,11 +34,8 @@ void allBlue(unsigned long time) { strip->setNoSequence(0.66, 1.0, 0.5); }
 
 void setup()
 {
-  Serial.begin(9600);
-  Debug.setDebugLevel(DBG_VERBOSE);
-
-  System::add(strip);
-  System::setup();
+  Circuit::add(strip);
+  Circuit::setup();
 
   // set all LEDs to red
   Timer::schedule(0, allRed);
@@ -54,6 +51,6 @@ void setup()
 
 void loop()
 {
-  System::loop();
+  Circuit::loop();
   Timer::loop();
 }
