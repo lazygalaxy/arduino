@@ -13,12 +13,13 @@ Button::Button(uint8_t pin) : PinComponent(pin)
 void Button::setup()
 {
   pinMode(_pin, INPUT_PULLUP);
-  _clicksCallback = nullptr;
-  _longPressCallback = nullptr;
+  stopClicksCallback();
+  stopLongPressCallback();
 }
 
 void Button::reset()
 {
+  Serial.println("button reset");
   Component::reset();
   // we are basically always active for buttons
   _triggerTime = 1;
@@ -39,14 +40,18 @@ void Button::stopClicksCallback()
   _clicksCallback = nullptr;
 }
 
-void Button::startLongPressCallback(longPressCallbackPtr longPressCallback)
+void Button::startLongPressCallback(longPressCallbackPtr longPressCallback, unsigned long longPressCallbackCycle, unsigned long longPressDuration)
 {
   _longPressCallback = longPressCallback;
+  _longPressCallbackCycle = longPressCallbackCycle;
+  _longPressDuration = longPressDuration;
 }
 
 void Button::stopLongPressCallback()
 {
   _longPressCallback = nullptr;
+  _longPressCallbackCycle = 0;
+  _longPressDuration = 0;
 }
 
 unsigned long Button::update(unsigned long time)
@@ -55,15 +60,19 @@ unsigned long Button::update(unsigned long time)
 
   if (value == LOW && _pressTime == 0)
   {
+    Serial.println("1st press");
     _pressTime = time;
     _releaseTime = 0;
     _prevValue = value;
   }
-  else if (value == LOW && _pressTime != 0 && (time - _pressTime) >= 1000)
+  else if ((value == LOW) && (((_pressTime != 0 && _longPressDuration != 0) && ((time - _pressTime) >= _longPressDuration)) || _isLongPress))
   {
     _isLongPress = true;
-    if (_longPressCallback != nullptr)
+    if (_longPressCallback != nullptr && ((time - _pressTime) >= _longPressCallbackCycle))
+    {
       _longPressCallback(time);
+      _pressTime = time;
+    }
   }
   else if (value == HIGH && _prevValue == LOW)
   {
@@ -71,6 +80,7 @@ unsigned long Button::update(unsigned long time)
       return 0;
     else
     {
+      Serial.println("additional press");
       _clicks += 1;
       _releaseTime = time;
       _pressTime = 0;
@@ -83,7 +93,6 @@ unsigned long Button::update(unsigned long time)
   {
     if (_clicksCallback != nullptr)
       _clicksCallback(time, _clicks);
-    // temporary we deactivate the component, it will be reset and activated again
     return 0;
   }
 

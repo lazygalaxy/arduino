@@ -18,13 +18,23 @@ void MyAudioPlayer::setup()
   _mySerial = new SoftwareSerial(_rxPin, _txPin); // RX, TX
   _mySerial->begin(9600);
 
-  _player.begin(*_mySerial, false, 1000);
-  // set the volume twice, seems like a bug in the lib
+  _player.begin(*_mySerial);
+
+  // not sure why, need to call _player functions twice and tehy then work here...
   _player.volume(_volume);
   _player.volume(_volume);
   Serial.println(F("DFPlayer OK"));
   Serial.print("DFPlayer volume is ");
   Serial.println(_volume);
+
+  _player.numFolders();
+  _tracksInFolder = new uint8_t[_player.numFolders()];
+
+  for (int i = 0; i < _player.numFolders(); i++)
+  {
+    _player.numTracksInFolder(i + 1);
+    _tracksInFolder[i] = _player.numTracksInFolder(i + 1);
+  }
 }
 
 void MyAudioPlayer::reset()
@@ -35,6 +45,11 @@ void MyAudioPlayer::reset()
 void MyAudioPlayer::play(uint8_t folderNum, uint8_t trackNum)
 {
   _player.playFolder(folderNum, trackNum);
+}
+
+void MyAudioPlayer::playRandom(uint8_t folderNum)
+{
+  _player.playFolder(folderNum, random(_tracksInFolder[folderNum - 1]));
 }
 
 int16_t MyAudioPlayer::getNumTracks(uint8_t folderNum)

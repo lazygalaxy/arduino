@@ -20,6 +20,7 @@ public:
   unsigned long update(unsigned long time) override;
 
   void play(uint8_t folderNum, uint8_t trackNum);
+  void playRandom(uint8_t folderNum);
   int16_t getNumTracks(uint8_t folderNum);
 
   void stop();
@@ -30,6 +31,7 @@ private:
   uint8_t _volume;
   SoftwareSerial *_mySerial; // RX, TX
   DFPlayerMini_Fast _player;
+  uint8_t *_tracksInFolder;
 };
 
 #endif

@@ -23,7 +23,7 @@ public:
 
   void startClicksCallback(clicksCallbackPtr clicksCallback);
   void stopClicksCallback();
-  void startLongPressCallback(longPressCallbackPtr longPressCallback);
+  void startLongPressCallback(longPressCallbackPtr longPressCallback, unsigned long longPressCallbackCycle = 100, unsigned long longPressDuration = 1000);
   void stopLongPressCallback();
 
 private:
@@ -34,6 +34,8 @@ private:
   bool _isLongPress;
   clicksCallbackPtr _clicksCallback;
   longPressCallbackPtr _longPressCallback;
+  unsigned long _longPressCallbackCycle;
+  unsigned long _longPressDuration;
 };
 
 #endif

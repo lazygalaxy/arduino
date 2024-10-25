@@ -25,7 +25,6 @@ void MyMotion::setup()
 
 void MyMotion::reset()
 {
-  Serial.println("reset motion");
   Component::reset();
   _motionCallback = nullptr;
 }
