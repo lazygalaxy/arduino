@@ -19,7 +19,6 @@ void Button::setup()
 
 void Button::reset()
 {
-  Serial.println("button reset");
   Component::reset();
   // we are basically always active for buttons
   _triggerTime = 1;
@@ -60,7 +59,6 @@ unsigned long Button::update(unsigned long time)
 
   if (value == LOW && _pressTime == 0)
   {
-    Serial.println("1st press");
     _pressTime = time;
     _releaseTime = 0;
     _prevValue = value;
@@ -80,7 +78,6 @@ unsigned long Button::update(unsigned long time)
       return 0;
     else
     {
-      Serial.println("additional press");
       _clicks += 1;
       _releaseTime = time;
       _pressTime = 0;

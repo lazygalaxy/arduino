@@ -14,7 +14,7 @@
 
 // neopixel fixed values
 // the delay with which each succesive LED light is turned on and off
-static const unsigned int NEOPIXEL_DELAY_MILLIS = 10;
+static const unsigned int NEOPIXEL_DELAY_MILLIS = 20;
 // the saturation of all LED lights
 static const float NEOPIXEL_SAT = 1.0;
 // the value of all LED lights
@@ -35,6 +35,8 @@ static const float FREQ_SMOOTH_FACTOR = 0.2;
 bool lightSaberOn = false;
 float hue = 0.0;
 int freq_prev = 20;
+unsigned int lastHardHitTime = 0;
+unsigned int lastSoftHitTime = 0;
 
 // all lightsaber components
 Button *button = new Button(D5);
@@ -52,10 +54,23 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   int freq_new = freq * FREQ_SMOOTH_FACTOR + freq_prev * (1 - FREQ_SMOOTH_FACTOR); // smooth filter
   if (freq_new != freq_prev)
     toneSpeaker->playTone(freq_new);
+
   if (accel >= 320)
-    audioPlayer->playRandom(HARDHIT_FOLDER);
+  {
+    if (time - lastHardHitTime > 250)
+    {
+      lastHardHitTime = time;
+      audioPlayer->playRandom(HARDHIT_FOLDER);
+    }
+  }
   else if (accel >= 150)
-    audioPlayer->playRandom(SOFTHIT_FOLDER);
+  {
+    if (time - lastSoftHitTime > 250)
+    {
+      lastSoftHitTime = time;
+      audioPlayer->playRandom(SOFTHIT_FOLDER);
+    }
+  }
   //  else if (gyro >= 300)
   //    DEBUG_VERBOSE("hard swing at %lu with %i", time, gyro);
   //  else if (gyro >= 150)
@@ -65,7 +80,6 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 
 void longPressCallback(unsigned long time)
 {
-  Serial.println("longPressCallback");
   hue += 0.01;
   if (hue > 1.0)
     hue = 0.0;

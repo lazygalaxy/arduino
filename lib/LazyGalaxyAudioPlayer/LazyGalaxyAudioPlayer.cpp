@@ -52,9 +52,9 @@ void MyAudioPlayer::playRandom(uint8_t folderNum)
   _player.playFolder(folderNum, random(_tracksInFolder[folderNum - 1]));
 }
 
-int16_t MyAudioPlayer::getNumTracks(uint8_t folderNum)
+bool MyAudioPlayer::isPlaying()
 {
-  return _player.numTracksInFolder(folderNum);
+  return _player.isPlaying();
 }
 
 void MyAudioPlayer::stop()

@@ -21,7 +21,7 @@ public:
 
   void play(uint8_t folderNum, uint8_t trackNum);
   void playRandom(uint8_t folderNum);
-  int16_t getNumTracks(uint8_t folderNum);
+  bool isPlaying();
 
   void stop();
 
