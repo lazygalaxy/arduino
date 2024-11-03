@@ -31,7 +31,7 @@ private:
   uint8_t _volume;
   SoftwareSerial *_mySerial; // RX, TX
   DFPlayerMini_Fast _player;
-  uint8_t *_tracksInFolder;
+  int16_t *_tracksInFolder;
 };
 
 #endif

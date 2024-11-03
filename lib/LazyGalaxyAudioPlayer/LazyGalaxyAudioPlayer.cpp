@@ -28,12 +28,18 @@ void MyAudioPlayer::setup()
   Serial.println(_volume);
 
   _player.numFolders();
-  _tracksInFolder = new uint8_t[_player.numFolders()];
+  int16_t numFolders = _player.numFolders();
+  Serial.print("folders found ");
+  Serial.println(numFolders);
+  //_tracksInFolder = new int16_t[numFolders];
+  _tracksInFolder = new int16_t[numFolders];
 
   for (int i = 0; i < _player.numFolders(); i++)
   {
     _player.numTracksInFolder(i + 1);
     _tracksInFolder[i] = _player.numTracksInFolder(i + 1);
+    Serial.print("tracks found ");
+    Serial.println(_tracksInFolder[i]);
   }
 }
 
