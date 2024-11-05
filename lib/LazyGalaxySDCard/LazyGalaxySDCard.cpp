@@ -14,8 +14,8 @@ void MySDCard::setup()
 {
   if (!SD.begin(_pin))
   { // see if the card is present and can be initialized:
-    DEBUG_ERROR("SD fail");
+    Serial.println("SD fail");
     return; // don't do anything more if not
   }
-  DEBUG_INFO("SD OK");
+  Serial.println("SD OK");
 }

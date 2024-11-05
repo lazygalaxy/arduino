@@ -5,11 +5,13 @@
 */
 
 #include <LazyGalaxyCircuit.h>
+#include <LazyGalaxySDCard.h>
 #include <LazyGalaxyToneSpeaker.h>
-#include <LazyGalaxyAudioPlayer.h>
+#include <LazyGalaxyWAVPlayer.h>
 
+MySDCard *sdCard = new MySDCard(D10);
 MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 5);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, 15);
+MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 5);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -33,22 +35,29 @@ void noteCallback(unsigned long time, int note)
   Serial.println(note);
 }
 
+void step4(unsigned long time)
+{
+  Serial.println("step4");
+  wavPlayer->play("off.wav");
+}
+
 void step3(unsigned long time)
 {
   Serial.println("step3");
-  audioPlayer->play(1, 1);
+  toneSpeaker->playMelody(santaClausMelody, noteCallback, step4);
 }
 
 void step2(unsigned long time)
 {
   Serial.println("step2");
-  toneSpeaker->playMelody(santaClausMelody, noteCallback, step3);
+  wavPlayer->play("on.wav", step3);
 }
 
 void setup()
 {
+  Circuit::add(sdCard);
   Circuit::add(toneSpeaker);
-  Circuit::add(audioPlayer);
+  Circuit::add(wavPlayer);
   Circuit::setup();
 
   toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
