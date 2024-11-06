@@ -10,8 +10,8 @@
 #include <LazyGalaxyWAVPlayer.h>
 
 MySDCard *sdCard = new MySDCard(D10);
-MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 5);
-MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 5);
+MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 3);
+MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 3);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -60,7 +60,8 @@ void setup()
   Circuit::add(wavPlayer);
   Circuit::setup();
 
-  toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
+  wavPlayer->play("on.wav", step2);
+  // toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
 }
 
 void loop()

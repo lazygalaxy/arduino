@@ -48,10 +48,10 @@ unsigned long lastSoftSwingTime = 0;
 Button *button = new Button(D5);
 LED *led = new LED(D4);
 MySDCard *sdCard = new MySDCard(D10);
-// MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 10);
+// MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(10); // A4 //A5
-MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, SPEAKER_VOLUME * 3);
+MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, SPEAKER_VOLUME);
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -69,7 +69,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
       Serial.print("hard hit ");
       Serial.println(time);
       lastHardHitTime = time;
-      // audioPlayer->playRandom(HARDHIT_FOLDER);
+      wavPlayer->play("hst1.wav");
     }
   }
   else if (accel >= 150)
@@ -79,7 +79,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
       Serial.print("soft hit ");
       Serial.println(time);
       lastSoftHitTime = time;
-      // audioPlayer->playRandom(SOFTHIT_FOLDER);
+      wavPlayer->play("sst1.wav");
     }
   }
   else if (gyro >= 300)
@@ -89,7 +89,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
       Serial.print("hard swing ");
       Serial.println(time);
       lastHardSwingTime = time;
-      // audioPlayer->playRandom(HARDSWING_FOLDER);
+      wavPlayer->play("hsw1.wav");
     }
   }
   else if (gyro >= 150)
@@ -99,7 +99,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
       Serial.print("soft swing ");
       Serial.println(time);
       lastSoftSwingTime = time;
-      // audioPlayer->playRandom(SOFTSWING_FOLDER);
+      wavPlayer->play("ssw1.wav");
     }
   }
 
@@ -123,7 +123,7 @@ void clicksCallback(unsigned long time, int clicks)
     lightSaberOn = true;
     led->stopBlink();
     led->setLight(true);
-    // audioPlayer->play(GENERAL_FOLDER, 1);
+    wavPlayer->play("on.wav");
     neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
     motion->startCallback(motionCallback);
     // toneSpeaker->playTone(freq_prev);
@@ -139,7 +139,7 @@ void clicksCallback(unsigned long time, int clicks)
       motion->stopCallback();
       neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
       led->startBlink();
-      // audioPlayer->play(GENERAL_FOLDER, 2);
+      wavPlayer->play("off.wav");
       lightSaberOn = false;
       break;
     }
