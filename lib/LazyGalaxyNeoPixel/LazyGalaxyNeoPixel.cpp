@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyNeoPixel.h>
 
-NeoPixel::NeoPixel(char pin, int ledArraySize) : PinComponent(pin)
+NeoPixel::NeoPixel(char pin, uint8_t ledArraySize) : PinComponent(pin)
 {
   _ledArraySize = ledArraySize;
 }
@@ -40,7 +40,7 @@ void NeoPixel::reset()
 //     FastLED.show();
 // }
 
-void NeoPixel::setHSVColor(int ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
+void NeoPixel::setHSVColor(uint8_t ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
 {
   _ledArray[ledIndex] = CHSV(hue, sat, val);
   if (mustShow)
@@ -49,7 +49,7 @@ void NeoPixel::setHSVColor(int ledIndex, uint8_t hue, uint8_t sat, uint8_t val, 
 
 void NeoPixel::off() { setNoSequence(0, 0, 0); }
 
-void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay, bool reverse, finalCallbackPtr finalCallback)
+void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, uint16_t delay, bool reverse, finalCallbackPtr finalCallback)
 {
   reset();
   _sequenceType = WIPE_SEQUENCE_TYPE;
@@ -63,7 +63,7 @@ void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned i
   _finalCallback = finalCallback;
 }
 
-// void NeoPixel::setChaseSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay, unsigned short cycles, unsigned char gap, finalCallbackPtr finalCallback)
+// void NeoPixel::setChaseSequence(uint8_t hue, uint8_t sat, uint8_t val, uint16_t delay, uint8_t cycles, uint8_t gap, finalCallbackPtr finalCallback)
 // {
 //   reset();
 //   _sequenceType = CHASE_SEQUENCE_TYPE;

@@ -39,7 +39,7 @@ void Button::stopClicksCallback()
   _clicksCallback = nullptr;
 }
 
-void Button::startLongPressCallback(longPressCallbackPtr longPressCallback, unsigned long longPressCallbackCycle, unsigned long longPressDuration)
+void Button::startLongPressCallback(longPressCallbackPtr longPressCallback, uint16_t longPressCallbackCycle, uint16_t longPressDuration)
 {
   _longPressCallback = longPressCallback;
   _longPressCallbackCycle = longPressCallbackCycle;

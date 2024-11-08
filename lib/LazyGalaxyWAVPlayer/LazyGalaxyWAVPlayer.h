@@ -13,7 +13,7 @@
 class MyWAVPlayer : public PinComponent
 {
 public:
-  MyWAVPlayer(uint8_t pin, char volume = 15);
+  MyWAVPlayer(uint8_t pin, uint8_t volume = 15);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
@@ -24,7 +24,7 @@ public:
   void stop();
 
 private:
-  char _volume;
+  uint8_t _volume;
   TMRpcm _player;
   bool _hasPlayStarted;
 };

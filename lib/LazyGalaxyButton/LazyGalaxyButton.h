@@ -10,7 +10,7 @@
 #include <LazyGalaxyCommon.h>
 #include <LazyGalaxyTimer.h>
 
-typedef void (*clicksCallbackPtr)(unsigned long time, int clicks);
+typedef void (*clicksCallbackPtr)(unsigned long time, uint8_t clicks);
 typedef void (*longPressCallbackPtr)(unsigned long time);
 
 class Button : public PinComponent
@@ -23,19 +23,19 @@ public:
 
   void startClicksCallback(clicksCallbackPtr clicksCallback);
   void stopClicksCallback();
-  void startLongPressCallback(longPressCallbackPtr longPressCallback, unsigned long longPressCallbackCycle = 100, unsigned long longPressDuration = 1000);
+  void startLongPressCallback(longPressCallbackPtr longPressCallback, uint16_t longPressCallbackCycle = 100, uint16_t longPressDuration = 1000);
   void stopLongPressCallback();
 
 private:
   unsigned long _pressTime;
   unsigned long _releaseTime;
   int _prevValue;
-  int _clicks;
+  uint8_t _clicks;
   bool _isLongPress;
   clicksCallbackPtr _clicksCallback;
   longPressCallbackPtr _longPressCallback;
-  unsigned long _longPressCallbackCycle;
-  unsigned long _longPressDuration;
+  uint16_t _longPressCallbackCycle;
+  uint16_t _longPressDuration;
 };
 
 #endif
