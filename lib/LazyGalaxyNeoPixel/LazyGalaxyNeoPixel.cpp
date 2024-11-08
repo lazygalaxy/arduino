@@ -6,16 +6,16 @@
 
 #include <LazyGalaxyNeoPixel.h>
 
-NeoPixel::NeoPixel(char pin, unsigned short pixels) : PinComponent(pin)
+NeoPixel::NeoPixel(char pin, int ledArraySize) : PinComponent(pin)
 {
-  _pixels = pixels;
+  _ledArraySize = ledArraySize;
 }
 
 void NeoPixel::setup()
 {
-  _strip = new Adafruit_NeoPixel(_pixels, _pin, NEO_GRB + NEO_KHZ800);
-  _strip->begin();
-  _strip->show();
+  _ledArray = new CRGB[_ledArraySize];
+  FastLED.addLeds<WS2812, 6, GRB>(_ledArray, _ledArraySize);
+  FastLED.setBrightness(100);
   off();
 }
 
@@ -23,47 +23,39 @@ void NeoPixel::reset()
 {
   Component::reset();
   _sequenceType = NO_SEQUENCE_TYPE;
-  _sequenceHue = 0.0;
-  _sequenceSaturation = 0.0;
-  _sequenceValue = 0.0;
+  _seqHue = 0.0;
+  _seqSat = 0.0;
+  _seqVal = 0.0;
   _sequenceDelay = 0;
   _sequenceReverse = false;
-  _sequenceCycles = 0;
-  _sequenceGap = 0;
+  //_sequenceCycles = 0;
+  //_sequenceGap = 0;
   _sequenceIndex = 0;
 }
 
-void NeoPixel::setRGBColor(unsigned short pixel, float red, float green, float blue, bool mustShow)
-{
-  uint8_t convertRed = 255 * red;
-  uint8_t convertGre = 255 * green;
-  uint8_t convertBlu = 255 * blue;
+// void NeoPixel::setRGBColor(int ledIndex, uint8_t red, uint8_t gre, uint8_t blu, bool mustShow)
+// {
+//   leds[ledIndex] = CRGB(red, gre, blu);
+//   if (mustShow)
+//     FastLED.show();
+// }
 
-  _strip->setPixelColor(pixel, _strip->Color(convertRed, convertGre, convertBlu));
+void NeoPixel::setHSVColor(int ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
+{
+  _ledArray[ledIndex] = CHSV(hue, sat, val);
   if (mustShow)
-    _strip->show();
+    FastLED.show();
 }
 
-void NeoPixel::setHSVColor(unsigned short pixel, float hue, float saturation, float value, bool mustShow)
-{
-  uint16_t convertHue = 65535 * hue;
-  uint8_t convertSat = 255 * saturation;
-  uint8_t convertVal = 255 * value;
+void NeoPixel::off() { setNoSequence(0, 0, 0); }
 
-  _strip->setPixelColor(pixel, _strip->gamma32(_strip->ColorHSV(convertHue, convertSat, convertVal)));
-  if (mustShow)
-    _strip->show();
-}
-
-void NeoPixel::off() { setNoSequence(0.0, 0.0, 0.0); }
-
-void NeoPixel::setWipeSequence(float hue, float saturation, float value, unsigned int delay, bool reverse, finalCallbackPtr finalCallback)
+void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay, bool reverse, finalCallbackPtr finalCallback)
 {
   reset();
   _sequenceType = WIPE_SEQUENCE_TYPE;
-  _sequenceHue = hue;
-  _sequenceSaturation = saturation;
-  _sequenceValue = value;
+  _seqHue = hue;
+  _seqSat = sat;
+  _seqVal = val;
   _sequenceDelay = delay;
   _sequenceReverse = reverse;
 
@@ -71,59 +63,59 @@ void NeoPixel::setWipeSequence(float hue, float saturation, float value, unsigne
   _finalCallback = finalCallback;
 }
 
-void NeoPixel::setChaseSequence(float hue, float saturation, float value, unsigned int delay, unsigned short cycles, unsigned char gap, finalCallbackPtr finalCallback)
+// void NeoPixel::setChaseSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay, unsigned short cycles, unsigned char gap, finalCallbackPtr finalCallback)
+// {
+//   reset();
+//   _sequenceType = CHASE_SEQUENCE_TYPE;
+//   _seqHue = hue;
+//   _seqSat = sat;
+//   _seqVal = val;
+//   _sequenceDelay = delay;
+//   _sequenceCycles = cycles;
+//   _sequenceGap = gap;
+
+//   _triggerTime = update(millis());
+//   _finalCallback = finalCallback;
+// }
+
+void NeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, float probability)
 {
   reset();
-  _sequenceType = CHASE_SEQUENCE_TYPE;
-  _sequenceHue = hue;
-  _sequenceSaturation = saturation;
-  _sequenceValue = value;
-  _sequenceDelay = delay;
-  _sequenceCycles = cycles;
-  _sequenceGap = gap;
-
-  _triggerTime = update(millis());
-  _finalCallback = finalCallback;
-}
-
-void NeoPixel::setNoSequence(float hue, float saturation, float value, float probability)
-{
-  reset();
-  for (uint16_t i = 0; i < _strip->numPixels(); i++)
+  for (int i = 0; i < _ledArraySize; i++)
   {
     if (probability >= random(1000) / 1000.0f)
-      setHSVColor(i, hue, saturation, value, false);
+      setHSVColor(i, hue, sat, val, false);
     else
       setHSVColor(i, 0.0, 0.0, 0.0, false);
   }
-  _strip->show();
+  FastLED.show();
 }
 
 unsigned long NeoPixel::update(unsigned long time)
 {
   switch (_sequenceType)
   {
-  case CHASE_SEQUENCE_TYPE:
-    if (_sequenceIndex < _sequenceCycles)
-    {
-      for (uint16_t i = 0; i < _strip->numPixels(); i++)
-      {
-        if ((i + _sequenceIndex) % _sequenceGap == 0)
-          setHSVColor(i, _sequenceHue, _sequenceSaturation, _sequenceValue, false);
-        else
-          setRGBColor(i, 0, 0, 0, false);
-      }
-      _strip->show();
-    }
-    else
-      return 0;
+  // case CHASE_SEQUENCE_TYPE:
+  //   if (_sequenceIndex < _sequenceCycles)
+  //   {
+  //     for (int i = 0; i < _pixels; i++)
+  //     {
+  //       if ((i + _sequenceIndex) % _sequenceGap == 0)
+  //         setHSVColor(i, _seqHue, _seqSat, _seqVal, false);
+  //       else
+  //         setHSVColor(i, 0, 0, 0, false);
+  //     }
+  //     FastLED.show();
+  //   }
+  //   else
+  //     return 0;
   case WIPE_SEQUENCE_TYPE:
-    if (_sequenceIndex < _strip->numPixels())
+    if (_sequenceIndex < _ledArraySize)
     {
-      uint16_t index = _sequenceIndex;
+      int index = _sequenceIndex;
       if (_sequenceReverse)
-        index = _strip->numPixels() - _sequenceIndex - 1;
-      setHSVColor(index, _sequenceHue, _sequenceSaturation, _sequenceValue);
+        index = _ledArraySize - _sequenceIndex - 1;
+      setHSVColor(index, _seqHue, _seqSat, _seqVal);
     }
     else
       return 0;

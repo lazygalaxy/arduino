@@ -7,48 +7,40 @@
 #ifndef LAZYGALAXYNEOPIXEL_H
 #define LAZYGALAXYNEOPIXEL_H
 
-#include <Adafruit_NeoPixel.h>
+#include <FastLED.h>
 #include <LazyGalaxyCommon.h>
 
 static const unsigned char NO_SEQUENCE_TYPE = 0;
-static const unsigned char CHASE_SEQUENCE_TYPE = 1;
-static const unsigned char WIPE_SEQUENCE_TYPE = 2;
+static const unsigned char WIPE_SEQUENCE_TYPE = 1;
+// static const unsigned char CHASE_SEQUENCE_TYPE = 2;
 
 class NeoPixel : public PinComponent
 {
 public:
-  NeoPixel(char pin, unsigned short pixels);
+  NeoPixel(char pin, int ledArraySize);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
 
-  void setRGBColor(unsigned short pixel, float red, float green, float blue,
-                   bool mustShow = true);
-  void setHSVColor(unsigned short pixel, float hue, float saturation,
-                   float value, bool mustShow = true);
+  // void setRGBColor(int pixel, uint8_t red, uint8_t gre, uint8_t blu, bool mustShow = true);
+  void setHSVColor(int pixel, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow = true);
   void off();
-  void setWipeSequence(float hue, float saturation, float value,
-                       unsigned int delay = 50, bool reverse = false,
-                       finalCallbackPtr finalCallback = nullptr);
-  void setChaseSequence(float hue, float saturation, float value,
-                        unsigned int delay = 50, unsigned short cycles = 50,
-                        unsigned char gap = 3,
-                        finalCallbackPtr finalCallback = nullptr);
-  void setNoSequence(float hue, float saturation, float value,
-                     float probability = 1.0);
+  void setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay = 50, bool reverse = false, finalCallbackPtr finalCallback = nullptr);
+  // void setChaseSequence(uint8_t hue, uint8_t sat, uint8_t val, unsigned int delay = 50, unsigned short cycles = 50, unsigned char gap = 3, finalCallbackPtr finalCallback = nullptr);
+  void setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, float probability = 1.0);
 
 private:
-  Adafruit_NeoPixel *_strip;
-  unsigned short _pixels;
+  CRGB *_ledArray;
+  int _ledArraySize;
   unsigned char _sequenceType;
-  float _sequenceHue;
-  float _sequenceSaturation;
-  float _sequenceValue;
+  uint8_t _seqHue;
+  uint8_t _seqSat;
+  uint8_t _seqVal;
   unsigned int _sequenceDelay;
   bool _sequenceReverse;
-  unsigned short _sequenceCycles;
-  unsigned char _sequenceGap;
-  uint16_t _sequenceIndex;
+  // int _sequenceCycles;
+  // unsigned char _sequenceGap;
+  int _sequenceIndex;
 };
 
 #endif

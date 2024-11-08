@@ -17,20 +17,22 @@ void allOff(unsigned long time) { strip->off(); }
 void wipeSequenceReverse(unsigned long time)
 {
   Serial.println("wipeSequenceReverse");
-  strip->setWipeSequence(0.66, 1.0, 0.5, DELAY, true, allOff);
-}
-void wipeSequence(unsigned long time)
-{
-  strip->setWipeSequence(0.33, 1.0, 0.5, DELAY, false, wipeSequenceReverse);
-}
-void chaseSequence(unsigned long time)
-{
-  strip->setChaseSequence(0, 1.0, 0.5, DELAY, 1000, 3);
+  strip->setWipeSequence(85, 255, 128, DELAY, true, allOff);
 }
 
-void allRed(unsigned long time) { strip->setNoSequence(0.00, 1.0, 0.5); }
-void allGreen(unsigned long time) { strip->setNoSequence(0.33, 1.0, 0.5); }
-void allBlue(unsigned long time) { strip->setNoSequence(0.66, 1.0, 0.5); }
+void wipeSequence(unsigned long time)
+{
+  strip->setWipeSequence(0, 255, 128, DELAY, false, wipeSequenceReverse);
+}
+
+// void chaseSequence(unsigned long time)
+// {
+//   strip->setChaseSequence(0, 255, 128, DELAY, 1000, 3);
+// }
+
+void allRed(unsigned long time) { strip->setNoSequence(0, 255, 128); }
+void allGreen(unsigned long time) { strip->setNoSequence(85, 255, 128); }
+void allBlue(unsigned long time) { strip->setNoSequence(170, 255, 128); }
 
 void setup()
 {
@@ -44,9 +46,9 @@ void setup()
   // schedule a task to set all LEDs to blue in 4 seconds
   Timer::schedule(4000, allBlue);
   // schedule a chase sequence in 6 seconds
-  Timer::schedule(6000, chaseSequence);
+  // Timer::schedule(6000, chaseSequence);
   // schedule a wipe sequence in 8 seconds
-  Timer::schedule(8000, wipeSequence);
+  Timer::schedule(6000, wipeSequence);
 }
 
 void loop()
