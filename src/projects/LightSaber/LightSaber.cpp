@@ -13,28 +13,6 @@
 // #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-// neopixel fixed values
-// the delay with which each succesive LED light is turned on and off
-static const int16_t NEOPIXEL_DELAY_MILLIS = 20;
-// the saturation of all LED lights
-static const int8_t NEOPIXEL_SAT = 255;
-// the value of all LED lights
-static const int8_t NEOPIXEL_VAL = 126;
-
-// sound fixed values
-// the speaker volume from 0..10
-static const uint8_t SPEAKER_VOLUME = 5;
-static const unsigned long PLAY_MIN_TIME = 1000;
-// labeled folders
-static const uint8_t GENERAL_FOLDER = 1;
-static const uint8_t HARDHIT_FOLDER = 2;
-static const uint8_t SOFTHIT_FOLDER = 3;
-static const uint8_t HARDSWING_FOLDER = 4;
-static const uint8_t SOFTSWING_FOLDER = 5;
-
-// the smooth factor used on the freq of tones played
-static const float FREQ_SMOOTH_FACTOR = 0.2;
-
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
 int8_t hue = 0;
@@ -51,7 +29,7 @@ MySDCard *sdCard = new MySDCard(D10);
 // MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 MyMotion *motion = new MyMotion(D10); // A4 //A5
-MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, SPEAKER_VOLUME);
+MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 5);
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -64,7 +42,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 
   if (accel >= 320)
   {
-    if (time - lastHardHitTime > PLAY_MIN_TIME)
+    if (time - lastHardHitTime > 1000)
     {
       // Serial.print("hard hit ");
       // Serial.println(time);
@@ -74,7 +52,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   }
   else if (accel >= 150)
   {
-    if (time - lastSoftHitTime > PLAY_MIN_TIME && time - lastHardHitTime > PLAY_MIN_TIME)
+    if (time - lastSoftHitTime > 1000 && time - lastHardHitTime > 1000)
     {
       // Serial.print("soft hit ");
       // Serial.println(time);
@@ -84,7 +62,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   }
   else if (gyro >= 300)
   {
-    if (time - lastHardSwingTime > PLAY_MIN_TIME && time - lastSoftHitTime > PLAY_MIN_TIME && time - lastHardHitTime > PLAY_MIN_TIME)
+    if (time - lastHardSwingTime > 1000 && time - lastSoftHitTime > 1000 && time - lastHardHitTime > 1000)
     {
       // Serial.print("hard swing ");
       // Serial.println(time);
@@ -94,7 +72,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   }
   else if (gyro >= 150)
   {
-    if (time - lastSoftSwingTime > PLAY_MIN_TIME && time - lastHardSwingTime > PLAY_MIN_TIME && time - lastSoftHitTime > PLAY_MIN_TIME && time - lastHardHitTime > PLAY_MIN_TIME)
+    if (time - lastSoftSwingTime > 1000 && time - lastHardSwingTime > 1000 && time - lastSoftHitTime > 1000 && time - lastHardHitTime > 1000)
     {
       // Serial.print("soft swing ");
       // Serial.println(time);
@@ -124,7 +102,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
     // led->stopBlink();
     // led->setLight(true);
     wavPlayer->play("on.wav");
-    neopixel->setWipeSequence(hue, NEOPIXEL_SAT, NEOPIXEL_VAL, NEOPIXEL_DELAY_MILLIS, false);
+    neopixel->setWipeSequence(hue, 255, 128, 20, false);
     motion->startCallback(motionCallback);
     //  toneSpeaker->playTone(freq_prev);
     // button->startLongPressCallback(longPressCallback, 100, 1000);
@@ -137,7 +115,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
       // button->stopLongPressCallback();
       // toneSpeaker->stopTone();
       motion->stopCallback();
-      neopixel->setWipeSequence(0.0, 0.0, 0.0, NEOPIXEL_DELAY_MILLIS, true);
+      neopixel->setWipeSequence(0.0, 0.0, 0.0, 20, true);
       // led->startBlink();
       wavPlayer->play("off.wav");
       lightSaberOn = false;
