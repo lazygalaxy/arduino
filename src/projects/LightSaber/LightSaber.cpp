@@ -9,9 +9,9 @@
 #include <LazyGalaxyLED.h>
 //  #include <LazyGalaxyMotion.h>
 #include <LazyGalaxyNeoPixel.h>
-// #include <LazyGalaxySDCard.h>
+#include <LazyGalaxySDCard.h>
 //   #include <LazyGalaxyToneSpeaker.h>
-// #include <LazyGalaxyWAVPlayer.h>
+#include <LazyGalaxyWAVPlayer.h>
 
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
@@ -25,11 +25,11 @@ int8_t hue = 0;
 // all lightsaber components
 Button *button = new Button(D5);
 MyLED *led = new MyLED(D4);
-// MySDCard *sdCard = new MySDCard(D10);
+MySDCard *sdCard = new MySDCard(D10);
 // MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, SPEAKER_VOLUME);
 NeoPixel *neopixel = new NeoPixel(D6, 33);
 // MyMotion *motion = new MyMotion(D10); // A4 //A5
-// MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 2);
+MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 2);
 
 // void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 // {
@@ -101,7 +101,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
     lightSaberOn = true;
     led->stopBlink();
     led->setLight(true);
-    // wavPlayer->play("on.wav");
+    wavPlayer->play("on.wav");
     neopixel->setWipeSequence(hue);
     //  motion->startCallback(motionCallback);
     //  toneSpeaker->playTone(freq_prev);
@@ -117,7 +117,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
       // motion->stopCallback();
       neopixel->setWipeSequence(0, 0, 0, true);
       led->startBlink();
-      // wavPlayer->play("off.wav");
+      wavPlayer->play("off.wav");
       lightSaberOn = false;
       break;
     }
@@ -129,11 +129,11 @@ void setup()
   // System setup
   Circuit::add(led);
   Circuit::add(button);
-  // Circuit::add(sdCard);
+  Circuit::add(sdCard);
   // Circuit::add(toneSpeaker);
   // Circuit::add(motion);
   Circuit::add(neopixel);
-  // Circuit::add(wavPlayer);
+  Circuit::add(wavPlayer);
   Circuit::setup();
 
   // if (!Circuit::statusOK)
@@ -143,7 +143,7 @@ void setup()
 
   led->startBlink();
   button->startClicksCallback(clicksCallback);
-  // wavPlayer->play("hum.wav");
+  wavPlayer->play("hum.wav");
 }
 
 void loop()
