@@ -13,38 +13,43 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
+// const char *GEN[2] = {"a1", "a2"};
+// const char *HST[8] = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8"};
+// const char *SST[8] = {"c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"};
+
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
 int8_t hue = 0;
-int freq_prev = 20;
+uint16_t freq_prev = 20;
 
 // all lightsaber components
 MyButton button(D5);
 MyLED led(D4);
 MySDCard sdCard(D10);
-MyToneSpeaker toneSpeaker(D9, 5);
+MyToneSpeaker toneSpeaker(D9, 2);
 MyNeoPixel neopixel(D6, 33);
 MyMotion motion(D10); // A4 //A5
 MyWAVPlayer wavPlayer(D9, 3);
 
-void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
+void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
 {
-  unsigned long COMPL = accel + gyro;
-  int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
+  uint32_t sum = accel + gyro;
+  uint16_t freq = (sum * sum) / 1500;
   freq = constrain(freq, 18, 300);
-  int freq_new = freq * 0.2 + freq_prev * (1.0 - 0.2); // smooth filter
-  if (!wavPlayer.isPlaying() && freq_new != freq_prev)
+  uint16_t freq_new = (freq * 0.2) + (freq_prev * 0.8);
+
+  if (!wavPlayer.isPlaying())
     toneSpeaker.playTone(freq_new);
 
   if (accel >= 320)
   {
     toneSpeaker.stopTone();
-    wavPlayer.play("hst1.wav");
+    wavPlayer.play("b1.wav");
   }
-  else if (accel >= 150)
+  else if (accel >= 200)
   {
     toneSpeaker.stopTone();
-    wavPlayer.play("sst1.wav");
+    wavPlayer.play("c1.wav");
   }
   // else if (gyro >= 300)
   // {
@@ -67,7 +72,7 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   //   }
   // }
 
-  // freq_prev = freq_new;
+  freq_prev = freq_new;
 }
 
 void longPressCallback(unsigned long time)
@@ -87,7 +92,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
     lightSaberOn = true;
     led.stopBlink();
     led.setLight(true);
-    wavPlayer.play("on.wav");
+    wavPlayer.play("a1.wav");
     neopixel.setWipeSequence(hue);
     motion.startCallback(motionCallback);
     button.startLongPressCallback(longPressCallback, 100, 1000);
@@ -102,7 +107,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
       motion.stopCallback();
       neopixel.setWipeSequence(0, 0, 0, true);
       led.startBlink();
-      wavPlayer.play("off.wav");
+      wavPlayer.play("a2.wav");
       lightSaberOn = false;
       break;
     }
@@ -110,8 +115,8 @@ void clicksCallback(unsigned long time, uint8_t clicks)
 
 void setup()
 {
-  Serial.begin(9600);
-  // System setup
+  // Serial.begin(9600);
+  //  System setup
   Circuit::add(&led);
   Circuit::add(&button);
   Circuit::add(&sdCard);

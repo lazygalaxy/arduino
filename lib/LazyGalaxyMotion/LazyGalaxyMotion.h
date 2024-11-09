@@ -10,7 +10,7 @@
 #include <LazyGalaxyCommon.h>
 #include <MPU6050.h>
 
-typedef void (*motionCallbackPtr)(unsigned long time, unsigned long accel, unsigned long gyro);
+typedef void (*motionCallbackPtr)(unsigned long time, uint16_t accel, uint16_t gyro);
 
 class MyMotion : public Component
 {

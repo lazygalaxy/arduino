@@ -43,18 +43,18 @@ unsigned long MyMotion::update(unsigned long time)
   _accelgyro.getMotion6(&_ax, &_ay, &_az, &_gx, &_gy, &_gz);
 
   // find absolute and divide on 100
-  int gyroX = abs(_gx / 100);
-  int gyroY = abs(_gy / 100);
-  int gyroZ = abs(_gz / 100);
-  int accelX = abs(_ax / 100);
-  int accelY = abs(_ay / 100);
-  int accelZ = abs(_az / 100);
+  uint16_t gyroX = abs(_gx / 100);
+  uint16_t gyroY = abs(_gy / 100);
+  uint16_t gyroZ = abs(_gz / 100);
+  uint16_t accelX = abs(_ax / 100);
+  uint16_t accelY = abs(_ay / 100);
+  uint16_t accelZ = abs(_az / 100);
 
   // vector sum
-  unsigned long _accel = sq((long)accelX) + sq((long)accelY) + sq((long)accelZ);
+  uint16_t _accel = sq(accelX) + sq(accelY) + sq(accelZ);
   _accel = sqrt(_accel);
-  unsigned long _gyro = sq((long)gyroX) + sq((long)gyroY) + sq((long)gyroZ);
-  _gyro = sqrt((long)_gyro);
+  uint16_t _gyro = sq(gyroX) + sq(gyroY) + sq(gyroZ);
+  _gyro = sqrt(_gyro);
 
   if (_motionCallback != nullptr)
     _motionCallback(time, _accel, _gyro);
