@@ -8,13 +8,16 @@
 #define LAZYGALAXYSDCARD_H
 
 #include <LazyGalaxyCommon.h>
-#include <SD.h>
+#include <SdFat.h>
 
 class MySDCard : public PinComponent
 {
 public:
   MySDCard(uint8_t pin);
   void setup() override;
+
+private:
+  SdFat _sd;
 };
 
 #endif

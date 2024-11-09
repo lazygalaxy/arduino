@@ -6,18 +6,18 @@
 
 #include <LazyGalaxyButton.h>
 
-Button::Button(uint8_t pin) : PinComponent(pin)
+MyButton::MyButton(uint8_t pin) : PinComponent(pin)
 {
 }
 
-void Button::setup()
+void MyButton::setup()
 {
   pinMode(_pin, INPUT_PULLUP);
   stopClicksCallback();
   stopLongPressCallback();
 }
 
-void Button::reset()
+void MyButton::reset()
 {
   Component::reset();
   // we are basically always active for buttons
@@ -28,31 +28,31 @@ void Button::reset()
   _clicks = 0;
 }
 
-void Button::startClicksCallback(clicksCallbackPtr clicksCallback)
+void MyButton::startClicksCallback(clicksCallbackPtr clicksCallback)
 {
   _clicksCallback = clicksCallback;
 }
 
-void Button::stopClicksCallback()
+void MyButton::stopClicksCallback()
 {
   _clicksCallback = nullptr;
 }
 
-void Button::startLongPressCallback(longPressCallbackPtr longPressCallback, uint16_t longPressCallbackCycle, uint16_t longPressDuration)
+void MyButton::startLongPressCallback(longPressCallbackPtr longPressCallback, uint16_t longPressCallbackCycle, uint16_t longPressDuration)
 {
   _longPressCallback = longPressCallback;
   _longPressCallbackCycle = longPressCallbackCycle;
   _longPressDuration = longPressDuration;
 }
 
-void Button::stopLongPressCallback()
+void MyButton::stopLongPressCallback()
 {
   _longPressCallback = nullptr;
   _longPressCallbackCycle = 0;
   _longPressDuration = 0;
 }
 
-unsigned long Button::update(unsigned long time)
+unsigned long MyButton::update(unsigned long time)
 {
   int value = digitalRead(_pin);
 

@@ -13,10 +13,10 @@
 typedef void (*clicksCallbackPtr)(unsigned long time, uint8_t clicks);
 typedef void (*longPressCallbackPtr)(unsigned long time);
 
-class Button : public PinComponent
+class MyButton : public PinComponent
 {
 public:
-  Button(uint8_t pin);
+  MyButton(uint8_t pin);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;

@@ -10,10 +10,10 @@
 #include <FastLED.h>
 #include <LazyGalaxyCommon.h>
 
-class NeoPixel : public PinComponent
+class MyNeoPixel : public PinComponent
 {
 public:
-  NeoPixel(char pin, uint8_t ledArraySize);
+  MyNeoPixel(char pin, uint8_t ledArraySize);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;

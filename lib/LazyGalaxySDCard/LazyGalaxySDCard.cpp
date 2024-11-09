@@ -12,6 +12,6 @@ MySDCard::MySDCard(uint8_t pin) : PinComponent(pin)
 
 void MySDCard::setup()
 {
-  if (!SD.begin(_pin))
-    _statusOK = false;
+ if (!_sd.begin(_pin, SPI_FULL_SPEED))
+ _statusOK= false;
 }

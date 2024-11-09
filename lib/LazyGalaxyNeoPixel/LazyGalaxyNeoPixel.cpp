@@ -6,12 +6,12 @@
 
 #include <LazyGalaxyNeoPixel.h>
 
-NeoPixel::NeoPixel(char pin, uint8_t ledArraySize) : PinComponent(pin)
+MyNeoPixel::MyNeoPixel(char pin, uint8_t ledArraySize) : PinComponent(pin)
 {
   _ledArraySize = ledArraySize;
 }
 
-void NeoPixel::setup()
+void MyNeoPixel::setup()
 {
   _ledArray = new CRGB[_ledArraySize];
   FastLED.addLeds<WS2812, 6, GRB>(_ledArray, _ledArraySize);
@@ -19,7 +19,7 @@ void NeoPixel::setup()
   off();
 }
 
-void NeoPixel::reset()
+void MyNeoPixel::reset()
 {
   Component::reset();
   _sequenceType = NO_SEQUENCE_TYPE;
@@ -40,19 +40,19 @@ void NeoPixel::reset()
 //     FastLED.show();
 // }
 
-void NeoPixel::setHSVColor(uint8_t ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
+void MyNeoPixel::setHSVColor(uint8_t ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
 {
   _ledArray[ledIndex] = CHSV(hue, sat, val);
   if (mustShow)
     FastLED.show();
 }
 
-void NeoPixel::off()
+void MyNeoPixel::off()
 {
   setNoSequence(0, 0, 0);
 }
 
-void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, bool reverse, uint16_t delay, finalCallbackPtr finalCallback)
+void MyNeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, bool reverse, uint16_t delay, finalCallbackPtr finalCallback)
 {
   reset();
   _sequenceType = WIPE_SEQUENCE_TYPE;
@@ -81,7 +81,7 @@ void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, bool rever
 //   _finalCallback = finalCallback;
 // }
 
-void NeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, uint8_t probability)
+void MyNeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, uint8_t probability)
 {
   reset();
   for (uint8_t i = 0; i < _ledArraySize; i++)
@@ -92,7 +92,7 @@ void NeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, uint8_t prob
   FastLED.show();
 }
 
-unsigned long NeoPixel::update(unsigned long time)
+unsigned long MyNeoPixel::update(unsigned long time)
 {
   switch (_sequenceType)
   {

@@ -7,6 +7,8 @@
 #ifndef LAZYGALAXYWAVPLAYER_H
 #define LAZYGALAXYWAVPLAYER_H
 
+#define SDFAT
+
 #include <LazyGalaxyCommon.h>
 #include <TMRpcm.h>
 
