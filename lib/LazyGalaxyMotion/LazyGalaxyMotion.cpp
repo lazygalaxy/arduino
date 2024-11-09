@@ -17,10 +17,8 @@ void MyMotion::setup()
   _accelgyro.initialize();
   _accelgyro.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
   _accelgyro.setFullScaleGyroRange(MPU6050_GYRO_FS_250);
-  // if (_accelgyro.testConnection())
-  //   Serial.println("MPU6050 OK");
-  // else
-  //   Serial.println("MPU6050 fail");
+  if (!_accelgyro.testConnection())
+    _statusOK = false;
 }
 
 void MyMotion::reset()

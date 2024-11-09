@@ -29,9 +29,8 @@ public:
 private:
   unsigned long _pressTime;
   unsigned long _releaseTime;
-  int _prevValue;
+  bool _isLongPressed;
   uint8_t _clicks;
-  bool _isLongPress;
   clicksCallbackPtr _clicksCallback;
   longPressCallbackPtr _longPressCallback;
   uint16_t _longPressCallbackCycle;

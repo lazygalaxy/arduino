@@ -17,7 +17,7 @@ void Circuit::addComponent(Component *component)
 
 void Circuit::setupComponents()
 {
-  for (int i = 0; i < _components.size(); i++)
+  for (uint8_t i = 0; i < _components.size(); i++)
   {
     Component *component = _components[i];
     component->setup();
@@ -25,10 +25,18 @@ void Circuit::setupComponents()
   }
 }
 
+bool Circuit::statusOKComponents()
+{
+  for (uint8_t i = 0; i < _components.size(); i++)
+    if (!_components[i]->_statusOK)
+      return false;
+  return true;
+}
+
 void Circuit::loopComponents()
 {
   unsigned long time = millis();
-  for (int i = 0; i < _components.size(); i++)
+  for (uint8_t i = 0; i < _components.size(); i++)
   {
     Component *component = _components[i];
     if (component->isActive() && time >= component->_triggerTime)

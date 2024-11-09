@@ -9,20 +9,20 @@
 
 #include <LazyGalaxyCommon.h>
 
-class LED : public PinComponent
+class MyLED : public PinComponent
 {
 private:
-  unsigned int _blinkDelay;
+  uint16_t _blinkDelay;
 
 public:
-  LED(uint8_t pin);
+  MyLED(uint8_t pin);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
 
   void setLight(bool flag, bool considerDeActivation = true);
   bool isLight();
-  void startBlink(unsigned int blinkDelay = 500);
+  void startBlink(uint16_t blinkDelay = 500);
   void stopBlink();
 };
 

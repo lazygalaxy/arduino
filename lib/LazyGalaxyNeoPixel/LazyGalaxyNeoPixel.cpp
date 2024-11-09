@@ -23,9 +23,9 @@ void NeoPixel::reset()
 {
   Component::reset();
   _sequenceType = NO_SEQUENCE_TYPE;
-  _seqHue = 0.0;
-  _seqSat = 0.0;
-  _seqVal = 0.0;
+  _seqHue = 0;
+  _seqSat = 0;
+  _seqVal = 0;
   _sequenceDelay = 0;
   _sequenceReverse = false;
   //_sequenceCycles = 0;
@@ -47,17 +47,20 @@ void NeoPixel::setHSVColor(uint8_t ledIndex, uint8_t hue, uint8_t sat, uint8_t v
     FastLED.show();
 }
 
-void NeoPixel::off() { setNoSequence(0, 0, 0); }
+void NeoPixel::off()
+{
+  setNoSequence(0, 0, 0);
+}
 
-void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, uint16_t delay, bool reverse, finalCallbackPtr finalCallback)
+void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, bool reverse, uint16_t delay, finalCallbackPtr finalCallback)
 {
   reset();
   _sequenceType = WIPE_SEQUENCE_TYPE;
   _seqHue = hue;
   _seqSat = sat;
   _seqVal = val;
-  _sequenceDelay = delay;
   _sequenceReverse = reverse;
+  _sequenceDelay = delay;
 
   _triggerTime = update(millis());
   _finalCallback = finalCallback;
@@ -78,16 +81,14 @@ void NeoPixel::setWipeSequence(uint8_t hue, uint8_t sat, uint8_t val, uint16_t d
 //   _finalCallback = finalCallback;
 // }
 
-void NeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, float probability)
+void NeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, uint8_t probability)
 {
   reset();
-  for (int i = 0; i < _ledArraySize; i++)
-  {
-    if (probability >= random(1000) / 1000.0f)
+  for (uint8_t i = 0; i < _ledArraySize; i++)
+    if (probability >= random(100) + 1)
       setHSVColor(i, hue, sat, val, false);
     else
       setHSVColor(i, 0.0, 0.0, 0.0, false);
-  }
   FastLED.show();
 }
 
@@ -98,7 +99,7 @@ unsigned long NeoPixel::update(unsigned long time)
   // case CHASE_SEQUENCE_TYPE:
   //   if (_sequenceIndex < _sequenceCycles)
   //   {
-  //     for (int i = 0; i < _pixels; i++)
+  //     for (uint8_t i = 0; i < _pixels; i++)
   //     {
   //       if ((i + _sequenceIndex) % _sequenceGap == 0)
   //         setHSVColor(i, _seqHue, _seqSat, _seqVal, false);

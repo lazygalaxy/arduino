@@ -24,9 +24,8 @@ void Button::reset()
   _triggerTime = 1;
   _pressTime = 0;
   _releaseTime = 0;
-  _prevValue = HIGH;
+  _isLongPressed = false;
   _clicks = 0;
-  _isLongPress = false;
 }
 
 void Button::startClicksCallback(clicksCallbackPtr clicksCallback)
@@ -61,27 +60,25 @@ unsigned long Button::update(unsigned long time)
   {
     _pressTime = time;
     _releaseTime = 0;
-    _prevValue = value;
   }
-  else if ((value == LOW) && (((_pressTime != 0 && _longPressDuration != 0) && ((time - _pressTime) >= _longPressDuration)) || _isLongPress))
+  else if ((value == LOW) && (((_pressTime != 0 && _longPressDuration != 0) && ((time - _pressTime) >= _longPressDuration)) || _isLongPressed))
   {
-    _isLongPress = true;
+    _isLongPressed = true;
     if (_longPressCallback != nullptr && ((time - _pressTime) >= _longPressCallbackCycle))
     {
       _longPressCallback(time);
       _pressTime = time;
     }
   }
-  else if (value == HIGH && _prevValue == LOW)
+  else if (value == HIGH && _pressTime > 0)
   {
-    if (_isLongPress)
+    if (_isLongPressed)
       return 0;
     else
     {
       _clicks += 1;
       _releaseTime = time;
       _pressTime = 0;
-      _prevValue = value;
     }
   }
 

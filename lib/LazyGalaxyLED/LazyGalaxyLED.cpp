@@ -6,23 +6,23 @@
 
 #include <LazyGalaxyLED.h>
 
-LED::LED(uint8_t pin) : PinComponent(pin)
+MyLED::MyLED(uint8_t pin) : PinComponent(pin)
 {
 }
 
-void LED::setup()
+void MyLED::setup()
 {
   pinMode(_pin, OUTPUT);
   setLight(false);
 }
 
-void LED::reset()
+void MyLED::reset()
 {
   Component::reset();
   _blinkDelay = 0;
 }
 
-void LED::setLight(bool flag, bool considerDeActivation)
+void MyLED::setLight(bool flag, bool considerDeActivation)
 {
   if (considerDeActivation && isActive())
     reset();
@@ -42,7 +42,7 @@ void LED::setLight(bool flag, bool considerDeActivation)
   };
 }
 
-bool LED::isLight()
+bool MyLED::isLight()
 {
   if (isDigital())
     return digitalRead(_pin) == HIGH;
@@ -50,7 +50,7 @@ bool LED::isLight()
     return analogRead(_pin) > 0;
 }
 
-void LED::startBlink(unsigned int blinkDelay)
+void MyLED::startBlink(uint16_t blinkDelay)
 {
   if (!isActive())
   {
@@ -60,13 +60,13 @@ void LED::startBlink(unsigned int blinkDelay)
   }
 }
 
-void LED::stopBlink()
+void MyLED::stopBlink()
 {
   if (isActive())
     reset();
 }
 
-unsigned long LED::update(unsigned long time)
+unsigned long MyLED::update(unsigned long time)
 {
   setLight(!isLight(), false);
   return time + _blinkDelay;

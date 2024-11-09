@@ -18,6 +18,7 @@ private:
   Circuit();
   void addComponent(Component *component);
   void setupComponents();
+  bool statusOKComponents();
   void loopComponents();
 
   static Circuit *getInstance()
@@ -34,13 +35,17 @@ public:
 
   static void setup()
   {
-    // Serial.begin(115200);
     getInstance()->setupComponents();
   }
 
   static void loop()
   {
     getInstance()->loopComponents();
+  }
+
+  static bool statusOK()
+  {
+    return getInstance()->statusOKComponents();
   }
 };
 

@@ -38,13 +38,13 @@ void noteCallback(unsigned long time, int note)
 void step4(unsigned long time)
 {
   Serial.println("step4");
-  wavPlayer->play("off.wav");
+  toneSpeaker->playMelody(santaClausMelody, noteCallback, step4);
 }
 
 void step3(unsigned long time)
 {
   Serial.println("step3");
-  toneSpeaker->playMelody(santaClausMelody, noteCallback, step4);
+  wavPlayer->play("off.wav");
 }
 
 void step2(unsigned long time)

@@ -30,6 +30,7 @@ typedef void (*finalCallbackPtr)(unsigned long time);
 class Component
 {
 public:
+  bool _statusOK = true;
   unsigned long _triggerTime = 0;
   finalCallbackPtr _finalCallback = nullptr;
 

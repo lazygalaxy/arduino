@@ -22,7 +22,7 @@ void MyWAVPlayer::reset()
   Component::reset();
 
   _hasPlayStarted = false;
-  _player.stopPlayback();
+  _player.disable();
 }
 
 void MyWAVPlayer::play(const char *filename, finalCallbackPtr finalCallback)
@@ -48,6 +48,6 @@ void MyWAVPlayer::stop()
 unsigned long MyWAVPlayer::update(unsigned long time)
 {
   if (_hasPlayStarted && isPlaying())
-    return time + 50;
+    return time + 10;
   return 0;
 }
