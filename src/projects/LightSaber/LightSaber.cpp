@@ -19,13 +19,13 @@ int8_t hue = 0;
 int freq_prev = 20;
 
 // all lightsaber components
-MyButton *button = new MyButton(D5);
-MyLED *led = new MyLED(D4);
-MySDCard *sdCard = new MySDCard(D10);
-MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 5);
-MyNeoPixel *neopixel = new MyNeoPixel(D6, 33);
-MyMotion *motion = new MyMotion(D10); // A4 //A5
-MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 3);
+MyButton button(D5);
+MyLED led(D4);
+MySDCard sdCard(D10);
+MyToneSpeaker toneSpeaker(D9, 5);
+MyNeoPixel neopixel(D6, 33);
+MyMotion motion(D10); // A4 //A5
+MyWAVPlayer wavPlayer(D9, 3);
 
 void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 {
@@ -33,18 +33,18 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
   int freq = (long)COMPL * COMPL / 1500; // parabolic tone change
   freq = constrain(freq, 18, 300);
   int freq_new = freq * 0.2 + freq_prev * (1.0 - 0.2); // smooth filter
-  if (!wavPlayer->isPlaying() && freq_new != freq_prev)
-    toneSpeaker->playTone(freq_new);
+  if (!wavPlayer.isPlaying() && freq_new != freq_prev)
+    toneSpeaker.playTone(freq_new);
 
   if (accel >= 320)
   {
-    toneSpeaker->stopTone();
-    wavPlayer->play("hst1.wav");
+    toneSpeaker.stopTone();
+    wavPlayer.play("hst1.wav");
   }
   else if (accel >= 150)
   {
-    toneSpeaker->stopTone();
-    wavPlayer->play("sst1.wav");
+    toneSpeaker.stopTone();
+    wavPlayer.play("sst1.wav");
   }
   // else if (gyro >= 300)
   // {
@@ -75,7 +75,7 @@ void longPressCallback(unsigned long time)
   hue += 5;
   if (hue > 255)
     hue = 0;
-  neopixel->setNoSequence(hue);
+  neopixel.setNoSequence(hue);
 }
 
 void clicksCallback(unsigned long time, uint8_t clicks)
@@ -85,24 +85,24 @@ void clicksCallback(unsigned long time, uint8_t clicks)
   {
     // turn on the light saber with any button click
     lightSaberOn = true;
-    led->stopBlink();
-    led->setLight(true);
-    wavPlayer->play("on.wav");
-    neopixel->setWipeSequence(hue);
-    motion->startCallback(motionCallback);
-    button->startLongPressCallback(longPressCallback, 100, 1000);
+    led.stopBlink();
+    led.setLight(true);
+    wavPlayer.play("on.wav");
+    neopixel.setWipeSequence(hue);
+    motion.startCallback(motionCallback);
+    button.startLongPressCallback(longPressCallback, 100, 1000);
   }
   else if (lightSaberOn)
     switch (clicks)
     {
     case 1:
       // if there is 1 click, stop the light saber
-      button->stopLongPressCallback();
-      toneSpeaker->stopTone();
-      motion->stopCallback();
-      neopixel->setWipeSequence(0, 0, 0, true);
-      led->startBlink();
-      wavPlayer->play("off.wav");
+      button.stopLongPressCallback();
+      toneSpeaker.stopTone();
+      motion.stopCallback();
+      neopixel.setWipeSequence(0, 0, 0, true);
+      led.startBlink();
+      wavPlayer.play("off.wav");
       lightSaberOn = false;
       break;
     }
@@ -112,13 +112,13 @@ void setup()
 {
   Serial.begin(9600);
   // System setup
-  Circuit::add(led);
-  Circuit::add(button);
-  Circuit::add(sdCard);
-  Circuit::add(toneSpeaker);
-  Circuit::add(motion);
-  Circuit::add(neopixel);
-  Circuit::add(wavPlayer);
+  Circuit::add(&led);
+  Circuit::add(&button);
+  Circuit::add(&sdCard);
+  Circuit::add(&toneSpeaker);
+  Circuit::add(&motion);
+  Circuit::add(&neopixel);
+  Circuit::add(&wavPlayer);
   Circuit::setup();
 
   if (!Circuit::statusOK)
@@ -126,8 +126,8 @@ void setup()
   else
     Serial.println(F("circuit ok"));
 
-  led->startBlink();
-  button->startClicksCallback(clicksCallback);
+  led.startBlink();
+  button.startClicksCallback(clicksCallback);
 }
 
 void loop()
