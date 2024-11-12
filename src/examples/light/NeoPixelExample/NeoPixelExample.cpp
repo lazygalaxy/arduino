@@ -10,25 +10,20 @@
 
 static const unsigned int DELAY = 50;
 
-NeoPixel *strip = new NeoPixel(D6, 33);
+MyNeoPixel *strip = new MyNeoPixel(D6, 33);
 
 void allOff(unsigned long time) { strip->off(); }
 
 void wipeSequenceReverse(unsigned long time)
 {
   Serial.println("wipeSequenceReverse");
-  strip->setWipeSequence(85, 255, 128, DELAY, true, allOff);
+  strip->setWipeSequence(85, 255, 128, true, DELAY, allOff);
 }
 
 void wipeSequence(unsigned long time)
 {
-  strip->setWipeSequence(0, 255, 128, DELAY, false, wipeSequenceReverse);
+  strip->setWipeSequence(0, 255, 128, false, DELAY, wipeSequenceReverse);
 }
-
-// void chaseSequence(unsigned long time)
-// {
-//   strip->setChaseSequence(0, 255, 128, DELAY, 1000, 3);
-// }
 
 void allRed(unsigned long time) { strip->setNoSequence(0, 255, 128); }
 void allGreen(unsigned long time) { strip->setNoSequence(85, 255, 128); }

@@ -126,10 +126,10 @@ void setup()
   Circuit::add(&wavPlayer);
   Circuit::setup();
 
-  if (!Circuit::statusOK)
-    Serial.println(F("circuit error"));
-  else
-    Serial.println(F("circuit ok"));
+  // if (!Circuit::statusOK)
+  //   Serial.println(F("circuit error"));
+  // else
+  //   Serial.println(F("circuit ok"));
 
   led.startBlink();
   button.startClicksCallback(clicksCallback);
