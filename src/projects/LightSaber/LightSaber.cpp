@@ -13,6 +13,10 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
+const char *GEN[2] = {"a1.wav", "a2.wav"};
+const char *HST[1] = {"b1.wav"};
+const char *SST[1] = {"c1.wav"};
+
 // const char *GEN[2] = {"a1", "a2"};
 // const char *HST[8] = {"b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8"};
 // const char *SST[8] = {"c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"};
@@ -44,12 +48,12 @@ void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
   if (accel >= 320)
   {
     toneSpeaker.stopTone();
-    wavPlayer.play("b1.wav");
+    wavPlayer.play(HST[0]);
   }
   else if (accel >= 200)
   {
     toneSpeaker.stopTone();
-    wavPlayer.play("c1.wav");
+    wavPlayer.play(SST[0]);
   }
   // else if (gyro >= 300)
   // {
@@ -92,7 +96,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
     lightSaberOn = true;
     led.stopBlink();
     led.setLight(true);
-    wavPlayer.play("a1.wav");
+    wavPlayer.play(GEN[0]);
     neopixel.setWipeSequence(hue);
     motion.startCallback(motionCallback);
     button.startLongPressCallback(longPressCallback, 100, 1000);
@@ -107,7 +111,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
       motion.stopCallback();
       neopixel.setWipeSequence(0, 0, 0, true);
       led.startBlink();
-      wavPlayer.play("a2.wav");
+      wavPlayer.play(GEN[1]);
       lightSaberOn = false;
       break;
     }
