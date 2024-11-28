@@ -23,6 +23,10 @@ void Circuit::setupComponents()
     component->setup();
     component->reset();
   }
+  if (!statusOKComponents())
+    Serial.println(F("circuit error"));
+  else
+    Serial.println(F("circuit ok"));
 }
 
 bool Circuit::statusOKComponents()

@@ -14,11 +14,11 @@ class Circuit
 {
 private:
   LinkedList<Component *> _components = LinkedList<Component *>();
+  bool statusOKComponents();
 
   Circuit();
   void addComponent(Component *component);
   void setupComponents();
-  bool statusOKComponents();
   void loopComponents();
 
   static Circuit *getInstance()
@@ -41,11 +41,6 @@ public:
   static void loop()
   {
     getInstance()->loopComponents();
-  }
-
-  static bool statusOK()
-  {
-    return getInstance()->statusOKComponents();
   }
 };
 
