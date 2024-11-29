@@ -9,7 +9,7 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyNeoPixel.h>
 #include <LazyGalaxyToneSpeaker.h>
-// #include <LazyGalaxyAudioPlayer.h>
+#include <LazyGalaxyAudioPlayer.h>
 
 static const unsigned int DELAY = 50;
 static const int8_t SAT = 255;
@@ -24,10 +24,8 @@ MyLED led3(A4);
 MyButton button4(D5);
 MyLED led4(A5);
 MyNeoPixel strip(D6, 123);
-MyToneSpeaker speaker(D9, 5);
-// MyAudioPlayer audioPlayer(D10, D11, 15);
-
-boolean reverse = false;
+MyToneSpeaker toneSpeaker(D9, 10);
+MyAudioPlayer audioPlayer(D10, D11, 25);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -55,78 +53,87 @@ Melody *merryChristmasMelody =
 
 void noteCallback(unsigned long time, int note)
 {
-        strip.setNoSequence(random(255), SAT, VAL, 0.5);
+        strip.setNoSequence(random(255), SAT, VAL, 50);
+}
+
+void reverseLights(unsigned long time)
+{
+        strip.setWipeSequence(0, 0, 0, true, DELAY);
 }
 
 void finalCallback(unsigned long time)
 {
         strip.off();
-        // audioPlayer.stop();
+        audioPlayer.pause();
         led1.setLight(true);
         led2.setLight(true);
         led3.setLight(true);
         led4.setLight(true);
 }
 
-void playMelody1(unsigned long time, uint8_t clicks)
+void buttonPress1(unsigned long time, uint8_t clicks)
 {
-        if (!speaker.isActive() && clicks > 0)
+        if (!led1.isLight() && led4.isLight())
+                audioPlayer.prev();
+        else if (!toneSpeaker.isActive())
         {
-                strip.off();
-                // audioPlayer.stop();
+                audioPlayer.pause();
                 led1.setLight(true);
                 led2.setLight(false);
                 led3.setLight(false);
                 led4.setLight(false);
-                speaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
+                toneSpeaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
         }
 }
 
-void playMelody2(unsigned long time, uint8_t clicks)
+void buttonPress2(unsigned long time, uint8_t clicks)
 {
-        if (!speaker.isActive() && clicks > 0)
+        if (!led2.isLight() && led4.isLight())
+                finalCallback(millis());
+        else if (!toneSpeaker.isActive())
         {
-                strip.off();
-                // audioPlayer.stop();
+                audioPlayer.pause();
                 led1.setLight(false);
                 led2.setLight(true);
                 led3.setLight(false);
                 led4.setLight(false);
-                speaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
+                toneSpeaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
         }
 }
 
-void playMelody3(unsigned long time, uint8_t clicks)
+void buttonPress3(unsigned long time, uint8_t clicks)
 {
-        if (!speaker.isActive() && clicks > 0)
+        if (!led3.isLight() && led4.isLight())
+                audioPlayer.next();
+        else if (!toneSpeaker.isActive())
         {
-                strip.off();
-                // audioPlayer.stop();
+                audioPlayer.pause();
                 led1.setLight(false);
                 led2.setLight(false);
                 led3.setLight(true);
                 led4.setLight(false);
-                speaker.playMelody(santaClausMelody, noteCallback, finalCallback);
+                toneSpeaker.playMelody(santaClausMelody, noteCallback, finalCallback);
         }
 }
 
-void playMP3(unsigned long time, uint8_t clicks)
+void buttonPress4(unsigned long time, uint8_t clicks)
 {
-        if (clicks > 0)
+        if (!toneSpeaker.isActive())
         {
-                strip.off();
                 led1.setLight(false);
                 led2.setLight(false);
                 led3.setLight(false);
                 led4.setLight(true);
-                // audioPlayer.play(1);
+                audioPlayer.resume();
+                uint8_t hue = random(255);
+                strip.setWipeSequence(hue, SAT, VAL, false, DELAY, reverseLights);
         }
 }
 
 void setup()
 {
-        Serial.begin(115200);
-        //   System setup
+        // Serial.begin(115200);
+        //    System setup
         Circuit::add(&strip);
         Circuit::add(&button1);
         Circuit::add(&led1);
@@ -136,42 +143,20 @@ void setup()
         Circuit::add(&led3);
         Circuit::add(&button4);
         Circuit::add(&led4);
-        Circuit::add(&speaker);
-        // Circuit::add(&audioPlayer);
+        Circuit::add(&toneSpeaker);
+        Circuit::add(&audioPlayer);
         Circuit::setup();
+        audioPlayer.play(1, 1);
+        delay(1500);
+        buttonPress4(millis(), 1);
 
-        finalCallback(0);
-
-        button1.startClicksCallback(playMelody1);
-        button2.startClicksCallback(playMelody2);
-        button3.startClicksCallback(playMelody3);
-        button4.startClicksCallback(playMP3);
+        button1.startClicksCallback(buttonPress1);
+        button2.startClicksCallback(buttonPress2);
+        button3.startClicksCallback(buttonPress3);
+        button4.startClicksCallback(buttonPress4);
 }
 
 void loop()
 {
         Circuit::loop();
-        button4.startClicksCallback(playMP3);
-        // if (!speaker.isActive() && button4.getClicks() > 0)
-        // {
-        //         strip.off();
-        //         button1.setOn(false);
-        //         button2.setOn(false);
-        //         button3.setOn(false);
-        //         button4.setOn(true);
-        //         speaker.reset();
-
-        //         float prob = random(100) / 100.0f;
-        //         float hue = random(100) / 100.0f;
-
-        //         if (0.5 >= prob)
-        //         {
-        //                 strip.setChaseSequence(hue, SAT, VAL, DELAY, 100, 3, finalCallback);
-        //         }
-        //         else
-        //         {
-        //                 strip.setWipeSequence(hue, SAT, VAL, DELAY, reverse, finalCallback);
-        //                 reverse = !reverse;
-        //         }
-        // }
 }

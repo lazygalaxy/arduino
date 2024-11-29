@@ -9,30 +9,30 @@
 #include <LazyGalaxyLED.h>
 
 // any pin is ok for the LEDs, digital(with and without PWM) or analog
-LED *led = new LED(D4);
+MyLED led(D4);
 
 void lightOff(unsigned long time)
 {
-  led->setLight(false);
+  led.setLight(false);
 }
 
 void blinkOn(unsigned long time)
 {
-  led->startBlink();
+  led.startBlink();
 }
 
 void blinkOff(unsigned long time)
 {
-  led->stopBlink();
+  led.stopBlink();
 }
 
 void setup()
 {
-  Circuit::add(led);
+  Circuit::add(&led);
   Circuit::setup();
 
   // light LED on startup
-  led->setLight(true);
+  led.setLight(true);
 
   // schedule a task/function to switch the light off in 3 seconds
   Timer::schedule(3000, lightOff);

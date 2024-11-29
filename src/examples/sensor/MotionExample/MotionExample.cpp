@@ -7,9 +7,9 @@
 #include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyMotion.h>
 
-MyMotion *motion = new MyMotion(1000); // A4 //A5
+MyMotion motion(1000); // A4 //A5
 
-void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
+void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
 {
   Serial.print(accel);
   Serial.print(" ");
@@ -18,10 +18,10 @@ void motionCallback(unsigned long time, unsigned long accel, unsigned long gyro)
 
 void setup()
 {
-  Circuit::add(motion);
+  Circuit::add(&motion);
   Circuit::setup();
 
-  motion->startCallback(motionCallback);
+  motion.startCallback(motionCallback);
 }
 
 void loop()

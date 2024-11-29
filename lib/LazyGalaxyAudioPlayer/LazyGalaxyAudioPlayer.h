@@ -20,8 +20,11 @@ public:
   unsigned long update(unsigned long time) override;
 
   void play(uint8_t folderNum, uint8_t trackNum);
-  void play(uint8_t folderNum);
   void playRandom(uint8_t folderNum);
+  void next();
+  void prev();
+  void pause();
+  void resume();
   bool isPlaying();
 
   void stop();

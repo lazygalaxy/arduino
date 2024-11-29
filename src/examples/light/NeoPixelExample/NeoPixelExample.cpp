@@ -10,28 +10,28 @@
 
 static const unsigned int DELAY = 50;
 
-MyNeoPixel *strip = new MyNeoPixel(D6, 33);
+MyNeoPixel strip(D6, 33);
 
-void allOff(unsigned long time) { strip->off(); }
+void allOff(unsigned long time) { strip.off(); }
 
 void wipeSequenceReverse(unsigned long time)
 {
   Serial.println("wipeSequenceReverse");
-  strip->setWipeSequence(85, 255, 128, true, DELAY, allOff);
+  strip.setWipeSequence(85, 255, 128, true, DELAY, allOff);
 }
 
 void wipeSequence(unsigned long time)
 {
-  strip->setWipeSequence(0, 255, 128, false, DELAY, wipeSequenceReverse);
+  strip.setWipeSequence(0, 255, 128, false, DELAY, wipeSequenceReverse);
 }
 
-void allRed(unsigned long time) { strip->setNoSequence(0, 255, 128); }
-void allGreen(unsigned long time) { strip->setNoSequence(85, 255, 128); }
-void allBlue(unsigned long time) { strip->setNoSequence(170, 255, 128); }
+void allRed(unsigned long time) { strip.setNoSequence(0, 255, 128); }
+void allGreen(unsigned long time) { strip.setNoSequence(85, 255, 128); }
+void allBlue(unsigned long time) { strip.setNoSequence(170, 255, 128); }
 
 void setup()
 {
-  Circuit::add(strip);
+  Circuit::add(&strip);
   Circuit::setup();
 
   // set all LEDs to red

@@ -9,9 +9,9 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-MySDCard *sdCard = new MySDCard(D10);
-MyToneSpeaker *toneSpeaker = new MyToneSpeaker(D9, 3);
-MyWAVPlayer *wavPlayer = new MyWAVPlayer(D9, 3);
+MySDCard sdCard(D10);
+MyToneSpeaker toneSpeaker(D9, 3);
+MyWAVPlayer wavPlayer(D9, 3);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -38,30 +38,30 @@ void noteCallback(unsigned long time, int note)
 void step4(unsigned long time)
 {
   Serial.println("step4");
-  toneSpeaker->playMelody(santaClausMelody, noteCallback, step4);
+  toneSpeaker.playMelody(santaClausMelody, noteCallback, step4);
 }
 
 void step3(unsigned long time)
 {
   Serial.println("step3");
-  wavPlayer->play("off.wav");
+  wavPlayer.play("off.wav");
 }
 
 void step2(unsigned long time)
 {
   Serial.println("step2");
-  wavPlayer->play("on.wav", step3);
+  wavPlayer.play("on.wav", step3);
 }
 
 void setup()
 {
-  Circuit::add(sdCard);
-  Circuit::add(toneSpeaker);
-  Circuit::add(wavPlayer);
+  Circuit::add(&sdCard);
+  Circuit::add(&toneSpeaker);
+  Circuit::add(&wavPlayer);
   Circuit::setup();
 
-  wavPlayer->play("on.wav", step2);
-  // toneSpeaker->playMelody(jingleBellsMelody, noteCallback, step2);
+  wavPlayer.play("on.wav", step2);
+  // toneSpeaker.playMelody(jingleBellsMelody, noteCallback, step2);
 }
 
 void loop()
