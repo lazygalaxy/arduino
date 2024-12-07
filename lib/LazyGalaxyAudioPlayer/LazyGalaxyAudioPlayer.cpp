@@ -26,18 +26,18 @@ void MyAudioPlayer::setup()
   // Serial.println(F("DFPlayer OK"));
   // Serial.println(_volume);
 
-  // _player.numFolders();
-  // int16_t numFolders = _player.numFolders();
-  // Serial.println(numFolders);
-  // //_tracksInFolder = new int16_t[numFolders];
-  // _tracksInFolder = new int16_t[numFolders];
+  _player.numFolders();
+  int16_t numFolders = _player.numFolders();
+  Serial.println(numFolders);
+  //_tracksInFolder = new int16_t[numFolders];
+  _tracksInFolder = new int16_t[numFolders];
 
-  // for (int i = 0; i < _player.numFolders(); i++)
-  // {
-  //   _player.numTracksInFolder(i + 1);
-  //   _tracksInFolder[i] = _player.numTracksInFolder(i + 1);
-  //   Serial.println(_tracksInFolder[i]);
-  // }
+  for (int i = 0; i < _player.numFolders(); i++)
+  {
+    _player.numTracksInFolder(i + 1);
+    _tracksInFolder[i] = _player.numTracksInFolder(i + 1);
+    Serial.println(_tracksInFolder[i]);
+  }
 }
 
 void MyAudioPlayer::reset()
@@ -53,6 +53,11 @@ void MyAudioPlayer::play(uint8_t folderNum, uint8_t trackNum)
 void MyAudioPlayer::playRandom(uint8_t folderNum)
 {
   _player.playFolder(folderNum, random(_tracksInFolder[folderNum - 1]));
+}
+
+uint8_t MyAudioPlayer::getNumTracks(uint8_t folderNum)
+{
+  return _tracksInFolder[folderNum];
 }
 
 void MyAudioPlayer::next()

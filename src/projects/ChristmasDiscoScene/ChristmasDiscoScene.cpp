@@ -25,28 +25,28 @@ uint8_t christmasTrackIndex = 0;
 uint8_t discoTrackIndex = 0;
 
 // all scene components
-LED *chrismasLED = new LED(D2);
-LED *discoLED = new LED(D3);
-MyAudioPlayer *audioPlayer = new MyAudioPlayer(D10, D11, SPEAKER_VOLUME);
+MyLED chrismasLED(D2);
+MyLED discoLED(D3);
+MyAudioPlayer audioPlayer(D10, D11, SPEAKER_VOLUME);
 
 unsigned long playScene(unsigned long time)
 {
   if (isChristmasScene)
   {
     // our christmas scene logic
-    discoLED->stopBlink();
-    discoLED->setLight(false);
-    chrismasLED->setLight(true);
+    discoLED.stopBlink();
+    discoLED.setLight(false);
+    chrismasLED.setLight(true);
     christmasTrackIndex = ++christmasTrackIndex > totalChristmasTracks ? 1 : christmasTrackIndex;
-    audioPlayer->play(1, christmasTrackIndex);
+    audioPlayer.play(1, christmasTrackIndex);
   }
   else
   {
     // our disco scene logic
-    chrismasLED->setLight(false);
-    discoLED->startBlink(DISCO_BLINK_MILLIS);
+    chrismasLED.setLight(false);
+    discoLED.startBlink(DISCO_BLINK_MILLIS);
     discoTrackIndex = ++discoTrackIndex > totalDiscoTracks ? 1 : discoTrackIndex;
-    audioPlayer->play(2, discoTrackIndex);
+    audioPlayer.play(2, discoTrackIndex);
   }
 
   // switch the scene flag
@@ -58,14 +58,14 @@ unsigned long playScene(unsigned long time)
 void setup()
 {
   // Circuit setup
-  Circuit::add(chrismasLED);
-  Circuit::add(discoLED);
-  Circuit::add(audioPlayer);
+  Circuit::add(&chrismasLED);
+  Circuit::add(&discoLED);
+  Circuit::add(&audioPlayer);
   Circuit::setup();
 
   // get the total number of tracks now that we have setup the audio player
-  totalChristmasTracks = audioPlayer->getNumTracks(1);
-  totalDiscoTracks = audioPlayer->getNumTracks(2);
+  totalChristmasTracks = audioPlayer.getNumTracks(1);
+  totalDiscoTracks = audioPlayer.getNumTracks(2);
 
   // schedule the timer immediatly to play teh first scene
   Timer::schedule(0, playScene);
