@@ -49,7 +49,7 @@ MyButton button(D5);
 MyLED led(D4);
 MySDCard sdCard(D10);
 MyToneSpeaker toneSpeaker(D9, 2);
-MyNeoPixel neopixel(D6, 33);
+MyNeoPixel neopixel(D6, 40);
 MyMotion motion(D10); // A4 //A5
 MyWAVPlayer wavPlayer(D9, 3);
 

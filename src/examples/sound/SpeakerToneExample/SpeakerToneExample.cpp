@@ -1,17 +1,13 @@
 /*
-   SpeakerExample.cpp - Asynchronous melody and sound playing example.
-   Created by LazyGalaxy - Evangelos Papakonstantis, November 22, 2018.
+   SpeakerToneExample.cpp - Asynchronous melody and sound playing example.
+   Created by LazyGalaxy - Evangelos Papakonstantis, August 18, 2025.
    Released into the public domain.
 */
 
 #include <LazyGalaxyCircuit.h>
-#include <LazyGalaxySDCard.h>
 #include <LazyGalaxyToneSpeaker.h>
-#include <LazyGalaxyWAVPlayer.h>
 
-MySDCard sdCard(D10);
-MyToneSpeaker toneSpeaker(D8, 3);
-MyWAVPlayer wavPlayer(D9, 3);
+MyToneSpeaker toneSpeaker(D9, 10);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -29,39 +25,30 @@ Melody *jingleBellsMelody =
                        2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 4, 4},
                100);
 
+Melody *zorbasMelody =
+    new Melody((int[]){TCS4, TD4,TCS4, TD4,
+                       TEND},
+               (int[]){1, 16, 1, 16},
+               100);
+
 void noteCallback(unsigned long time, int note)
 {
   Serial.print("note play ");
   Serial.println(note);
 }
 
-void step4(unsigned long time)
-{
-  Serial.println("step4");
-  toneSpeaker.playMelody(santaClausMelody, noteCallback);
-}
-
-void step3(unsigned long time)
-{
-  Serial.println("step3");
-  wavPlayer.play("off.wav", step4);
-}
-
 void step2(unsigned long time)
 {
   Serial.println("step2");
-  wavPlayer.play("on.wav", step3);
+  toneSpeaker.playMelody(santaClausMelody, noteCallback);
 }
 
 void setup()
 {
-  Circuit::add(&sdCard);
   Circuit::add(&toneSpeaker);
-  Circuit::add(&wavPlayer);
   Circuit::setup();
 
-  wavPlayer.play("on.wav", step2);
-  // toneSpeaker.playMelody(jingleBellsMelody, noteCallback, step2);
+  toneSpeaker.playMelody(zorbasMelody, noteCallback);
 }
 
 void loop()
