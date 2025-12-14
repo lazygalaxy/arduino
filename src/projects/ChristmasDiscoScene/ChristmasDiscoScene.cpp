@@ -28,7 +28,7 @@ void buttonPress(unsigned long time, uint8_t clicks)
     // Serial.print("click");
     if (!flag)
     {
-      audioPlayer.playRandom(1);
+      audioPlayer.playAll(1);
       chrismasLED.setLight(true);
       // Serial.print("play");
     }

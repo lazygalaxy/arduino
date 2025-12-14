@@ -55,6 +55,16 @@ void MyAudioPlayer::playRandom(uint8_t folderNum)
   _player.playFolder(folderNum, random(_tracksInFolder[folderNum - 1]));
 }
 
+void MyAudioPlayer::playAll(uint8_t folderNum)
+{
+  _player.repeatFolder(folderNum);
+  for (int i = 1; i < random(_tracksInFolder[folderNum - 1]); i++)
+  {
+    delay(200);
+    _player.playNext();
+  }
+}
+
 uint8_t MyAudioPlayer::getNumTracks(uint8_t folderNum)
 {
   return _tracksInFolder[folderNum];

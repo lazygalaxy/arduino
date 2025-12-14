@@ -25,7 +25,7 @@ MyButton button4(D5);
 MyLED led4(A5);
 MyNeoPixel strip(D6, 123);
 MyToneSpeaker toneSpeaker(D9, 10);
-MyAudioPlayer audioPlayer(D10, D11, 25);
+MyAudioPlayer audioPlayer(D10, D11, 20);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -64,9 +64,9 @@ void reverseLights(unsigned long time)
 void finalCallback(unsigned long time)
 {
         strip.off();
-        audioPlayer.pause();
+        audioPlayer.stop();
         led1.setLight(true);
-        led2.setLight(true);
+        led2.setLight(false);
         led3.setLight(true);
         led4.setLight(true);
 }
@@ -77,12 +77,12 @@ void buttonPress1(unsigned long time, uint8_t clicks)
                 audioPlayer.prev();
         else if (!toneSpeaker.isActive())
         {
-                audioPlayer.pause();
+                audioPlayer.stop();
                 led1.setLight(true);
                 led2.setLight(false);
                 led3.setLight(false);
                 led4.setLight(false);
-                toneSpeaker.playMelody(merryChristmasMelody, noteCallback, finalCallback);
+                toneSpeaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
         }
 }
 
@@ -90,15 +90,15 @@ void buttonPress2(unsigned long time, uint8_t clicks)
 {
         if (!led2.isLight() && led4.isLight())
                 finalCallback(millis());
-        else if (!toneSpeaker.isActive())
-        {
-                audioPlayer.pause();
-                led1.setLight(false);
-                led2.setLight(true);
-                led3.setLight(false);
-                led4.setLight(false);
-                toneSpeaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
-        }
+        // else if (!toneSpeaker.isActive())
+        //{
+        //         audioPlayer.stop();
+        //         led1.setLight(false);
+        //         led2.setLight(true);
+        //         led3.setLight(false);
+        //         led4.setLight(false);
+        //  toneSpeaker.playMelody(jingleBellsMelody, noteCallback, finalCallback);
+        // }
 }
 
 void buttonPress3(unsigned long time, uint8_t clicks)
@@ -107,7 +107,7 @@ void buttonPress3(unsigned long time, uint8_t clicks)
                 audioPlayer.next();
         else if (!toneSpeaker.isActive())
         {
-                audioPlayer.pause();
+                audioPlayer.stop();
                 led1.setLight(false);
                 led2.setLight(false);
                 led3.setLight(true);
@@ -124,7 +124,7 @@ void buttonPress4(unsigned long time, uint8_t clicks)
                 led2.setLight(false);
                 led3.setLight(false);
                 led4.setLight(true);
-                audioPlayer.resume();
+                audioPlayer.playAll(1);
                 uint8_t hue = random(255);
                 strip.setWipeSequence(hue, SAT, VAL, false, DELAY, reverseLights);
         }
@@ -132,8 +132,9 @@ void buttonPress4(unsigned long time, uint8_t clicks)
 
 void setup()
 {
+        randomSeed(analogRead(A0));
         // Serial.begin(115200);
-        //    System setup
+        // System setup
         Circuit::add(&strip);
         Circuit::add(&button1);
         Circuit::add(&led1);
@@ -146,7 +147,6 @@ void setup()
         Circuit::add(&toneSpeaker);
         Circuit::add(&audioPlayer);
         Circuit::setup();
-        audioPlayer.play(1, 1);
         delay(1500);
         buttonPress4(millis(), 1);
 
