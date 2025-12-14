@@ -14,6 +14,8 @@
 static const unsigned int DELAY = 50;
 static const int8_t SAT = 255;
 static const int8_t VAL = 128;
+// the speaker volume from 0 to 30
+static const uint8_t SPEAKER_VOLUME = 20;
 
 MyButton button1(D2);
 MyLED led1(A2);
@@ -25,7 +27,7 @@ MyButton button4(D5);
 MyLED led4(A5);
 MyNeoPixel strip(D6, 123);
 MyToneSpeaker toneSpeaker(D9, 10);
-MyAudioPlayer audioPlayer(D10, D11, 20);
+MyAudioPlayer audioPlayer(D10, D11, SPEAKER_VOLUME);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
