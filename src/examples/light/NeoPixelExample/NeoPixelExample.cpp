@@ -10,7 +10,7 @@
 
 static const unsigned int DELAY = 50;
 
-MyNeoPixel strip(D6, 33);
+MyNeoPixel strip(D12, 33);
 
 void allOff(unsigned long time) { strip.off(); }
 

@@ -7,7 +7,7 @@
 #ifndef LAZYGALAXYNEOPIXEL_H
 #define LAZYGALAXYNEOPIXEL_H
 
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 #include <LazyGalaxyCommon.h>
 
 class MyNeoPixel : public PinComponent
@@ -33,7 +33,7 @@ private:
   static const uint8_t WIPE_SEQUENCE_TYPE = 1;
   // static const uint8_t CHASE_SEQUENCE_TYPE = 2;
 
-  CRGB *_ledArray;
+  Adafruit_NeoPixel *_pixels;
   uint8_t _ledArraySize;
   uint8_t _sequenceType;
   uint8_t _seqHue;

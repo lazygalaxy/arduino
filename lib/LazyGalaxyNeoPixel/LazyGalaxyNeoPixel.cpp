@@ -13,9 +13,8 @@ MyNeoPixel::MyNeoPixel(char pin, uint8_t ledArraySize) : PinComponent(pin)
 
 void MyNeoPixel::setup()
 {
-  _ledArray = new CRGB[_ledArraySize];
-  FastLED.addLeds<WS2812, 6, GRB>(_ledArray, _ledArraySize);
-  FastLED.setBrightness(100);
+  _pixels = new Adafruit_NeoPixel(_ledArraySize, _pin, NEO_GRB + NEO_KHZ800);
+  _pixels->setBrightness(100);
   off();
 }
 
@@ -42,9 +41,10 @@ void MyNeoPixel::reset()
 
 void MyNeoPixel::setHSVColor(uint8_t ledIndex, uint8_t hue, uint8_t sat, uint8_t val, bool mustShow)
 {
-  _ledArray[ledIndex] = CHSV(hue, sat, val);
+  // multiply hue by 257 to scale from [0,255] to [0,65535]
+  _pixels->setPixelColor(ledIndex, _pixels->ColorHSV(hue * 257, sat, val));
   if (mustShow)
-    FastLED.show();
+    _pixels->show();
 }
 
 void MyNeoPixel::off()
@@ -89,7 +89,7 @@ void MyNeoPixel::setNoSequence(uint8_t hue, uint8_t sat, uint8_t val, uint8_t pr
       setHSVColor(i, hue, sat, val, false);
     else
       setHSVColor(i, 0.0, 0.0, 0.0, false);
-  FastLED.show();
+  _pixels->show();
 }
 
 unsigned long MyNeoPixel::update(unsigned long time)
