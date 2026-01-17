@@ -8,7 +8,6 @@
 #define LAZYGALAXYTONESPEAKER_H
 
 #include <LazyGalaxyCommon.h>
-#include <toneAC.h>
 
 // Tones for easy reference
 #define TEND 0 // tone end
@@ -121,12 +120,13 @@ struct Melody
 class MyToneSpeaker : public PinComponent
 {
 public:
+  // volume is 0 (min) to 10 (max)
   MyToneSpeaker(uint8_t pin, uint8_t volume = 5);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
 
-  void playTone(int tone);
+  void playTone(int frequency);
   void stopTone();
   void playMelody(Melody *melody, noteCallbackPtr noteCallback = nullptr, finalCallbackPtr finalCallback = nullptr);
 

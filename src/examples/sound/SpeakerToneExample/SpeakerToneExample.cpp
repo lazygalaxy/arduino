@@ -7,7 +7,7 @@
 #include <LazyGalaxyCircuit.h>
 #include <LazyGalaxyToneSpeaker.h>
 
-MyToneSpeaker toneSpeaker(D9, 10);
+MyToneSpeaker toneSpeaker(D8, 10);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
@@ -26,7 +26,7 @@ Melody *jingleBellsMelody =
                100);
 
 Melody *zorbasMelody =
-    new Melody((int[]){TCS4, TD4,TCS4, TD4,
+    new Melody((int[]){TCS4, TD4, TCS4, TD4,
                        TEND},
                (int[]){1, 16, 1, 16},
                100);
@@ -48,7 +48,7 @@ void setup()
   Circuit::add(&toneSpeaker);
   Circuit::setup();
 
-  toneSpeaker.playMelody(zorbasMelody, noteCallback);
+  toneSpeaker.playMelody(jingleBellsMelody, noteCallback, step2);
 }
 
 void loop()

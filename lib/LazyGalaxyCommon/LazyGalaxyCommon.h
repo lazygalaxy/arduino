@@ -23,6 +23,7 @@ static const uint8_t D10 = 10;
 static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
+static const uint8_t D25 = 25;
 
 typedef unsigned long (*updateCallbackPtr)(unsigned long time);
 typedef void (*finalCallbackPtr)(unsigned long time);

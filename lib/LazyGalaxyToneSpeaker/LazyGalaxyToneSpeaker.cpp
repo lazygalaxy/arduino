@@ -26,15 +26,15 @@ void MyToneSpeaker::reset()
   stopTone();
 }
 
-void MyToneSpeaker::playTone(int tone)
+void MyToneSpeaker::playTone(int frequency)
 {
   _isTonePlaying = true;
-  toneAC(tone, _volume);
+  tone(_pin, frequency);
 }
 
 void MyToneSpeaker::stopTone()
 {
-  noToneAC();
+  noTone(_pin);
   _isTonePlaying = false;
 }
 

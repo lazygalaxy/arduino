@@ -10,12 +10,18 @@
 #define SDFAT
 
 #include <LazyGalaxyCommon.h>
-#include <TMRpcm.h>
+
+#include <LittleFS.h>
+
+#include <AudioFileSourceLittleFS.h>
+#include <AudioGeneratorWAV.h>
+#include <AudioOutputI2S.h>
 
 class MyWAVPlayer : public PinComponent
 {
 public:
-  MyWAVPlayer(uint8_t pin, uint8_t volume = 15);
+  // volume is 0 (min) to 10 (max)
+  MyWAVPlayer(uint8_t pin, uint8_t volume = 5);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
@@ -26,8 +32,11 @@ public:
   void stop();
 
 private:
+  // Audio objects
+  AudioGeneratorWAV *_wav;
+  AudioOutputI2S *_out;
+
   uint8_t _volume;
-  TMRpcm _player;
   bool _hasPlayStarted;
 };
 
