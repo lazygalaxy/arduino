@@ -120,8 +120,8 @@ struct Melody
 class MyToneSpeaker : public PinComponent
 {
 public:
-  // volume is 0 (min) to 10 (max)
-  MyToneSpeaker(uint8_t pin, uint8_t volume = 5);
+  // volume is 0 (min) to 100 (max)
+  MyToneSpeaker(uint8_t pin, uint8_t volume = 50);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;

@@ -20,8 +20,8 @@
 class MyWAVPlayer : public PinComponent
 {
 public:
-  // volume is 0 (min) to 10 (max)
-  MyWAVPlayer(uint8_t pin, uint8_t volume = 5);
+  // volume is 0 (min) to 100 (max)
+  MyWAVPlayer(uint8_t volume = 50);
   void setup() override;
   void reset() override;
   unsigned long update(unsigned long time) override;
@@ -37,7 +37,6 @@ private:
   AudioOutputI2S *_out;
 
   uint8_t _volume;
-  bool _hasPlayStarted;
 };
 
 #endif
