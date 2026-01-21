@@ -27,7 +27,13 @@ void MyWAVPlayer::setup()
 void MyWAVPlayer::reset()
 {
   Component::reset();
-  stop();
+
+  _wav->stop();
+  if (_file != nullptr)
+  {
+    delete _file;
+    _file = nullptr;
+  }
 }
 
 void MyWAVPlayer::play(const char *filename, finalCallbackPtr finalCallback)
@@ -35,19 +41,14 @@ void MyWAVPlayer::play(const char *filename, finalCallbackPtr finalCallback)
   reset();
 
   _finalCallback = finalCallback;
-  AudioFileSourceLittleFS *file = new AudioFileSourceLittleFS(filename);
-  _wav->begin(file, _out);
-  _triggerTime = update(millis());
+  _file = new AudioFileSourceLittleFS(filename);
+  _wav->begin(_file, _out);
+  _triggerTime = 1; // start asap
 }
 
 bool MyWAVPlayer::isPlaying()
 {
   return _wav->isRunning() && _wav->loop();
-}
-
-void MyWAVPlayer::stop()
-{
-  _wav->stop();
 }
 
 unsigned long MyWAVPlayer::update(unsigned long time)

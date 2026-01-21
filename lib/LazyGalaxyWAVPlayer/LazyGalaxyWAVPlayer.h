@@ -7,12 +7,9 @@
 #ifndef LAZYGALAXYWAVPLAYER_H
 #define LAZYGALAXYWAVPLAYER_H
 
-#define SDFAT
-
 #include <LazyGalaxyCommon.h>
-
+#include <unordered_map>
 #include <LittleFS.h>
-
 #include <AudioFileSourceLittleFS.h>
 #include <AudioGeneratorWAV.h>
 #include <AudioOutputI2S.h>
@@ -29,14 +26,13 @@ public:
   void play(const char *filename, finalCallbackPtr finalCallback = nullptr);
   bool isPlaying();
 
-  void stop();
-
 private:
+  uint8_t _volume;
+
   // Audio objects
   AudioGeneratorWAV *_wav;
   AudioOutputI2S *_out;
-
-  uint8_t _volume;
+  AudioFileSourceLittleFS *_file;
 };
 
 #endif
