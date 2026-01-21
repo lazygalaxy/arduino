@@ -27,7 +27,7 @@ public:
   bool isPlaying();
 
 private:
-  uint8_t _volume;
+  float _volume;
 
   // Audio objects
   AudioGeneratorWAV *_wav;

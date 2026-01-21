@@ -9,6 +9,8 @@
 
 #include <LazyGalaxyCommon.h>
 
+#define PWM_CHANNEL 0
+
 // Tones for easy reference
 #define TEND 0 // tone end
 #define TB0 31
@@ -132,7 +134,7 @@ public:
 
 private:
   // general
-  uint8_t _volume;
+  uint32_t _volume;
 
   // note
   Melody *_melody;

@@ -8,7 +8,7 @@
 
 MyWAVPlayer::MyWAVPlayer(uint8_t volume) : PinComponent(DAC1)
 {
-  _volume = volume;
+  _volume = volume / 100.0f;
 }
 
 void MyWAVPlayer::setup()
@@ -19,7 +19,7 @@ void MyWAVPlayer::setup()
   {
     // if all good we can initialize audio objects
     _out = new AudioOutputI2S(0, AudioOutputI2S::INTERNAL_DAC);
-    _out->SetGain(_volume / 100.0f);
+    _out->SetGain(_volume);
     _wav = new AudioGeneratorWAV();
   }
 }

@@ -8,8 +8,9 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-MyToneSpeaker toneSpeaker(D4, 3);
-MyWAVPlayer wavPlayer(10);
+uint8_t volume = 29; // volume 0-100
+MyToneSpeaker toneSpeaker(D4, volume);
+MyWAVPlayer wavPlayer(volume);
 
 Melody *santaClausMelody =
     new Melody((int[]){TG4, TE4, TF4, TG4, TG4, TG4, TA4, TB4, TC5, TC5,
