@@ -9,49 +9,45 @@
 #include <LazyGalaxyLED.h>
 #include <LazyGalaxyMotion.h>
 #include <LazyGalaxyNeoPixel.h>
-#include <LazyGalaxySDCard.h>
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-const char a1[] PROGMEM = "a1.wav";
-const char a2[] PROGMEM = "a2.wav";
-const char *const GEN[] PROGMEM = {a1, a2};
+const char on[] = "/a1.wav";
+const char off[] = "/a2.wav";
 
-const char b1[] PROGMEM = "b1.wav";
-const char b2[] PROGMEM = "b2.wav";
-const char b3[] PROGMEM = "b3.wav";
-const char b4[] PROGMEM = "b4.wav";
-const char b5[] PROGMEM = "b5.wav";
-const char b6[] PROGMEM = "b6.wav";
-const char b7[] PROGMEM = "b7.wav";
-const char b8[] PROGMEM = "b8.wav";
-const char *const HST[] PROGMEM = {b1, b2, b3, b4, b5, b6, b7, b8};
+const char b1[] = "/b1.wav";
+const char b2[] = "/b2.wav";
+const char b3[] = "/b3.wav";
+const char b4[] = "/b4.wav";
+const char b5[] = "/b5.wav";
+const char b6[] = "/b6.wav";
+const char b7[] = "/b7.wav";
+const char b8[] = "/b8.wav";
+const char *const hard_strike[] = {b1, b2, b3, b4, b5, b6, b7, b8};
 
-const char c1[] PROGMEM = "c1.wav";
-const char c2[] PROGMEM = "c2.wav";
-const char c3[] PROGMEM = "c3.wav";
-const char c4[] PROGMEM = "c4.wav";
-const char c5[] PROGMEM = "c5.wav";
-const char c6[] PROGMEM = "c6.wav";
-const char c7[] PROGMEM = "c7.wav";
-const char c8[] PROGMEM = "c8.wav";
-const char *const SST[] PROGMEM = {c1, c2, c3, c4, c5, c6, c7, c8};
-
-char stringBuffer[7];
+const char c1[] = "/c1.wav";
+const char c2[] = "/c2.wav";
+const char c3[] = "/c3.wav";
+const char c4[] = "/c4.wav";
+const char c5[] = "/c5.wav";
+const char c6[] = "/c6.wav";
+const char c7[] = "/c7.wav";
+const char c8[] = "/c8.wav";
+const char *const soft_strike[] = {c1, c2, c3, c4, c5, c6, c7, c8};
 
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
 int8_t hue = 0;
 uint16_t freq_prev = 20;
+uint8_t volume = 40;
 
 // all lightsaber components
-MyButton button(D5);
-MyLED led(D4);
-MySDCard sdCard(D10);
-MyToneSpeaker toneSpeaker(D9, 2);
-MyNeoPixel neopixel(D6, 40);
-MyMotion motion(D10); // A4 //A5
-MyWAVPlayer wavPlayer(D9, 3);
+MyButton button(19);
+MyLED led(18);
+MyToneSpeaker toneSpeaker(4, volume);
+MyNeoPixel neopixel(12, 33);
+MyMotion motion;
+MyWAVPlayer wavPlayer(volume);
 
 void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
 {
@@ -66,8 +62,7 @@ void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
   if (accel >= 320)
   {
     toneSpeaker.stopTone();
-    strcpy_P(stringBuffer, (char *)pgm_read_word(&(HST[random(8)])));
-    wavPlayer.play(stringBuffer);
+    wavPlayer.play(hard_strike[random(8)]);
     neopixel.setNoSequence(0, 0, 255);
     delay(100);
     neopixel.setNoSequence(hue);
@@ -75,8 +70,7 @@ void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
   else if (accel >= 200)
   {
     toneSpeaker.stopTone();
-    strcpy_P(stringBuffer, (char *)pgm_read_word(&(SST[random(8)])));
-    wavPlayer.play(stringBuffer);
+    wavPlayer.play(soft_strike[random(8)]);
     neopixel.setNoSequence(0, 0, 255);
     delay(50);
     neopixel.setNoSequence(hue);
@@ -115,18 +109,20 @@ void longPressCallback(unsigned long time)
 
 void clicksCallback(unsigned long time, uint8_t clicks)
 {
+  Serial.println("clickscallback");
   // then implement the light saber logic
   if (!lightSaberOn && clicks > 0)
   {
+    Serial.println("button clicked");
     // turn on the light saber with any button click
     lightSaberOn = true;
     led.stopBlink();
     led.setLight(true);
-    strcpy_P(stringBuffer, (char *)pgm_read_word(&(GEN[0])));
-    wavPlayer.play(stringBuffer);
+    wavPlayer.play(on);
     neopixel.setWipeSequence(hue);
-    motion.startCallback(motionCallback);
+
     button.startLongPressCallback(longPressCallback, 100, 1000);
+    motion.startCallback(motionCallback);
   }
   else if (lightSaberOn)
     switch (clicks)
@@ -138,8 +134,7 @@ void clicksCallback(unsigned long time, uint8_t clicks)
       motion.stopCallback();
       neopixel.setWipeSequence(0, 0, 0, true);
       led.startBlink();
-      strcpy_P(stringBuffer, (char *)pgm_read_word(&(GEN[1])));
-      wavPlayer.play(stringBuffer);
+      wavPlayer.play(off);
       lightSaberOn = false;
       break;
     }
@@ -147,11 +142,10 @@ void clicksCallback(unsigned long time, uint8_t clicks)
 
 void setup()
 {
-  // Serial.begin(9600);
+  Serial.begin(115200);
   //  System setup
   Circuit::add(&led);
   Circuit::add(&button);
-  Circuit::add(&sdCard);
   Circuit::add(&toneSpeaker);
   Circuit::add(&motion);
   Circuit::add(&neopixel);

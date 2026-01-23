@@ -119,7 +119,7 @@ struct Melody
   int tempo;
 };
 
-class MyToneSpeaker : public PinComponent
+class MyToneSpeaker : public SinglePinComponent
 {
 public:
   // volume is 0 (min) to 100 (max)

@@ -8,7 +8,7 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-uint8_t volume = 29; // volume 0-100
+uint8_t volume = 20; // volume 0-100
 MyToneSpeaker toneSpeaker(D4, volume);
 MyWAVPlayer wavPlayer(volume);
 

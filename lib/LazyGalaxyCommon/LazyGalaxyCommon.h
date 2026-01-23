@@ -9,6 +9,7 @@
 
 #include <Arduino.h>
 
+#ifdef __AVR__
 static const uint8_t D0 = 0;
 static const uint8_t D1 = 1;
 static const uint8_t D2 = 2;
@@ -23,7 +24,7 @@ static const uint8_t D10 = 10;
 static const uint8_t D11 = 11;
 static const uint8_t D12 = 12;
 static const uint8_t D13 = 13;
-static const uint8_t D25 = 25;
+#endif
 
 typedef unsigned long (*updateCallbackPtr)(unsigned long time);
 typedef void (*finalCallbackPtr)(unsigned long time);
@@ -50,17 +51,20 @@ public:
   }
 };
 
-class PinComponent : public Component
+class SinglePinComponent : public Component
 {
 public:
-  explicit PinComponent(uint8_t pin)
+  explicit SinglePinComponent(uint8_t pin)
   {
     _pin = pin;
   }
 
   uint8_t getPin() { return _pin; }
 
+#ifdef __AVR__
   bool isDigital() { return _pin < A0; }
+  bool isAnalog() { return _pin >= A0; }
+#endif
 
 protected:
   uint8_t _pin;

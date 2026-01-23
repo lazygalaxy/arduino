@@ -9,7 +9,7 @@
 
 #include <LazyGalaxyCommon.h>
 
-class MyLED : public PinComponent
+class MyLED : public SinglePinComponent
 {
 private:
   uint16_t _blinkDelay;

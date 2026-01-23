@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyButton.h>
 
-MyButton::MyButton(uint8_t pin) : PinComponent(pin)
+MyButton::MyButton(uint8_t pin) : SinglePinComponent(pin)
 {
 }
 

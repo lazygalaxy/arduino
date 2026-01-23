@@ -10,7 +10,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <LazyGalaxyCommon.h>
 
-class MyNeoPixel : public PinComponent
+class MyNeoPixel : public SinglePinComponent
 {
 public:
   MyNeoPixel(char pin, uint8_t ledArraySize);

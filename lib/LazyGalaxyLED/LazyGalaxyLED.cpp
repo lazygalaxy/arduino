@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyLED.h>
 
-MyLED::MyLED(uint8_t pin) : PinComponent(pin)
+MyLED::MyLED(uint8_t pin) : SinglePinComponent(pin)
 {
 }
 
@@ -26,28 +26,16 @@ void MyLED::setLight(bool flag, bool considerDeActivation)
 {
   if (considerDeActivation && isActive())
     reset();
+
   if (flag)
-  {
-    if (isDigital())
-      digitalWrite(_pin, HIGH);
-    else
-      analogWrite(_pin, 255);
-  }
+    digitalWrite(_pin, HIGH);
   else
-  {
-    if (isDigital())
-      digitalWrite(_pin, LOW);
-    else
-      analogWrite(_pin, 0);
-  };
+    digitalWrite(_pin, LOW);
 }
 
 bool MyLED::isLight()
 {
-  if (isDigital())
-    return digitalRead(_pin) == HIGH;
-  else
-    return analogRead(_pin) > 0;
+  return digitalRead(_pin) == HIGH;
 }
 
 void MyLED::startBlink(uint16_t blinkDelay)

@@ -14,7 +14,7 @@
 #include <AudioGeneratorWAV.h>
 #include <AudioOutputI2S.h>
 
-class MyWAVPlayer : public PinComponent
+class MyWAVPlayer : public Component
 {
 public:
   // volume is 0 (min) to 100 (max)

@@ -18,6 +18,8 @@ void motionCallback(unsigned long time, uint16_t accel, uint16_t gyro)
 
 void setup()
 {
+  Serial.begin(115200);
+
   Circuit::add(&motion);
   Circuit::setup();
 

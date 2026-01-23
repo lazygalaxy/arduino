@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyToneSpeaker.h>
 
-MyToneSpeaker::MyToneSpeaker(uint8_t pin, uint8_t volume) : PinComponent(pin)
+MyToneSpeaker::MyToneSpeaker(uint8_t pin, uint8_t volume) : SinglePinComponent(pin)
 {
   _volume = volume * 2.55; // convert 0-100 to 0-255
 }
@@ -16,7 +16,6 @@ void MyToneSpeaker::setup()
   // 8 bits means the duty cycle has 2⁸ = 256 steps
   ledcSetup(PWM_CHANNEL, 1000, 8); // initial freq
   ledcAttachPin(_pin, PWM_CHANNEL);
-  Serial.println(_volume);
 }
 
 void MyToneSpeaker::reset()

@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyNeoPixel.h>
 
-MyNeoPixel::MyNeoPixel(char pin, uint8_t ledArraySize) : PinComponent(pin)
+MyNeoPixel::MyNeoPixel(char pin, uint8_t ledArraySize) : SinglePinComponent(pin)
 {
   _ledArraySize = ledArraySize;
 }

@@ -6,7 +6,7 @@
 
 #include <LazyGalaxyWAVPlayer.h>
 
-MyWAVPlayer::MyWAVPlayer(uint8_t volume) : PinComponent(DAC1)
+MyWAVPlayer::MyWAVPlayer(uint8_t volume) : Component()
 {
   _volume = volume / 100.0f;
 }
