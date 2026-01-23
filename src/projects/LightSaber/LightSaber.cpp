@@ -12,28 +12,28 @@
 #include <LazyGalaxyToneSpeaker.h>
 #include <LazyGalaxyWAVPlayer.h>
 
-const char on[] = "/a1.wav";
-const char off[] = "/a2.wav";
+const char on[] PROGMEM = "/a1.wav";
+const char off[] PROGMEM = "/a2.wav";
 
-const char b1[] = "/b1.wav";
-const char b2[] = "/b2.wav";
-const char b3[] = "/b3.wav";
-const char b4[] = "/b4.wav";
-const char b5[] = "/b5.wav";
-const char b6[] = "/b6.wav";
-const char b7[] = "/b7.wav";
-const char b8[] = "/b8.wav";
-const char *const hard_strike[] = {b1, b2, b3, b4, b5, b6, b7, b8};
+const char b1[] PROGMEM = "/b1.wav";
+const char b2[] PROGMEM = "/b2.wav";
+const char b3[] PROGMEM = "/b3.wav";
+const char b4[] PROGMEM = "/b4.wav";
+const char b5[] PROGMEM = "/b5.wav";
+const char b6[] PROGMEM = "/b6.wav";
+const char b7[] PROGMEM = "/b7.wav";
+const char b8[] PROGMEM = "/b8.wav";
+const char *const hard_strike[] PROGMEM = {b1, b2, b3, b4, b5, b6, b7, b8};
 
-const char c1[] = "/c1.wav";
-const char c2[] = "/c2.wav";
-const char c3[] = "/c3.wav";
-const char c4[] = "/c4.wav";
-const char c5[] = "/c5.wav";
-const char c6[] = "/c6.wav";
-const char c7[] = "/c7.wav";
-const char c8[] = "/c8.wav";
-const char *const soft_strike[] = {c1, c2, c3, c4, c5, c6, c7, c8};
+const char c1[] PROGMEM = "/c1.wav";
+const char c2[] PROGMEM = "/c2.wav";
+const char c3[] PROGMEM = "/c3.wav";
+const char c4[] PROGMEM = "/c4.wav";
+const char c5[] PROGMEM = "/c5.wav";
+const char c6[] PROGMEM = "/c6.wav";
+const char c7[] PROGMEM = "/c7.wav";
+const char c8[] PROGMEM = "/c8.wav";
+const char *const soft_strike[] PROGMEM = {c1, c2, c3, c4, c5, c6, c7, c8};
 
 // variables to track the state of the lightsaber
 bool lightSaberOn = false;
@@ -109,11 +109,9 @@ void longPressCallback(unsigned long time)
 
 void clicksCallback(unsigned long time, uint8_t clicks)
 {
-  Serial.println("clickscallback");
   // then implement the light saber logic
   if (!lightSaberOn && clicks > 0)
   {
-    Serial.println("button clicked");
     // turn on the light saber with any button click
     lightSaberOn = true;
     led.stopBlink();

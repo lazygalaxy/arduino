@@ -9,7 +9,7 @@
 #include <LazyGalaxyWAVPlayer.h>
 
 uint8_t volume = 20; // volume 0-100
-MyToneSpeaker toneSpeaker(D4, volume);
+MyToneSpeaker toneSpeaker(4, volume);
 MyWAVPlayer wavPlayer(volume);
 
 Melody *santaClausMelody =
